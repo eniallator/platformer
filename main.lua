@@ -12,11 +12,6 @@ function love.load()
   blockSize = screenDim.y/20
   blocks = {stone = {r = 150, b = 150, g = 150}}
   map = {x10y16 = {block = "stone", w = 8, h = 1}, x5y6 = {block = "stone", w = 2, h = 2}, x21y6 = {block = "stone", w = 2, h = 2}}
-
-  str = ""
-  for k,_ in pairs(player) do
-    str = str .. k .. " "
-  end
 end
 
 function love.update()
