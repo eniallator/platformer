@@ -1,16 +1,15 @@
 local display = {}
 
 display.map = function()
-  for coords, data in pairs(map) do
-    local xNum = coords:find("x")
-    local yNum = coords:find("y")
+  for i=1,#mapGrid do
+    for j=1,#mapGrid[i] do
+      if type(mapGrid[i][j]) == "table" then
 
-    local blockX = tonumber(coords:sub(xNum +1, yNum -1))
-    local blockY = tonumber(coords:sub(yNum +1, #coords))
-
-    local blockData = blocks[data.block]
-    love.graphics.setColor(blockData.r, blockData.g, blockData.b)
-    love.graphics.rectangle("fill", (blockX-1)*blockSize, (blockY-1)*blockSize, data.w*blockSize, data.h*blockSize)
+        local blockData = blocks[mapGrid[i][j].block]
+        love.graphics.setColor(blockData.r, blockData.g, blockData.b)
+        love.graphics.rectangle("fill", (j -1) *blockSize, (i -1) *blockSize, blockSize, blockSize)
+      end
+    end
   end
 end
 
