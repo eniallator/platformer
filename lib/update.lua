@@ -38,9 +38,14 @@ update.velocity = function()
 end
 
 update.position = function()
-  player.pos.x = player.pos.x + player.vel.x
+  if not collision.detectPlayer(player.pos.x + player.vel.x, player.pos.y) then
+    player.pos.x = player.pos.x + player.vel.x
 
-  if player.pos.y + 20 + player.vel.y < screenDim.y then
+  else
+    player.vel.x = 0
+  end
+
+  if player.pos.y + 20 + player.vel.y < screenDim.y and not collision.detectPlayer(player.pos.x, player.pos.y + player.vel.y) then
     player.pos.y = player.pos.y + player.vel.y
 
   else
