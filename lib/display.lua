@@ -1,5 +1,30 @@
 local display = {}
 
+local xCounter = 0
+
+display.loadTextures = function()
+
+  texture = {
+    player = {
+      still = love.graphics.newImage("assets/textures/player/player.still.png"),
+      glide = love.graphics.newImage("assets/textures/player/player.glide.png"),
+
+      sprint = {
+        love.graphics.newImage("assets/textures/player/player.sprint.1.png"),
+        love.graphics.newImage("assets/textures/player/player.sprint.2.png")
+      }
+    },
+
+    block = {
+      stone = love.graphics.newImage("assets/textures/blocks/stone.png"),
+    },
+
+    other = {
+      background = love.graphics.newImage("assets/textures/other/background.png")
+    }
+  }
+end
+
 display.map = function()
   for i=1,#mapGrid do
     for j=1,#mapGrid[i] do
@@ -16,7 +41,7 @@ display.player = function()
 
   xCounter = (xCounter + player.vel.x) % 40
 
-  if lastDir == "r" then
+  if lastDir == "r" or not lastDir then
     xOffset = -1 *player.w
     scaleOffset = -1
 
@@ -25,11 +50,11 @@ display.player = function()
     scaleOffset = 1
   end
 
-  if math.abs(player.vel.y) < 1 and math.abs(player.vel.x) < 1 then
-    currTexture = texture.player.still
+  if onGround then
+    if math.abs(player.vel.x) < 1 then
+      currTexture = texture.player.still
 
-  elseif onGround then
-    if xCounter > 20 then
+    elseif xCounter >= 20 then
       currTexture = texture.player.sprint[1]
 
     else
@@ -37,7 +62,7 @@ display.player = function()
     end
 
   else
-    currTexture = texture.player.glide
+    currTexture = texture.player.still
   end
 
   love.graphics.draw(currTexture, player.pos.x - xOffset, player.pos.y, 0, scaleOffset * (player.w /currTexture:getWidth()), player.h /currTexture:getHeight())

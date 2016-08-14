@@ -36,6 +36,11 @@ end
 update.velocity = function()
   player.vel.x = player.vel.x * drag
   player.vel.y = player.vel.y + 0.1 * gravity
+
+  if onGround then
+    player.vel.x = player.vel.x * friction
+  end
+
   getInput()
 end
 
