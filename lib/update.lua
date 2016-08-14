@@ -24,10 +24,12 @@ local function getInput()
 
   if love.keyboard.isDown("right") then
     player.vel.x = player.vel.x + moveSpeed
+    lastDir = "r"
   end
 
   if love.keyboard.isDown("left") then
     player.vel.x = player.vel.x - moveSpeed
+    lastDir = "l"
   end
 end
 
@@ -45,12 +47,14 @@ update.position = function()
     player.vel.x = 0
   end
 
-  if player.pos.y + 20 + player.vel.y < screenDim.y and not collision.detectPlayer(player.pos.x, player.pos.y + player.vel.y) then
+  if player.pos.y + player.h + player.vel.y < screenDim.y and not collision.detectPlayer(player.pos.x, player.pos.y + player.vel.y) then
     player.pos.y = player.pos.y + player.vel.y
+    onGround = false
 
   else
     jumpsLeft = 2
     player.vel.y = 0
+    onGround = true
   end
 end
 
