@@ -68,4 +68,29 @@ display.player = function()
   love.graphics.draw(currTexture, player.pos.x - xOffset, player.pos.y, 0, scaleOffset * (player.w /currTexture:getWidth()), player.h /currTexture:getHeight())
 end
 
+local function createBackgroundTable()
+  local tbl = {}
+  local backgroundW = texture.other.background:getWidth()
+
+  while #tbl *backgroundW - (cameraTranlation/1.5 % backgroundW) < screenDim.x do
+    table.insert(tbl,{texture.other.background, 0 -cameraTranlation/1.5 +(#tbl - math.floor(cameraTranlation /1.5 /backgroundW /2 +1)) *backgroundW, 0, 0, screenDim.x /texture.other.background:getWidth(), screenDim.y /texture.other.background:getHeight()})
+  end
+
+  return tbl
+end
+
+display.background = function()
+  if cameraTranlation ~= 0 then
+    local bgTable = createBackgroundTable()
+
+    for i=1, #bgTable do
+      local currBg = bgTable[i]
+      love.graphics.draw(currBg[1], currBg[2], currBg[3], currBg[4], currBg[5], currBg[6])
+    end
+
+  else
+    love.graphics.draw(texture.other.background, 0, 0, 0, screenDim.x /texture.other.background:getWidth(), screenDim.y /texture.other.background:getHeight())
+  end
+end
+
 return display

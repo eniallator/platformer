@@ -63,4 +63,13 @@ update.position = function()
   end
 end
 
+update.camera = function()
+  if player.pos.x > screenDim.x/2 - player.w/2 then
+    cameraTranlation = cameraTranlation - player.vel.x
+
+  else
+    cameraTranlation = 0
+  end
+end
+
 return update

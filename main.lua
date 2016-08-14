@@ -20,17 +20,19 @@ function love.load()
   blocks = {stone = {solid = true}}
   formattedMap = {x10y16 = {block = "stone", w = 8, h = 1}, x5y6 = {block = "stone", w = 2, h = 2}, x21y6 = {block = "stone", w = 2, h = 2}, x10y20 = {block = "stone", w = 4, h = 1}}
   map.makeGrid()
+  cameraTranlation = 0
 end
 
 function love.update()
   update.velocity()
   update.position()
+  update.camera()
 end
 
 function love.draw()
+  love.graphics.translate(cameraTranlation, 0)
   love.graphics.setColor(255, 255, 255)
-  love.graphics.draw(texture.other.background, 0, 0, 0, screenDim.x /texture.other.background:getWidth(), screenDim.y /texture.other.background:getHeight())
-  -- love.graphics.setColor(50, 70, 80)
+  display.background()
   display.map()
   display.player()
 end
