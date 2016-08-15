@@ -45,7 +45,7 @@ update.velocity = function()
 end
 
 update.position = function()
-  if not collision.detectPlayer(player.pos.x + player.vel.x, player.pos.y) and player.pos.x + player.vel.x > 0 then
+  if not collision.detectPlayer(player.pos.x + player.vel.x, player.pos.y) and player.pos.x + player.vel.x > 0  and player.pos.x + player.vel.x + player.w <= 255*blockSize then
     player.pos.x = player.pos.x + player.vel.x
 
   else
@@ -64,12 +64,18 @@ update.position = function()
 end
 
 update.camera = function()
-  if player.pos.x > screenDim.x/2 - player.w/2 then
-    cameraTranlation = cameraTranlation - player.vel.x
+  if player.pos.x + player.w/2 > screenDim.x/2  then
+    if player.pos.x + player.w/2 > 255*blockSize - screenDim.x/2 then
+      cameraTranlation = -(255*blockSize - screenDim.x)
+
+    else
+      cameraTranlation = cameraTranlation - player.vel.x
+    end
 
   else
     cameraTranlation = 0
   end
+
 end
 
 return update
