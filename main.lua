@@ -10,15 +10,15 @@ function love.load()
 
   screenDim = {}
   screenDim.x, screenDim.y = love.graphics.getDimensions()
-  player = {pos = {x = 1, y = 1}, vel = {x = 0, y = 0}, col = {r = 0, g = 0, b = 255}, w = 16, h = 32}
+  player = {pos = {x = 1, y = 1}, vel = {x = 0, y = 0}, w = 16, h = 32}
   moveSpeed = 0.3
   jumpHeight = -5
   gravity = 3
   drag = 0.96
   friction = 0.93
   blockSize = screenDim.y/20
-  blocks = {{name = "stone", solid = true}}
-  formattedMap = {x10y16 = {block = "stone", w = 8, h = 1}, x5y6 = {block = "stone", w = 2, h = 2}, x21y6 = {block = "stone", w = 2, h = 2}, x10y20 = {block = "stone", w = 4, h = 1}}
+  blocks = {{name = "stone", solid = true}, {name = "dirt", solid = true}, {name = "grass", solid = true}, {name = "sand", solid = true}}
+  formattedMap = {x1y19 = {block = "stone", w = 16, h = 2}, x2y17 = {block = "sand", w = 14, h = 2}, x3y15 = {block = "dirt", w = 12, h = 2}, x4y13 = {block = "grass", w = 10, h = 2}}
   map.makeGrid()
   cameraTranlation = 0
 

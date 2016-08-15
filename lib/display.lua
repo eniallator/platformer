@@ -17,6 +17,9 @@ display.loadTextures = function()
 
     block = {
       stone = love.graphics.newImage("assets/textures/blocks/stone.png"),
+      dirt = love.graphics.newImage("assets/textures/blocks/dirt.png"),
+      grass = love.graphics.newImage("assets/textures/blocks/grass.png"),
+      sand = love.graphics.newImage("assets/textures/blocks/sand.png"),
     },
 
     other = {
