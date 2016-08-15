@@ -17,10 +17,14 @@ function love.load()
   drag = 0.96
   friction = 0.93
   blockSize = screenDim.y/20
-  blocks = {stone = {solid = true}}
+  blocks = {{name = "stone", solid = true}}
   formattedMap = {x10y16 = {block = "stone", w = 8, h = 1}, x5y6 = {block = "stone", w = 2, h = 2}, x21y6 = {block = "stone", w = 2, h = 2}, x10y20 = {block = "stone", w = 4, h = 1}}
   map.makeGrid()
   cameraTranlation = 0
+
+  -- map.writeTable(formattedMap, "testMap.txt")
+  -- formattedMap = map.readTable("testMap.txt")
+  -- Testing if writing then reading files works and it does
 end
 
 function love.update()

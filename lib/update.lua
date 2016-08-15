@@ -45,7 +45,7 @@ update.velocity = function()
 end
 
 update.position = function()
-  if not collision.detectPlayer(player.pos.x + player.vel.x, player.pos.y) then
+  if not collision.detectPlayer(player.pos.x + player.vel.x, player.pos.y) and player.pos.x + player.vel.x > 0 then
     player.pos.x = player.pos.x + player.vel.x
 
   else
