@@ -42,7 +42,7 @@ end
 
 display.player = function()
 
-  xCounter = (xCounter + player.vel.x) % 40
+  xCounter = (xCounter + player.vel.x) % 30
 
   if lastDir == "r" or not lastDir then
     xOffset = -1 *player.w
@@ -57,7 +57,7 @@ display.player = function()
     if math.abs(player.vel.x) < 1 then
       currTexture = texture.player.still
 
-    elseif xCounter >= 20 then
+    elseif xCounter >= 15 then
       currTexture = texture.player.sprint[1]
 
     else
@@ -94,6 +94,15 @@ display.background = function()
   else
     love.graphics.draw(texture.other.background, 0, 0, 0, screenDim.x /texture.other.background:getWidth(), screenDim.y /texture.other.background:getHeight())
   end
+end
+
+display.box = function(box)
+  local font = love.graphics.getFont()
+
+  love.graphics.setColor(150, 150, 150)
+  love.graphics.rectangle("fill", box.x, box.y, box.w, box.h)
+  love.graphics.setColor(255, 255, 255)
+  love.graphics.printf(box.name, box.x + box.w/2 - font:getWidth(box.name)/2, box.y + box.h/2 - font:getHeight(box.name)/2,box.w)
 end
 
 return display

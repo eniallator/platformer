@@ -26,4 +26,33 @@ collision.detectPlayer = function(x,y)
   return false
 end
 
+collision.clickBox = function(displayedTbl)
+  local clicked = false
+  local stillDown
+
+  if love.mouse.isDown(1) then
+    if not stillDown then
+      clicked = true
+    end
+
+    stillDown = true
+  else
+    stillDown = false
+  end
+
+  if clicked then
+    local mouseCoords = {love.mouse.getPosition()}
+
+    for name,box in pairs(displayedTbl) do
+      if mouseCoords[1] >= box.x and mouseCoords[1] <= box.x + box.w and mouseCoords[2] >= box.y and mouseCoords[2] <= box.y + box.h then
+
+        return name
+      end
+    end
+
+    return false
+  end
+
+end
+
 return collision
