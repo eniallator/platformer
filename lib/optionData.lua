@@ -20,4 +20,20 @@ optionData.main = {
   }
 }
 
+optionData.options = {
+  display = function()
+    local default = {w = screenDim.x /4, h = screenDim.y /8}
+    default.x = screenDim.x /2 - default.w /2
+    local boxGap = 20
+
+    return {
+      back = {name = "Back", x = default.x, y = screenDim.y/2 - default.h/2, w = default.w, h = default.h}
+    }
+  end,
+
+  funcs = {
+    back = function() currMenu = "main" end
+  }
+}
+
 return optionData

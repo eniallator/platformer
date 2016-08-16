@@ -1,3 +1,4 @@
+local stillDown
 local collision = {}
 
 collision.getBlock = function(block)
@@ -28,7 +29,6 @@ end
 
 collision.clickBox = function(displayedTbl)
   local clicked = false
-  local stillDown
 
   if love.mouse.isDown(1) then
     if not stillDown then
