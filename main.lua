@@ -39,10 +39,12 @@ function love.update()
     update.camera()
 
   elseif selected == "menu" then
-    local clickedBox = collision.clickBox(optionData[currMenu].display())
+    local menuDisplayed = optionData[currMenu].display()
+    local clickedBox = collision.clickBox(menuDisplayed)
 
     if clickedBox then
-      optionData[currMenu].funcs[clickedBox]()
+      optionData[currMenu].funcs[clickedBox](menuDisplayed[clickedBox])
+      debug = menuDisplayed[clickedBox].name
     end
   end
 end
