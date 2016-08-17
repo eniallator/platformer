@@ -66,14 +66,14 @@ end
 update.camera = function()
   if player.pos.x + player.w/2 > screenDim.x/2  then
     if player.pos.x + player.w/2 > 255*blockSize - screenDim.x/2 then
-      cameraTranlation = -(255*blockSize - screenDim.x)
+      cameraTranslation = -(255*blockSize - screenDim.x)
 
     else
-      cameraTranlation = cameraTranlation - player.vel.x
+      cameraTranslation = cameraTranslation - player.vel.x
     end
 
   else
-    cameraTranlation = 0
+    cameraTranslation = 0
   end
 
 end

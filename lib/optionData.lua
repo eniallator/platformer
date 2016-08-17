@@ -34,12 +34,18 @@ local function loadMapOptions()
     returnTbl[k] = v
   end
 
-  loadMapFuncs(mapPages[currPage])
+  loadPlayFuncs(mapPages[currPage])
 
   return returnTbl
 end
 
-function loadMapFuncs(page)
+function loadPlayFuncs(page)
+  optionData.play.funcs = {
+    nextPage = function() currPage = currPage + 1 end,
+    prevPage = function() currPage = currPage - 1 end,
+    back = function() currMenu = "main" currPage = 1 end
+  }
+
   for k,v in pairs(page) do
     optionData.play.funcs[k] = function(box)
 
@@ -90,13 +96,7 @@ optionData.play = {
   display = function()
 
     return loadMapOptions()
-  end,
-
-  funcs = {
-    nextPage = function() currPage = currPage + 1 end,
-    prevPage = function() currPage = currPage - 1 end,
-    back = function() currMenu = "main" currPage = 1 end
-  }
+  end
 }
 
 return optionData
