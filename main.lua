@@ -26,8 +26,12 @@ function love.load()
   currMenu = "main"
   mapExtension = ".map"
 
-  love.graphics.setFont(love.graphics.newFont(screenDim.x/40))
+  if not love.filesystem.isDirectory("maps") then
+    love.filesystem.createDirectory("maps")
+  end
+  
   map.writeTable(formattedMap, "maps/devMap" .. mapExtension)
+  love.graphics.setFont(love.graphics.newFont(screenDim.x/40))
 end
 
 function love.update()
