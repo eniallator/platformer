@@ -78,4 +78,30 @@ update.camera = function()
 
 end
 
+update.mapCreatorinteract = function()
+  local mouseCoords = {love.mouse.getPosition()}
+  mouseCoords[1] = mouseCoords[1] - cameraTranslation
+
+  if love.mouse.isDown(1) and not firstLoad then
+    map.placeBlock(mouseCoords)
+
+  elseif not love.mouse.isDown(1) then
+    firstLoad = false
+  end
+
+  if love.mouse.isDown(2) then
+    map.destroyBlock(mouseCoords)
+  end
+end
+
+update.mapCreatorPos = function()
+  if love.keyboard.isDown("right") and cameraTranslation > -(255*blockSize - screenDim.x) then
+    cameraTranslation = cameraTranslation - 5
+  end
+
+  if love.keyboard.isDown("left") and cameraTranslation < 0 then
+    cameraTranslation = cameraTranslation + 5
+  end
+end
+
 return update

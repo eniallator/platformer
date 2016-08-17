@@ -71,8 +71,14 @@ optionData.main = {
 
   funcs = {
     play = function() currMenu = "play" end,
-    createMap = function() selected = "createMap" end,
-    settings = function() currMenu = "options" end
+    settings = function() currMenu = "options" end,
+
+    createMap = function()
+      selected = "createMap"
+      formattedMap = {}
+      map.makeGrid()
+      firstLoad = true
+    end
   }
 }
 

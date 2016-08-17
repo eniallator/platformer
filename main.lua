@@ -26,10 +26,6 @@ function love.load()
   currMenu = "main"
 
   love.graphics.setFont(love.graphics.newFont(screenDim.x/40))
-
-  -- map.writeTable(formattedMap, "testMap.txt")
-  -- formattedMap = map.readTable("testMap.txt")
-  -- Testing if writing then reading files works and it does
 end
 
 function love.update()
@@ -46,6 +42,11 @@ function love.update()
       optionData[currMenu].funcs[clickedBox](menuDisplayed[clickedBox])
       debug = menuDisplayed[clickedBox].name
     end
+
+  elseif selected == "createMap" then
+    update.mapCreatorPos()
+    update.mapCreatorinteract()
+
   end
 end
 
@@ -63,5 +64,11 @@ function love.draw()
 
       display.box(box)
     end
+
+  elseif selected == "createMap" then
+    love.graphics.translate(cameraTranslation, 0)
+    display.background()
+    display.map()
+
   end
 end

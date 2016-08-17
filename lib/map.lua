@@ -118,4 +118,14 @@ map.readTable = function(fileToRead)
   return outTbl
 end
 
+local selectedBlockIndex = 1
+
+map.destroyBlock = function(coords)
+  mapGrid[math.ceil(coords[2]/blockSize)][math.ceil(coords[1]/blockSize)] = "n"
+end
+
+map.placeBlock = function(coords)
+  mapGrid[math.ceil(coords[2]/blockSize)][math.ceil(coords[1]/blockSize)] = {block = blocks[selectedBlockIndex].name}
+end
+
 return map
