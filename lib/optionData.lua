@@ -1,5 +1,6 @@
 local loadedMaps
-local currPage = 1
+local currPlayPage = 1
+local currBlockPage = 1
 local optionData = {}
 
 local function filterFiles(oldTbl)
@@ -34,29 +35,29 @@ local function loadMapOptions()
   local returnTbl = {back = {name = "Back", x = screenDim.x /2 - mapIcon.w /2, y = screenDim.y /2 + mapIcon.h *1.5 + (mapIcon.h + boxGap) *3, w = mapIcon.w, h = mapIcon.h}}
   local pageGap = screenDim.x /40
 
-  if mapPages[currPage +1] then
+  if mapPages[currPlayPage +1] then
     returnTbl.nextPage = {name = "Next Page", x = screenDim.x - screenDim.x /5, y = screenDim.y /2 - (mapIcon.h + boxGap) *3 - boxGap - screenDim.y /20, w = screenDim.x /7, h = currY + boxGap *2 + mapIcon.h *3}
     -- yOffset = screenDim.y /20
   end
 
-  if mapPages[currPage -1] then
+  if mapPages[currPlayPage -1] then
     returnTbl.prevPage = {name = "Prev Page", x = screenDim.x /5 - screenDim.x /7, y = screenDim.y /2 - (mapIcon.h + boxGap) *3 - boxGap - screenDim.y /20, w = screenDim.x /7, h = currY + boxGap *2 + mapIcon.h *3}
   end
 
-  for k,v in pairs(mapPages[currPage]) do
+  for k,v in pairs(mapPages[currPlayPage]) do
     returnTbl[k] = v
   end
 
-  loadPlayFuncs(mapPages[currPage])
+  loadPlayFuncs(mapPages[currPlayPage])
 
   return returnTbl
 end
 
 function loadPlayFuncs(page)
   optionData.play.funcs = {
-    nextPage = function() currPage = currPage + 1 end,
-    prevPage = function() currPage = currPage - 1 end,
-    back = function() currMenu = "main" currPage = 1 end
+    nextPage = function() currPlayPage = currPlayPage + 1 end,
+    prevPage = function() currPlayPage = currPlayPage - 1 end,
+    back = function() currMenu = "main" currPlayPage = 1 end
   }
 
   for k,v in pairs(page) do
@@ -67,6 +68,34 @@ function loadPlayFuncs(page)
       currMenu = "main"
     end
   end
+end
+
+local function loadBlockOptions()
+  local pageIndex = 0
+  local returnTbl = {}
+  local blockGap = screenDim.x /40
+  local currX
+
+  for i=1, #blocks do
+    if i%14 == 1 then
+      pageIndex = pageIndex +1
+      returnTbl[pageIndex] = {}
+      currX = screenDim.x /(40/3)
+    end
+
+    table.insert(returnTbl[pageIndex], {blockIndex = i, texture = texture.block[blocks[i].name], x = currX, y = screenDim.y -screenDim.y /12, w = blockSize, h = blockSize})
+    currX = currX + blockSize + blockGap
+  end
+
+  if returnTbl[currBlockPage + 1] then
+    returnTbl[currBlockPage].nextPage = {name = "Next", x = screenDim.x -(screenDim.x /(40/3) - blockSize), y = screenDim.y -screenDim.y /12, w = blockSize, h = blockSize}
+  end
+
+  if returnTbl[currBlockPage - 1] then
+    returnTbl[currBlockPage].prevPage = {name = "Prev", x = screenDim.x /(40/3) - blockSize, y = screenDim.y -screenDim.y /12, w = blockSize, h = blockSize}
+  end
+
+  return returnTbl[currBlockPage]
 end
 
 optionData.main = {
@@ -116,6 +145,18 @@ optionData.play = {
 
     return loadMapOptions()
   end
+}
+
+optionData.blockMenu = {
+  display = function()
+
+    return loadBlockOptions()
+  end,
+
+  funcs = {
+    nextPage = function() currBlockPage = currBlockPage + 1 end,
+    prevPage = function() currBlockPage = currBlockPage - 1 end
+  }
 }
 
 return optionData

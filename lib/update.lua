@@ -94,6 +94,14 @@ update.mapCreatorinteract = function()
   end
 end
 
+update.mapCreatorBlockMenu = function()
+  mapCreatorMenu = false
+
+  if love.keyboard.isDown("m") then
+    mapCreatorMenu = true
+  end
+end
+
 update.mapCreatorPos = function()
   if love.keyboard.isDown("right") and cameraTranslation > -(255*blockSize - screenDim.x) then
     cameraTranslation = cameraTranslation - mapCreatorScrollSpeed

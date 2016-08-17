@@ -47,13 +47,26 @@ function love.update()
 
     if clickedBox then
       optionData[currMenu].funcs[clickedBox](menuDisplayed[clickedBox])
-      debug = menuDisplayed[clickedBox].name
     end
 
   elseif selected == "createMap" then
     update.mapCreatorPos()
-    update.mapCreatorinteract()
+    update.mapCreatorBlockMenu()
 
+    if mapCreatorMenu then
+      local blockMenuTable = optionData.blockMenu.display()
+      local blockClicked = collision.clickBox(blockMenuTable)
+
+      if blockClicked == "prevPage" or blockClicked == "nextPage" then
+        optionData.blockMenu.funcs[blockClicked]()
+
+      elseif blockClicked then
+        selectedBlockIndex = blockMenuTable[blockClicked].blockIndex
+        firstLoad = true
+      end
+    end
+
+    update.mapCreatorinteract()
   end
 end
 
@@ -76,5 +89,16 @@ function love.draw()
     love.graphics.translate(cameraTranslation, 0)
     display.background()
     display.map()
+
+    if mapCreatorMenu then
+      local blockMenuTable = optionData.blockMenu.display()
+
+      for i=1, #blockMenuTable do
+        local currBlock = blockMenuTable[i]
+        love.graphics.draw(currBlock.texture, currBlock.x, currBlock.y, 0, blockSize /currBlock.texture:getWidth(), blockSize /currBlock.texture:getHeight())
+      end
+
+      
+    end
   end
 end

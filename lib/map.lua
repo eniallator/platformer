@@ -1,3 +1,4 @@
+selectedBlockIndex = 1
 local map = {}
 
 local function createGrid(xMax,yMax)
@@ -117,8 +118,6 @@ map.readTable = function(fileToRead)
 
   return outTbl
 end
-
-local selectedBlockIndex = 1
 
 map.destroyBlock = function(coords)
   mapGrid[math.ceil(coords[2]/blockSize)][math.ceil(coords[1]/blockSize)] = "n"
