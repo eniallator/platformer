@@ -2,10 +2,23 @@ local loadedMaps
 local currPage = 1
 local optionData = {}
 
+local function filterFiles(oldTbl)
+  newTbl = {}
+
+  for i=1, #oldTbl do
+    if oldTbl[i]:sub(#oldTbl[i] -#mapExtension +1, #oldTbl[i]) == mapExtension then
+      table.insert(newTbl, oldTbl[i]:sub(1, #oldTbl[i] -#mapExtension))
+    end
+  end
+
+  return newTbl
+end
+
 local function loadMapOptions()
   local mapIcon = {w = screenDim.x /2, h = screenDim.y /16}
   local boxGap = screenDim.y/40
-  loadedMaps = love.filesystem.getDirectoryItems("maps")
+  loadedMaps = filterFiles(love.filesystem.getDirectoryItems("maps"))
+
   mapPages = {}
 
   for i=1, #loadedMaps do
@@ -49,7 +62,7 @@ function loadPlayFuncs(page)
   for k,v in pairs(page) do
     optionData.play.funcs[k] = function(box)
 
-      formattedMap = map.readTable("maps/" .. box.name)
+      formattedMap = map.readTable("maps/" .. box.name .. ".map")
       selected = "game"
       currMenu = "main"
     end

@@ -24,8 +24,10 @@ function love.load()
   cameraTranslation = 0
   selected = "menu"
   currMenu = "main"
+  mapExtension = ".map"
 
   love.graphics.setFont(love.graphics.newFont(screenDim.x/40))
+  map.writeTable(formattedMap, "maps/devMap" .. mapExtension)
 end
 
 function love.update()
@@ -69,6 +71,5 @@ function love.draw()
     love.graphics.translate(cameraTranslation, 0)
     display.background()
     display.map()
-
   end
 end
