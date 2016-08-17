@@ -31,14 +31,9 @@ end
 display.map = function()
   for i=1,#mapGrid do
     for j=1,screenDim.x/blockSize + blockSize*2 do
-      local cameraOffset = math.ceil(-cameraTranslation/blockSize)
-
-      if cameraOffset > 1 then
-        cameraOffset = cameraOffset - 1
-      end
+      local cameraOffset = math.ceil(-cameraTranslation /blockSize -1)
 
       if type(mapGrid[i][j +cameraOffset]) == "table" then
-
         local currImage = texture.block[mapGrid[i][j +cameraOffset].block]
         love.graphics.draw(currImage, ((j +cameraOffset) -1) *blockSize, (i -1) *blockSize, 0, blockSize /currImage:getWidth(), blockSize /currImage:getHeight())
       end

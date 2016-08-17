@@ -17,6 +17,7 @@ function love.load()
   gravity = 3
   drag = 0.96
   friction = 0.93
+  mapCreatorScrollSpeed = 5
   blockSize = screenDim.y/20
   blocks = {{name = "stone", solid = true}, {name = "dirt", solid = true}, {name = "grass", solid = true}, {name = "sand", solid = true}}
   formattedMap = {x1y19 = {block = "stone", w = 16, h = 2}, x2y17 = {block = "sand", w = 14, h = 2}, x3y15 = {block = "dirt", w = 12, h = 2}, x4y13 = {block = "grass", w = 10, h = 2}}
@@ -29,7 +30,7 @@ function love.load()
   if not love.filesystem.isDirectory("maps") then
     love.filesystem.createDirectory("maps")
   end
-  
+
   map.writeTable(formattedMap, "maps/devMap" .. mapExtension)
   love.graphics.setFont(love.graphics.newFont(screenDim.x/40))
 end
