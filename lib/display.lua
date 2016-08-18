@@ -32,7 +32,7 @@ display.map = function()
   for i=1,#mapGrid do
     for j=1,screenDim.x/blockSize + blockSize*2 do
       local cameraOffset = math.ceil(-cameraTranslation /blockSize -1)
-
+      
       if type(mapGrid[i][j +cameraOffset]) == "table" then
         local currImage = texture.block[mapGrid[i][j +cameraOffset].block]
         love.graphics.draw(currImage, ((j +cameraOffset) -1) *blockSize, (i -1) *blockSize, 0, blockSize /currImage:getWidth(), blockSize /currImage:getHeight())
@@ -105,9 +105,18 @@ display.box = function(box)
   local font = love.graphics.getFont()
 
   love.graphics.setColor(150, 150, 150)
-  love.graphics.rectangle("fill", box.x, box.y, box.w, box.h)
+  love.graphics.rectangle("fill", box.x -cameraTranslation, box.y, box.w, box.h)
   love.graphics.setColor(255, 255, 255)
-  love.graphics.printf(box.name, box.x + box.w/2 - font:getWidth(box.name)/2, box.y + box.h/2 - font:getHeight(box.name)/2,box.w)
+  love.graphics.printf(box.name, box.x + box.w/2 - font:getWidth(box.name)/2 -cameraTranslation, box.y + box.h/2 - font:getHeight(box.name)/2,box.w)
+end
+
+display.escMenu = function()
+  if escMenuOn then
+    for _, box in pairs(optionData.escMenu.display()) do
+
+      display.box(box)
+    end
+  end
 end
 
 return display

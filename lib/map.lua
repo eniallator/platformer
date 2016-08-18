@@ -113,7 +113,6 @@ map.readTable = function(fileToRead)
       outTbl[outKey].h = string.byte(rawTbl[index]) +2
       index = index +1
     end
-
   end
 
   return outTbl

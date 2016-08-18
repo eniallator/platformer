@@ -14,12 +14,14 @@ end
 collision.detectPlayer = function(x,y)
   for i=1,#mapGrid do
     for j=1,#mapGrid[i] do
+      if type(mapGrid[i][j]) == "table" then
 
-      local currBlock = blocks[collision.getBlock(mapGrid[i][j].block)]
+        local currBlock = blocks[collision.getBlock(mapGrid[i][j].block)]
 
-      if type(mapGrid[i][j]) == "table" and currBlock.solid and (j -1) *blockSize < x + player.w and x <= j *blockSize and (i -1) *blockSize < y + player.h and y <= i *blockSize then
+        if currBlock.solid and (j -1) *blockSize < x + player.w and x <= j *blockSize and (i -1) *blockSize < y + player.h and y <= i *blockSize then
 
-        return true
+          return true
+        end
       end
     end
   end

@@ -1,6 +1,7 @@
 local loadedMaps
 local currPlayPage = 1
 local currBlockPage = 1
+local otherTranslation = 0
 local optionData = {}
 
 local function filterFiles(oldTbl)
@@ -137,6 +138,43 @@ optionData.options = {
 
   funcs = {
     back = function() currMenu = "main" end
+  }
+}
+
+optionData.escMenu = {
+  display = function()
+    local default = {w = screenDim.x /4, h = screenDim.y /8}
+    default.x = screenDim.x /2 - default.w /2
+    local boxGap = screenDim.y /30
+
+    return {
+      close = {name = "close", x = screenDim.x - screenDim.x /4, y = screenDim.y /18, w = screenDim.x /5, h = screenDim.y /9},
+      modeSwitch = {name = "Mode: " .. selected, x = default.x, y = screenDim.y /2 -boxGap /2 -default.h, w = default.w, h = default.h}
+    }
+  end,
+
+  funcs = {
+    close = function() end,
+    modeSwitch = function()
+      if selected == "game" then
+        selected = "createMap"
+
+      else
+        if player.pos.x +player.w /2 > screenDim.x /2  then
+          if player.pos.x +player.w /2 > 255 *blockSize -screenDim.x /2 then
+            cameraTranslation = -(255*blockSize - screenDim.x)
+
+          else
+            cameraTranslation = -(player.pos.x -screenDim.x/2)
+          end
+
+        else
+          cameraTranslation = 0
+        end
+
+        selected = "game"
+      end
+    end
   }
 }
 

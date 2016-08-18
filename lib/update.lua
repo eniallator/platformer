@@ -114,4 +114,20 @@ update.mapCreatorPos = function()
   end
 end
 
+update.escMenu = function()
+  if love.keyboard.isDown("escape") then
+    escMenuOn = true
+  end
+
+  if escMenuOn then
+    firstLoad = true
+    local clickedBox = collision.clickBox(optionData.escMenu.display())
+
+    if clickedBox then
+      optionData.escMenu.funcs[clickedBox]()
+      escMenuOn = false
+    end
+  end
+end
+
 return update

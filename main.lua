@@ -40,6 +40,7 @@ function love.update()
     update.velocity()
     update.position()
     update.camera()
+    update.escMenu()
 
   elseif selected == "menu" then
     local menuDisplayed = optionData[currMenu].display()
@@ -66,6 +67,7 @@ function love.update()
       end
     end
 
+    update.escMenu()
     update.mapCreatorinteract()
   end
 end
@@ -77,6 +79,7 @@ function love.draw()
     display.background()
     display.map()
     display.player()
+    display.escMenu()
 
   elseif selected == "menu" then
     display.background()
@@ -97,8 +100,8 @@ function love.draw()
         local currBlock = blockMenuTable[i]
         love.graphics.draw(currBlock.texture, currBlock.x, currBlock.y, 0, blockSize /currBlock.texture:getWidth(), blockSize /currBlock.texture:getHeight())
       end
-
-      
     end
+
+    display.escMenu()
   end
 end
