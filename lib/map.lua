@@ -118,6 +118,65 @@ map.readTable = function(fileToRead)
   return outTbl
 end
 
+local function checkEmpty(tbl)
+  for i=1, #tbl do
+    for j=1, #tbl[i] do
+      if type(tbl[i][j]) == "table" then
+        return i, j
+      end
+    end
+  end
+
+  return false
+end
+
+local function checkBlockRow(tbl, block, width, x, y)
+  for i=1,width do
+    if not (tbl[y][x] and tbl[y][x].block == block) then
+      return false
+    end
+  end
+
+  return true
+end
+
+map.transform = function(oldMap)
+  local outMap = {}
+
+  repeat
+    local blockY, blockX = checkEmpty(oldMap)
+
+    if blockY then
+      local blocksWidth = 1
+      local blocksHeight = 1
+      local compareBlock = oldMap[blockY][blockX].block
+      local currKey = "x" .. blockX .. "y" .. blockY
+
+      outMap[currKey] = {block = compareBlock}
+
+      while oldMap[blockY][blockX + blocksWidth] and oldMap[blockY][blockX + blocksWidth].block == compareBlock do
+        blocksWidth = blocksWidth + 1
+      end
+
+      while checkBlockRow(oldMap, compareBlock, blocksWidth, blockX, blockY +blocksHeight) do
+        blocksHeight = blocksHeight + 1
+      end
+
+      outMap[currKey].w = blocksWidth
+      outMap[currKey].h = blocksHeight
+
+      for i=1, blocksHeight do
+        for j=1, blocksWidth do
+          oldMap[blockY +i -1][blockX +j -1] = "n"
+        end
+      end
+    end
+
+  until not blockY
+
+  return outMap
+end
+
 map.destroyBlock = function(coords)
   mapGrid[math.ceil(coords[2]/blockSize)][math.ceil(coords[1]/blockSize)] = "n"
 end

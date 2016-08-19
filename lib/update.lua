@@ -130,4 +130,9 @@ update.escMenu = function()
   end
 end
 
+update.resetPlayer = function()
+  player.pos = {x = 1, y = 1}
+  player.vel = {x = 0, y = 1}
+end
+
 return update

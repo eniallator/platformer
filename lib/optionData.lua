@@ -65,6 +65,7 @@ function loadPlayFuncs(page)
     optionData.play.funcs[k] = function(box)
 
       formattedMap = map.readTable("maps/" .. box.name .. ".map")
+      map.makeGrid()
       selected = "game"
       currMenu = "main"
     end
@@ -147,14 +148,25 @@ optionData.escMenu = {
     default.x = screenDim.x /2 - default.w /2
     local boxGap = screenDim.y /30
 
-    return {
-      close = {name = "close", x = screenDim.x - screenDim.x /4, y = screenDim.y /18, w = screenDim.x /5, h = screenDim.y /9},
-      modeSwitch = {name = "Mode: " .. selected, x = default.x, y = screenDim.y /2 -boxGap /2 -default.h, w = default.w, h = default.h}
+    local returnTbl = {
+      close = {name = "Close", x = screenDim.x - screenDim.x /4, y = screenDim.y /18, w = screenDim.x /5, h = screenDim.y /9},
+      modeSwitch = {name = "Mode: " .. selected, x = default.x, y = screenDim.y /2 -boxGap /2 -default.h, w = default.w, h = default.h},
+      backToMenu = {name = "Back To Menu", x = default.x, y = screenDim.y /2 +boxGap /2, w = default.w, h = default.h}
     }
+
+    if selected == "createMap" then
+      returnTbl.save = {name = "Save Map", x = default.x, y = screenDim.y /2 -boxGap -default.h *1.5, w = default.w, h = default.h}
+      returnTbl.modeSwitch.y = screenDim.y /2 -default.h * 0.5
+      returnTbl.backToMenu.y = screenDim.y /2 +boxGap +default.h /2
+    end
+
+    return returnTbl
   end,
 
   funcs = {
     close = function() end,
+    save = function() map.writeTable(map.transform(mapGrid), "maps/testMap.map") end,
+    backToMenu = function() selected = "menu" currMenu = "main" update.resetPlayer() end,
     modeSwitch = function()
       if selected == "game" then
         selected = "createMap"
