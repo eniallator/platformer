@@ -105,11 +105,11 @@ update.mapCreatorBlockMenu = function()
 end
 
 update.mapCreatorPos = function()
-  if love.keyboard.isDown("right") and cameraTranslation > -(255*blockSize - screenDim.x) then
+  if love.keyboard.isDown("right") and cameraTranslation > -(255*blockSize - screenDim.x) +mapCreatorScrollSpeed -1 then
     cameraTranslation = cameraTranslation - mapCreatorScrollSpeed
   end
 
-  if love.keyboard.isDown("left") and cameraTranslation < 0 then
+  if love.keyboard.isDown("left") and cameraTranslation < -mapCreatorScrollSpeed +1 then
     cameraTranslation = cameraTranslation + mapCreatorScrollSpeed
   end
 end
@@ -132,7 +132,7 @@ end
 
 update.resetPlayer = function()
   player.pos = {x = 1, y = 1}
-  player.vel = {x = 0, y = 1}
+  player.vel = {x = 0, y = 0}
 end
 
 return update

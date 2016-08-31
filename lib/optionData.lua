@@ -166,7 +166,14 @@ optionData.escMenu = {
   funcs = {
     close = function() end,
     save = function() map.writeTable(map.transform(mapGrid), "maps/testMap.map") end,
-    backToMenu = function() selected = "menu" currMenu = "main" update.resetPlayer() end,
+
+    backToMenu = function()
+      selected = "menu"
+      currMenu = "main"
+      update.resetPlayer()
+      cameraTranslation = 0
+    end,
+
     modeSwitch = function()
       if selected == "game" then
         selected = "createMap"

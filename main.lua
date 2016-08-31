@@ -37,9 +37,13 @@ end
 
 function love.update()
   if selected == "game" then
-    update.velocity()
-    update.position()
-    update.camera()
+    if not escMenuOn then
+      
+      update.velocity()
+      update.position()
+      update.camera()
+    end
+
     update.escMenu()
 
   elseif selected == "menu" then
