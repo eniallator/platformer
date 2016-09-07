@@ -140,8 +140,24 @@ local function checkBlockRow(tbl, block, width, x, y)
   return true
 end
 
-map.transform = function(oldMap)
+local function copyTable(tbl)
+  local newTbl = {}
+
+  for k,v in pairs(tbl) do
+    if type(v) == "table" then
+      newTbl[k] = copyTable(v)
+      
+    else
+      newTbl[k] = v
+    end
+  end
+
+  return newTbl
+end
+
+map.transform = function(mapTbl)
   local outMap = {}
+  local oldMap = copyTable(mapTbl)
 
   repeat
     local blockY, blockX = checkEmpty(oldMap)
