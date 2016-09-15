@@ -22,8 +22,8 @@ local function getCoords(str)
   return tonumber(str:sub(xNum +1, yNum -1)), tonumber(str:sub(yNum +1, #str))
 end
 
-map.makeGrid = function()
-  mapGrid = createGrid(screenDim.x/blockSize, screenDim.y/blockSize)
+map.makeGrid = function(x, y)
+  mapGrid = createGrid(x, y)
 
   for coords, data in pairs(formattedMap) do
 
@@ -58,7 +58,6 @@ map.writeTable = function(tbl, fileToWrite)
 end
 
 map.readTable = function(fileToRead)
-
   local rawTbl = {}
   local rawStr = love.filesystem.read(fileToRead)
 
@@ -71,17 +70,6 @@ map.readTable = function(fileToRead)
   local outKey
 
   while rawTbl[index] do
-
-    if outKey then
-      if not outTbl[outKey].w then
-        outTbl[outKey].w = 1
-      end
-
-      if not outTbl[outKey].h then
-        outTbl[outKey].h = 1
-      end
-    end
-
     if rawTbl[index] == "x" then
       index = index +1
       outKey = "x" .. string.byte(rawTbl[index]) +1
@@ -112,6 +100,14 @@ map.readTable = function(fileToRead)
       index = index +1
       outTbl[outKey].h = string.byte(rawTbl[index]) +2
       index = index +1
+    end
+
+    if not outTbl[outKey].w then
+      outTbl[outKey].w = 1
+    end
+
+    if not outTbl[outKey].h then
+      outTbl[outKey].h = 1
     end
   end
 
@@ -146,7 +142,7 @@ local function copyTable(tbl)
   for k,v in pairs(tbl) do
     if type(v) == "table" then
       newTbl[k] = copyTable(v)
-      
+
     else
       newTbl[k] = v
     end

@@ -21,7 +21,7 @@ function love.load()
   blockSize = screenDim.y/20
   blocks = {{name = "stone", solid = true}, {name = "dirt", solid = true}, {name = "grass", solid = true}, {name = "sand", solid = true}}
   formattedMap = {x1y19 = {block = "stone", w = 16, h = 2}, x2y17 = {block = "sand", w = 14, h = 2}, x3y15 = {block = "dirt", w = 12, h = 2}, x4y13 = {block = "grass", w = 10, h = 2}}
-  map.makeGrid()
+  map.makeGrid(256, screenDim.y/blockSize)
   cameraTranslation = 0
   selected = "menu"
   currMenu = "main"
@@ -38,7 +38,7 @@ end
 function love.update()
   if selected == "game" then
     if not escMenuOn then
-      
+
       update.velocity()
       update.position()
       update.camera()

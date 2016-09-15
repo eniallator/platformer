@@ -65,7 +65,7 @@ function loadPlayFuncs(page)
     optionData.play.funcs[k] = function(box)
 
       formattedMap = map.readTable("maps/" .. box.name .. ".map")
-      map.makeGrid()
+      map.makeGrid(256, screenDim.y/blockSize)
       selected = "game"
       currMenu = "main"
     end
@@ -120,7 +120,7 @@ optionData.main = {
     createMap = function()
       selected = "createMap"
       formattedMap = {}
-      map.makeGrid()
+      map.makeGrid(256, screenDim.y/blockSize)
       firstLoad = true
     end
   }
