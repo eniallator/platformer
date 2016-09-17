@@ -128,7 +128,7 @@ end
 
 local function checkBlockRow(tbl, block, width, x, y)
   for i=1,width do
-    if not (tbl[y][x] and tbl[y][x].block == block) then
+    if not tbl[y] or not (tbl[y][x] and tbl[y][x].block == block) then
       return false
     end
   end

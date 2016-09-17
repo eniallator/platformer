@@ -43,16 +43,23 @@ function love.load()
 end
 
 function love.keypressed(key)
-  utils.textBox.currChar = key
-  utils.keys[key] = true
+  if key == "capslock" then
+    utils.keys.capslock = not utils.keys.capslock
+
+  else
+    utils.textBox.currChar = key
+    utils.keys[key] = true
+  end
 end
 
 function love.keyreleased(key)
-  if utils.textBox.currChar == key then
-    utils.textBox.currChar = nil
-  end
+  if key ~= "capslock" then
+    if utils.textBox.currChar == key then
+      utils.textBox.currChar = nil
+    end
 
-  utils.keys[key] = false
+    utils.keys[key] = false
+  end
 end
 
 function love.update()

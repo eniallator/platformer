@@ -91,7 +91,17 @@ utils.textBox.getInput = function()
       if acceptedKeys:find(utils.textBox.currChar) then
         local char = utils.textBox.currChar
 
+        local upperCaseXOR = 0
+
         if utils.keys.rshift or utils.keys.lshift then
+          upperCaseXOR = 1
+        end
+
+        if utils.keys.capslock then
+          upperCaseXOR = upperCaseXOR + 1
+        end
+
+        if upperCaseXOR %2 == 1 then
           char = char:upper()
         end
 
