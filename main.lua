@@ -141,5 +141,4 @@ function love.draw()
 
     display.escMenu()
   end
-  love.graphics.print(utils.textBox.focusedChar .. " " .. #utils.textBox.currText)
 end
