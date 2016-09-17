@@ -165,7 +165,7 @@ optionData.escMenu = {
 
   funcs = {
     close = function() end,
-    save = function() map.writeTable(map.transform(mapGrid), "maps/testMap.map") end,
+    save = function() --[[map.writeTable(map.transform(mapGrid), "maps/testMap.map")]] utils.textBox.selected = "saveMap" end,
 
     backToMenu = function()
       selected = "menu"
