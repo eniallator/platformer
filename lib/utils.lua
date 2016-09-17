@@ -71,7 +71,7 @@ utils.textBox.display = function(title, currentText, x, y, w, h)
   timer = (timer + 1) %cursorDelay
 
   if timer < cursorDelay /2 then
-    love.graphics.rectangle("fill", textArea.x +5 +font:getWidth(displayText:sub(1,utils.textBox.focusedChar -1)), textArea.y +5, 2, font:getHeight(title))
+    love.graphics.rectangle("fill", textArea.x +5 +font:getWidth(displayText:sub(1,utils.textBox.focusedChar -utils.textBox.showedText)), textArea.y +5, 2, font:getHeight(title))
   end
 
   love.graphics.setColor(255, 255, 255)
