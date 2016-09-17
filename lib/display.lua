@@ -74,7 +74,7 @@ end
 local function createBackgroundTable(backgroundTexture)
   local tbl = {}
   local backgroundW = backgroundTexture:getWidth()
-  local scrollSpeed = cameraTranslation*(2/3)
+  local scrollSpeed = cameraTranslation*(2/3) +1
   local backgroundOffset = math.floor(scrollSpeed /backgroundW /2 +1)
 
   while #tbl *backgroundW - (scrollSpeed % backgroundW) < screenDim.x do
@@ -86,17 +86,11 @@ end
 
 display.background = function()
   local backgroundTexture = texture.other.background
+  local bgTable = createBackgroundTable(backgroundTexture)
 
-  if cameraTranslation ~= 0 then
-    local bgTable = createBackgroundTable(backgroundTexture)
-
-    for i=1, #bgTable do
-      local currBg = bgTable[i]
-      love.graphics.draw(currBg[1], currBg[2], currBg[3], currBg[4], currBg[5], currBg[6])
-    end
-
-  else
-    love.graphics.draw(backgroundTexture, 0, 0, 0, screenDim.x /backgroundTexture:getWidth(), screenDim.y /backgroundTexture:getHeight())
+  for i=1, #bgTable do
+    local currBg = bgTable[i]
+    love.graphics.draw(currBg[1], currBg[2], currBg[3], currBg[4], currBg[5], currBg[6])
   end
 end
 
