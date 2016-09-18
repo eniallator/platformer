@@ -38,15 +38,16 @@ local function loadMapOptions()
 
   if mapPages[currPlayPage +1] then
     returnTbl.nextPage = {name = "Next Page", x = screenDim.x - screenDim.x /5, y = screenDim.y /2 - (mapIcon.h + boxGap) *3 - boxGap - screenDim.y /20, w = screenDim.x /7, h = currY + boxGap *2 + mapIcon.h *3}
-    -- yOffset = screenDim.y /20
   end
 
   if mapPages[currPlayPage -1] then
     returnTbl.prevPage = {name = "Prev Page", x = screenDim.x /5 - screenDim.x /7, y = screenDim.y /2 - (mapIcon.h + boxGap) *3 - boxGap - screenDim.y /20, w = screenDim.x /7, h = currY + boxGap *2 + mapIcon.h *3}
   end
 
-  for k,v in pairs(mapPages[currPlayPage]) do
-    returnTbl[k] = v
+  if mapPages[1] then
+    for k,v in pairs(mapPages[currPlayPage]) do
+      returnTbl[k] = v
+    end
   end
 
   loadPlayFuncs(mapPages[currPlayPage])
@@ -61,13 +62,15 @@ function loadPlayFuncs(page)
     back = function() currMenu = "main" currPlayPage = 1 end
   }
 
-  for k,v in pairs(page) do
-    optionData.play.funcs[k] = function(box)
+  if page then
+    for k,v in pairs(page) do
+      optionData.play.funcs[k] = function(box)
 
-      formattedMap = map.readTable("maps/" .. box.name .. ".map")
-      map.makeGrid(256, screenDim.y/blockSize)
-      selected = "game"
-      currMenu = "main"
+        formattedMap = map.readTable("maps/" .. box.name .. ".map")
+        map.makeGrid(256, screenDim.y/blockSize)
+        selected = "game"
+        currMenu = "main"
+      end
     end
   end
 end
@@ -165,7 +168,7 @@ optionData.escMenu = {
 
   funcs = {
     close = function() end,
-    save = function() --[[map.writeTable(map.transform(mapGrid), "maps/testMap.map")]] utils.textBox.selected = "saveMap" end,
+    save = function() utils.textBox.selected = "saveMap" end,
 
     backToMenu = function()
       selected = "menu"

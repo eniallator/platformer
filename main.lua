@@ -4,6 +4,7 @@ function love.load()
   screenDim = {}
   screenDim.x, screenDim.y = love.graphics.getDimensions()
 
+  defaultMaps = require "lib/defaultMaps"
   optionData = require "lib/optionData"
   collision = require "lib/collision"
   display = require "lib/display"
@@ -27,8 +28,6 @@ function love.load()
     {name = "grass", solid = true},
     {name = "sand", solid = true}
   }
-  formattedMap = {x1y19 = {block = "stone", w = 16, h = 2}, x2y17 = {block = "sand", w = 14, h = 2}, x3y15 = {block = "dirt", w = 12, h = 2}, x4y13 = {block = "grass", w = 10, h = 2}}
-  map.makeGrid(256, screenDim.y/blockSize)
   cameraTranslation = 0
   selected = "menu"
   currMenu = "main"
@@ -38,7 +37,12 @@ function love.load()
     love.filesystem.createDirectory("maps")
   end
 
-  map.writeTable(formattedMap, "maps/devMap" .. mapExtension)
+  for name,mapData in pairs(defaultMaps) do
+    if not love.filesystem.exists("maps/" .. name .. mapExtension) then
+      map.writeTable(mapData, "maps/" .. name .. mapExtension)
+    end
+  end
+
   love.graphics.setFont(love.graphics.newFont(screenDim.x/40))
 end
 
