@@ -53,6 +53,10 @@ function love.keypressed(key)
   else
     utils.textBox.currChar = key
     utils.keys[key] = true
+
+    if key == "escape" then
+      escPressed = true
+    end
   end
 end
 

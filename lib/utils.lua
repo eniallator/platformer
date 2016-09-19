@@ -132,6 +132,9 @@ utils.textBox.getInput = function()
 
         utils.textBox.type[utils.textBox.selected].func(textInput)
         resetTextBox()
+
+      elseif update.checkEscButton() then
+        resetTextBox()
       end
     end
   end

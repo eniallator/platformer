@@ -115,8 +115,8 @@ update.mapCreatorPos = function()
 end
 
 update.escMenu = function()
-  if love.keyboard.isDown("escape") then
-    escMenuOn = true
+  if update.checkEscButton() then
+    escMenuOn = not escMenuOn
   end
 
   if escMenuOn then
@@ -133,6 +133,15 @@ end
 update.resetPlayer = function()
   player.pos = {x = 1, y = 1}
   player.vel = {x = 0, y = 0}
+end
+
+update.checkEscButton = function()
+  if escPressed then
+    escPressed = false
+    return true
+  end
+
+  return false
 end
 
 return update
