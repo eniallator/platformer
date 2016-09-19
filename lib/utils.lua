@@ -1,5 +1,4 @@
 local timer = 0
-local acceptedKeys = "abcdefghijklmnopqrstuvwxyz1234567890"
 local lastChar = nil
 local utils = {}
 
@@ -14,7 +13,7 @@ utils.textBox = {
   currCharDelay = 40,
   type = {
     saveMap = {
-      title ="Map Name:", x = screenDim.x /2 -150, y = screenDim.y /2 - 35, w = 300, h = 70,
+      title ="Map Name:", acceptedKeys = "^%w$", x = screenDim.x /2 -150, y = screenDim.y /2 - 35, w = 300, h = 70,
       func = function (mapName) map.writeTable(map.transform(mapGrid), "maps/" .. mapName .. ".map") end
     }
   }
@@ -88,7 +87,7 @@ utils.textBox.getInput = function()
         utils.textBox.currCharDelay = 2
       end
 
-      if acceptedKeys:find(utils.textBox.currChar) then
+      if utils.textBox.currChar:find(utils.textBox.type[utils.textBox.selected].acceptedKeys) then
         local char = utils.textBox.currChar
 
         local upperCaseXOR = 0
