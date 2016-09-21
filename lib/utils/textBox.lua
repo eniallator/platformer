@@ -84,29 +84,29 @@ local function checkText(selectedTextBox)
 end
 
 textBox.getInput = function(selectedTextBox)
-  if textBox.currChar ~= lastChar then
+  if keys.currKey ~= lastChar then
     textBox.currCharDelay = defaultCharDelay
   end
 
   if textBox.stopped then
     checkText(selectedTextBox)
 
-  elseif textBox.currChar then
-    if textBox.currChar ~= lastChar or textBox.currCharDelay <= 0 then
+  elseif keys.currKey then
+    if keys.currKey ~= lastChar or textBox.currCharDelay <= 0 then
       if textBox.currCharDelay <= 0 then
         textBox.currCharDelay = 2
       end
 
-      local char = textBox.currChar
+      local char = keys.currKey
 
-      if textBox.currChar:find(selectedTextBox.acceptedKeys) then
+      if keys.currKey:find(selectedTextBox.acceptedKeys) then
         local upperCaseXOR = 0
 
-        if keys.rshift or keys.lshift then
+        if keys.state.rshift or keys.state.lshift then
           upperCaseXOR = 1
         end
 
-        if keys.capslock then
+        if keys.state.capslock then
           upperCaseXOR = upperCaseXOR + 1
         end
 
@@ -141,11 +141,11 @@ textBox.getInput = function(selectedTextBox)
     end
   end
 
-  if textBox.currChar then
+  if keys.currKey then
     textBox.currCharDelay = textBox.currCharDelay -1
   end
 
-  lastChar = textBox.currChar
+  lastChar = keys.currKey
 end
 
 return textBox

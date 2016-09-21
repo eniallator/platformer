@@ -51,27 +51,11 @@ function love.load()
 end
 
 function love.keypressed(key)
-  if key == "capslock" then
-    keys.capslock = not keys.capslock
-
-  else
-    textBox.currChar = key
-    keys[key] = true
-
-    if key == "escape" and selected ~= "menu" then
-      escPressed = true
-    end
-  end
+  keys.updateState(key, true)
 end
 
 function love.keyreleased(key)
-  if key ~= "capslock" then
-    if textBox.currChar == key then
-      textBox.currChar = nil
-    end
-
-    keys[key] = false
-  end
+  keys.updateState(key, false)
 end
 
 function love.update()
