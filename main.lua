@@ -6,13 +6,17 @@ function love.load()
 
   defaultMaps = require "lib/defaultMaps"
   optionData = require "lib/optionData"
+  textBox = require "lib/utils/textBox"
   collision = require "lib/collision"
+  utilsData = require "lib/utilsData"
+  alert = require "lib/utils/alert"
   display = require "lib/display"
+  keys = require "lib/utils/keys"
   update = require "lib/update"
-  utils = require "lib/utils"
   map = require "lib/map"
 
   display.loadTextures()
+  textBox.reset()
 
   player = {pos = {x = 1, y = 1}, vel = {x = 0, y = 0}, w = 16, h = 32}
   moveSpeed = 0.3
@@ -48,13 +52,13 @@ end
 
 function love.keypressed(key)
   if key == "capslock" then
-    utils.keys.capslock = not utils.keys.capslock
+    keys.capslock = not keys.capslock
 
   else
-    utils.textBox.currChar = key
-    utils.keys[key] = true
+    textBox.currChar = key
+    keys[key] = true
 
-    if key == "escape" then
+    if key == "escape" and selected ~= "menu" then
       escPressed = true
     end
   end
@@ -62,21 +66,25 @@ end
 
 function love.keyreleased(key)
   if key ~= "capslock" then
-    if utils.textBox.currChar == key then
-      utils.textBox.currChar = nil
+    if textBox.currChar == key then
+      textBox.currChar = nil
     end
 
-    utils.keys[key] = false
+    keys[key] = false
   end
 end
 
 function love.update()
-  if utils.textBox.selected then
-    utils.textBox.getInput()
+  if utilsData.textBox.selected then
+    textBox.getInput(utilsData.textBox[utilsData.textBox.selected])
+
+    if utilsData.alert.selected then
+      local currAlert = utilsData.alert[utilsData.alert.selected]
+      alert.getInput(currAlert.buttons, currAlert.dimensions)
+    end
 
   elseif selected == "game" then
     if not escMenuOn then
-
       update.velocity()
       update.position()
       update.camera()
@@ -117,15 +125,20 @@ end
 function love.draw()
   love.graphics.translate(cameraTranslation, 0)
 
-  if utils.textBox.selected then
+  if utilsData.textBox.selected then
     display.background()
 
-    if utils.textBox.selected == "saveMap" then
+    if utilsData.textBox.selected == "saveMap" then
       display.map()
     end
 
-    local currTextBox = utils.textBox.type[utils.textBox.selected]
-    utils.textBox.display(currTextBox.title, utils.textBox.currText, currTextBox.x, currTextBox.y, currTextBox.w, currTextBox.h)
+    local currTextBox = utilsData.textBox[utilsData.textBox.selected]
+    textBox.display(currTextBox.title, textBox.currText, currTextBox.dimensions)
+
+    if utilsData.alert.selected then
+      local currAlert = utilsData.alert[utilsData.alert.selected]
+      alert.display(currAlert.message, currAlert.buttons, currAlert.dimensions)
+    end
 
   elseif selected == "game" then
     love.graphics.setColor(255, 255, 255)

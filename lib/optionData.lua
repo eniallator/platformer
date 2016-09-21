@@ -168,7 +168,7 @@ optionData.escMenu = {
 
   funcs = {
     close = function() end,
-    save = function() utils.textBox.selected = "saveMap" end,
+    save = function() utilsData.textBox.selected = "saveMap" end,
 
     backToMenu = function()
       selected = "menu"

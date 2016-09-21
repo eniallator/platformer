@@ -54,7 +54,6 @@ collision.clickBox = function(displayedTbl)
 
     return false
   end
-
 end
 
 return collision
