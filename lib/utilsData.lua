@@ -5,7 +5,7 @@ local utilsData = {
 }
 
 local function saveMap(mapName)
-  map.writeTable(map.transform(mapGrid), "maps/" .. mapName .. ".map")
+  map.writeTable(map.transform(mapGrid), "maps/" .. mapName .. mapExtension)
 end
 
 utilsData.textBox.saveMap = {
@@ -13,7 +13,7 @@ utilsData.textBox.saveMap = {
   dimensions = {x = screenDim.x /2 -150, y = screenDim.y /2 - 35, w = 300, h = 70},
 
   func = function (mapName)
-    if love.filesystem.exists("maps/" .. mapName .. ".map") then
+    if love.filesystem.exists("maps/" .. mapName .. mapExtension) then
       utilsData.alert.selected = "fileExists"
       mapFileName = mapName
       return true
@@ -42,7 +42,7 @@ utilsData.alert.fileExists = {
     {
       name = "No",
       func = function()
-        
+
         textBox.stopped = false
         utilsData.alert.selected = nil
       end

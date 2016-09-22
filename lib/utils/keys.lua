@@ -16,13 +16,14 @@ keys.updateState = function(key, newMode)
       end
 
       keys.currKey = key
-      keys.state[key] = newMode
 
     else
       if keys.currKey == key then
         keys.currKey = nil
       end
     end
+
+    keys.state[key] = newMode
   end
 end
 

@@ -6,14 +6,14 @@ function love.load()
 
   defaultMaps = require "lib/defaultMaps"
   optionData = require "lib/optionData"
-  textBox = require "lib/utils/textBox"
   collision = require "lib/collision"
   utilsData = require "lib/utilsData"
-  alert = require "lib/utils/alert"
   display = require "lib/display"
-  keys = require "lib/utils/keys"
   update = require "lib/update"
   map = require "lib/map"
+  textBox = require "lib/utils/textBox"
+  alert = require "lib/utils/alert"
+  keys = require "lib/utils/keys"
 
   display.loadTextures()
   textBox.reset()
