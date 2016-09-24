@@ -61,6 +61,7 @@ function love.keyreleased(key)
 end
 
 function love.update()
+  love.mouse.setCursor()
   mouse.updateState()
 
   if utilsData.textBox.selected then
