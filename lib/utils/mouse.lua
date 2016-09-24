@@ -7,16 +7,13 @@ local function updateMouseState(mouseButton)
   mouseButton.clicked = false
 
   if love.mouse.isDown(mouseButton.id) then
-    mouseButton.held = true
-
-    if not mouseButton.stillDown then
+    if not mouseButton.held then
       mouseButton.clicked = true
     end
 
-    mouseButton.stillDown = true
+    mouseButton.held = true
   else
     mouseButton.held = false
-    mouseButton.stillDown = false
   end
 end
 
