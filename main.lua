@@ -95,6 +95,8 @@ function love.update()
       optionData[currMenu].funcs[rightClickedBox](menuDisplayed[rightClickedBox], true)
     end
 
+    collision.updateMouseCursor(menuDisplayed)
+
   elseif selected == "createMap" then
     update.mapCreatorPos()
     update.mapCreatorBlockMenu()

@@ -53,4 +53,14 @@ collision.rightClickBox = function(displayedTbl)
   end
 end
 
+local handCursor = love.mouse.getSystemCursor("hand")
+
+collision.updateMouseCursor = function(displayedTbl)
+  love.mouse.setCursor()
+
+  if detectCollision(displayedTbl) then
+    love.mouse.setCursor(handCursor)
+  end
+end
+
 return collision
