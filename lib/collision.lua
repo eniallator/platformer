@@ -1,4 +1,3 @@
-local stillDown
 local collision = {}
 
 collision.getBlock = function(block)
@@ -29,30 +28,28 @@ collision.detectPlayer = function(x,y)
   return false
 end
 
-collision.clickBox = function(displayedTbl)
-  local clicked = false
+local function detectCollision(tbl)
+  local mouseCoords = {love.mouse.getPosition()}
 
-  if love.mouse.isDown(1) then
-    if not stillDown then
-      clicked = true
+  for name,box in pairs(tbl) do
+    if mouseCoords[1] >= box.x and mouseCoords[1] <= box.x + box.w and mouseCoords[2] >= box.y and mouseCoords[2] <= box.y + box.h then
+
+      return name
     end
-
-    stillDown = true
-  else
-    stillDown = false
   end
 
-  if clicked then
-    local mouseCoords = {love.mouse.getPosition()}
+  return false
+end
 
-    for name,box in pairs(displayedTbl) do
-      if mouseCoords[1] >= box.x and mouseCoords[1] <= box.x + box.w and mouseCoords[2] >= box.y and mouseCoords[2] <= box.y + box.h then
+collision.clickBox = function(displayedTbl)
+  if mouse.left.clicked then
+    return detectCollision(displayedTbl)
+  end
+end
 
-        return name
-      end
-    end
-
-    return false
+collision.rightClickBox = function(displayedTbl)
+  if mouse.right.clicked then
+    return detectCollision(displayedTbl)
   end
 end
 

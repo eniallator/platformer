@@ -11,8 +11,10 @@ function love.load()
   display = require "lib/display"
   update = require "lib/update"
   map = require "lib/map"
+  dropMenu = require "lib/utils/dropMenu"
   textBox = require "lib/utils/textBox"
   alert = require "lib/utils/alert"
+  mouse = require "lib/utils/mouse"
   keys = require "lib/utils/keys"
 
   display.loadTextures()
@@ -59,6 +61,8 @@ function love.keyreleased(key)
 end
 
 function love.update()
+  mouse.updateState()
+
   if utilsData.textBox.selected then
     textBox.getInput(utilsData.textBox[utilsData.textBox.selected])
 
@@ -66,6 +70,9 @@ function love.update()
       local currAlert = utilsData.alert[utilsData.alert.selected]
       alert.getInput(currAlert.buttons, currAlert.dimensions)
     end
+
+  elseif utilsData.dropMenu.selected then
+    dropMenu.getInput(utilsData.dropMenu[utilsData.dropMenu.selected], utilsData.dropMenu.mapName)
 
   elseif selected == "game" then
     if not escMenuOn then
@@ -79,9 +86,13 @@ function love.update()
   elseif selected == "menu" then
     local menuDisplayed = optionData[currMenu].display()
     local clickedBox = collision.clickBox(menuDisplayed)
+    local rightClickedBox = collision.rightClickBox(menuDisplayed)
 
     if clickedBox then
       optionData[currMenu].funcs[clickedBox](menuDisplayed[clickedBox])
+
+    elseif rightClickedBox and currMenu == "play" then
+      optionData[currMenu].funcs[rightClickedBox](menuDisplayed[rightClickedBox], true)
     end
 
   elseif selected == "createMap" then
@@ -124,6 +135,20 @@ function love.draw()
       alert.display(currAlert.message, currAlert.buttons, currAlert.dimensions)
     end
 
+  elseif utilsData.dropMenu.selected then
+    if not utilsData.dropMenu.coords then
+      utilsData.dropMenu.coords = {}
+      utilsData.dropMenu.coords.x, utilsData.dropMenu.coords.y = love.mouse.getPosition()
+    end
+
+    display.background()
+
+    for _, box in pairs(optionData[currMenu].display()) do
+      display.box(box)
+    end
+
+    dropMenu.display(utilsData.dropMenu[utilsData.dropMenu.selected], utilsData.dropMenu.coords)
+
   elseif selected == "game" then
     love.graphics.setColor(255, 255, 255)
     display.background()
@@ -133,8 +158,8 @@ function love.draw()
 
   elseif selected == "menu" then
     display.background()
-    for _, box in pairs(optionData[currMenu].display()) do
 
+    for _, box in pairs(optionData[currMenu].display()) do
       display.box(box)
     end
 

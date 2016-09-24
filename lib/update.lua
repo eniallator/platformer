@@ -83,14 +83,14 @@ update.mapCreatorinteract = function()
   mouseCoords[1] = mouseCoords[1] - cameraTranslation
 
   if mouseCoords[1] > 0 and mouseCoords[1] + cameraTranslation < screenDim.x and mouseCoords[2] > 0 and mouseCoords[2] < screenDim.y then
-    if love.mouse.isDown(1) and not firstLoad then
+    if mouse.left.held and not firstLoad then
       map.placeBlock(mouseCoords)
 
-    elseif not love.mouse.isDown(1) then
+    elseif not mouse.left.held then
       firstLoad = false
     end
 
-    if love.mouse.isDown(2) then
+    if mouse.right.held then
       map.destroyBlock(mouseCoords)
     end
   end

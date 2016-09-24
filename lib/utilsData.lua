@@ -1,7 +1,8 @@
 local mapFileName = nil
 local utilsData = {
   textBox = {selected = nil},
-  alert = {selected = nil}
+  alert = {selected = nil},
+  dropMenu = {selected = nil, mapName = nil, coords = nil}
 }
 
 local function saveMap(mapName)
@@ -47,6 +48,21 @@ utilsData.alert.fileExists = {
         utilsData.alert.selected = nil
       end
     }
+  }
+}
+
+utilsData.dropMenu.playMap = {
+  {
+    name = "Delete",
+    func = function(mapName)
+      love.filesystem.remove("maps/" .. mapName .. mapExtension)
+    end
+  },
+  {
+    name = "Rename",
+    func = function(mapName)
+      -- Rename code
+    end
   }
 }
 

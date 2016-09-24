@@ -57,19 +57,38 @@ end
 
 function loadPlayFuncs(page)
   optionData.play.funcs = {
-    nextPage = function() currPlayPage = currPlayPage + 1 end,
-    prevPage = function() currPlayPage = currPlayPage - 1 end,
-    back = function() currMenu = "main" currPlayPage = 1 end
+    nextPage = function(_, rmb)
+      if not rmb then
+        currPlayPage = currPlayPage + 1
+      end
+    end,
+
+    prevPage = function(_, rmb)
+      if not rmb then
+        currPlayPage = currPlayPage - 1
+      end
+    end,
+
+    back = function(_, rmb)
+      if not rmb then
+        currMenu = "main" currPlayPage = 1
+      end
+    end
   }
 
   if page then
     for k,v in pairs(page) do
-      optionData.play.funcs[k] = function(box)
+      optionData.play.funcs[k] = function(box, rmb)
+        if not rmb then
+          formattedMap = map.readTable("maps/" .. box.name .. ".map")
+          map.makeGrid(256, screenDim.y/blockSize)
+          selected = "game"
+          currMenu = "main"
 
-        formattedMap = map.readTable("maps/" .. box.name .. ".map")
-        map.makeGrid(256, screenDim.y/blockSize)
-        selected = "game"
-        currMenu = "main"
+        else
+          utilsData.dropMenu.selected = "playMap"
+          utilsData.dropMenu.mapName = box.name
+        end
       end
     end
   end
