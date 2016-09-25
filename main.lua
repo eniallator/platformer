@@ -10,6 +10,7 @@ function love.load()
   utilsData = require "lib/utilsData"
   display = require "lib/display"
   update = require "lib/update"
+  entity = require "lib/entity"
   map = require "lib/map"
   dropMenu = require "lib/utils/dropMenu"
   textBox = require "lib/utils/textBox"
@@ -20,12 +21,6 @@ function love.load()
   display.loadTextures()
   textBox.reset()
 
-  player = {pos = {x = 1, y = 1}, vel = {x = 0, y = 0}, w = 16, h = 32}
-  moveSpeed = 0.3
-  jumpHeight = -5
-  gravity = 3
-  drag = 0.96
-  friction = 0.93
   mapCreatorScrollSpeed = 5
   blockSize = screenDim.y/20
   blocks = {
@@ -77,8 +72,7 @@ function love.update()
 
   elseif selected == "game" then
     if not escMenuOn then
-      update.velocity()
-      update.position()
+      entity.player.update()
       update.camera()
     end
 
@@ -156,7 +150,7 @@ function love.draw()
     love.graphics.setColor(255, 255, 255)
     display.background()
     display.map()
-    display.player()
+    entity.player.display()
     display.escMenu()
 
   elseif selected == "menu" then

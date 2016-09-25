@@ -84,6 +84,7 @@ function loadPlayFuncs(page)
           map.makeGrid(256, screenDim.y/blockSize)
           selected = "game"
           currMenu = "main"
+          entity.player.reset()
 
         else
           utilsData.dropMenu.selected = "playMap"
@@ -192,7 +193,6 @@ optionData.escMenu = {
     backToMenu = function()
       selected = "menu"
       currMenu = "main"
-      update.resetPlayer()
       cameraTranslation = 0
     end,
 
@@ -201,12 +201,12 @@ optionData.escMenu = {
         selected = "createMap"
 
       else
-        if player.pos.x +player.w /2 > screenDim.x /2  then
-          if player.pos.x +player.w /2 > 255 *blockSize -screenDim.x /2 then
+        if entity.player.pos.x +entity.player.dim.w /2 > screenDim.x /2  then
+          if entity.player.pos.x +entity.player.dim.w /2 > 255 *blockSize -screenDim.x /2 then
             cameraTranslation = -(255*blockSize - screenDim.x)
 
           else
-            cameraTranslation = -(player.pos.x -screenDim.x/2)
+            cameraTranslation = -(entity.player.pos.x -screenDim.x/2)
           end
 
         else
