@@ -54,6 +54,7 @@ dropMenu.display = function(buttons, coords)
     display.box(box)
   end
 
+  collision.updateMouseCursor(buttonTable)
   love.graphics.setColor(255, 255, 255)
 end
 

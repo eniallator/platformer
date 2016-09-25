@@ -4,22 +4,8 @@ local function createButtonTable(buttons, dim, display)
   local innerArea = {x = dim.x +5, y = dim.y +5, w = dim.w -10, h = dim.h -10}
   local tbl = {}
 
-  if not display then
-    tbl.func = {}
-    tbl.box = {}
-  end
-
   for i=0, #buttons-1 do
-    local box = {name = buttons[i +1].name, x = innerArea.x +i *((innerArea.w +5) /#buttons), y = innerArea.y +dim.h /2, w = innerArea.w /#buttons, h = innerArea.h /2 -5}
-    local func = buttons[i +1].func
-
-    if not display then
-      tbl.box[buttons[i +1]] = box
-      tbl.func[buttons[i +1]] = func
-
-    else
-      table.insert(tbl,{box = box, func = func})
-    end
+    tbl[buttons[i +1].name] = {func = buttons[i +1].func, name = buttons[i +1].name, x = innerArea.x +i *((innerArea.w +5) /#buttons), y = innerArea.y +dim.h /2, w = innerArea.w /#buttons, h = innerArea.h /2 -5}
   end
 
   return tbl
@@ -33,19 +19,19 @@ alert.display = function(message, buttons, dim)
   love.graphics.setColor(255, 255, 255)
   love.graphics.print(message, dim.x +5, dim.y +5)
 
-  local buttonDims = createButtonTable(buttons, dim, true)
+  local buttonsTable = createButtonTable(buttons, dim)
 
-  for i=1, #buttonDims do
-    display.box(buttonDims[i].box)
+  for _,box in pairs(buttonsTable) do
+    display.box(box)
   end
 end
 
 alert.getInput = function(buttons, dim)
   local buttonTable = createButtonTable(buttons, dim)
-  local buttonClicked = collision.clickBox(buttonTable.box)
+  local buttonClicked = collision.clickBox(buttonTable)
 
   if buttonClicked then
-    buttonTable.func[buttonClicked]()
+    buttonTable[buttonClicked].func()
   end
 end
 

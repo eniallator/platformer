@@ -57,12 +57,6 @@ utilsData.dropMenu.playMap = {
     func = function(mapName)
       love.filesystem.remove("maps/" .. mapName .. mapExtension)
     end
-  },
-  {
-    name = "Rename",
-    func = function(mapName)
-      -- Rename code
-    end
   }
 }
 
