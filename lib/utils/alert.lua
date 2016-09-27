@@ -19,11 +19,13 @@ alert.display = function(message, buttons, dim)
   love.graphics.setColor(255, 255, 255)
   love.graphics.print(message, dim.x +5, dim.y +5)
 
-  local buttonsTable = createButtonTable(buttons, dim)
+  local buttonTable = createButtonTable(buttons, dim)
 
-  for _,box in pairs(buttonsTable) do
+  for _,box in pairs(buttonTable) do
     display.box(box)
   end
+
+  collision.updateMouseCursor(buttonTable)
 end
 
 alert.getInput = function(buttons, dim)

@@ -171,6 +171,8 @@ function love.draw()
         local currBlock = blockMenuTable[i]
         love.graphics.draw(currBlock.texture, currBlock.x -cameraTranslation, currBlock.y, 0, blockSize /currBlock.texture:getWidth(), blockSize /currBlock.texture:getHeight())
       end
+
+      collision.updateMouseCursor(blockMenuTable)
     end
 
     display.escMenu()
