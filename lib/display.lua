@@ -10,6 +10,7 @@ display.loadTextures = function()
       dirt = love.graphics.newImage("assets/textures/blocks/dirt.png"),
       grass = love.graphics.newImage("assets/textures/blocks/grass.png"),
       sand = love.graphics.newImage("assets/textures/blocks/sand.png"),
+      lava = love.graphics.newImage("assets/textures/blocks/lava.png")
     },
 
     other = {
@@ -22,10 +23,11 @@ display.map = function()
   for i=1,#mapGrid do
     for j=1,screenDim.x/blockSize + blockSize*2 do
       local cameraOffset = math.ceil(-cameraTranslation /blockSize -1)
+      local currTable = mapGrid[i][j +cameraOffset]
 
-      if type(mapGrid[i][j +cameraOffset]) == "table" then
-        local currImage = texture.block[mapGrid[i][j +cameraOffset].block]
-        love.graphics.draw(currImage, ((j +cameraOffset) -1) *blockSize, (i -1) *blockSize, 0, blockSize /currImage:getWidth(), blockSize /currImage:getHeight())
+      if type(currTable) == "table" then
+        local currImage = texture.block[currTable.block]
+        love.graphics.draw(currImage, ((j +cameraOffset) -1) *blockSize, (i -1) *blockSize, 0, screenDim.y/200, screenDim.y /200)
       end
     end
   end

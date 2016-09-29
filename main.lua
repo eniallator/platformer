@@ -31,7 +31,8 @@ function love.load()
     {name = "stone", solid = true},
     {name = "dirt", solid = true},
     {name = "grass", solid = true},
-    {name = "sand", solid = true}
+    {name = "sand", solid = true},
+    {name = "lava", dim = {w = 20, h = 8}, offSet = {x = 0, y = 2}, bigTexture = true}
   }
   cameraTranslation = 0
   selected = "menu"
@@ -157,8 +158,8 @@ function love.draw()
   elseif selected == "game" then
     love.graphics.setColor(255, 255, 255)
     display.background()
-    display.map()
     entity.player.display()
+    display.map()
     display.escMenu()
 
   elseif selected == "menu" then

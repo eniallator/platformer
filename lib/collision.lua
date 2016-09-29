@@ -16,9 +16,20 @@ collision.detectEntity = function(x, y, currEntity)
       if type(mapGrid[i][j]) == "table" then
 
         local currBlock = blocks[collision.getBlock(mapGrid[i][j].block)]
+        local xDim, yDim = blockSize, blockSize
+        local xOff, yOff = 0, 0
 
-        if currBlock.solid and (j -1) *blockSize < x + currEntity.dim.w and x <= j *blockSize and (i -1) *blockSize < y + currEntity.dim.h and y <= i *blockSize then
+        if currBlock.dim then
+          xDim = currBlock.dim.w *(screenDim.y/200)
+          yDim = currBlock.dim.h *(screenDim.y/200)
+        end
 
+        if currBlock.offSet then
+          xOff = currBlock.offSet.x *(screenDim.y/200)
+          yOff = currBlock.offSet.y *(screenDim.y/200)
+        end
+
+        if currBlock.solid and (j -1) *blockSize +xOff < x +currEntity.dim.w and x <= (j -1) *blockSize +xDim +xOff and (i -1) *blockSize +yOff < y +currEntity.dim.h and y <= (i -1) *blockSize +yDim +yOff then
           return true
         end
       end
