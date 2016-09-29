@@ -66,7 +66,7 @@ local function getInput(currEntity)
   end
 end
 
-entity.player = {pos = {x = 1, y = 1}, vel = {x = 0, y = 0}, dim = {w = 16, h = 32}, xCounter = 0}
+entity.player = {pos = {x = 1, y = 1}, vel = {x = 0, y = 0}, dim = {w = screenDim.y /37.5, h = screenDim.y /18.75}, xCounter = 0}
 
 entity.player.texture = {
   still = love.graphics.newImage("assets/textures/player/player.still.png"),

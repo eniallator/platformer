@@ -1,8 +1,13 @@
 love.graphics.setDefaultFilter("nearest", "nearest")
 
+local function updateInternalWindowSize()
+  screenDim.x, screenDim.y = love.graphics.getDimensions()
+  blockSize = screenDim.y/20
+end
+
 function love.load()
   screenDim = {}
-  screenDim.x, screenDim.y = love.graphics.getDimensions()
+  updateInternalWindowSize()
 
   defaultMaps = require "lib/defaultMaps"
   optionData = require "lib/optionData"
@@ -22,7 +27,6 @@ function love.load()
   textBox.reset()
 
   mapCreatorScrollSpeed = 5
-  blockSize = screenDim.y/20
   blocks = {
     {name = "stone", solid = true},
     {name = "dirt", solid = true},
@@ -45,6 +49,10 @@ function love.load()
   end
 
   love.graphics.setFont(love.graphics.newFont(screenDim.x/40))
+end
+
+function love.resize(w, h)
+  updateInternalWindowSize()
 end
 
 function love.keypressed(key)

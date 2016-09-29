@@ -33,12 +33,12 @@ end
 
 local function createBackgroundTable(backgroundTexture)
   local tbl = {}
-  local backgroundW = backgroundTexture:getWidth()
+  local backgroundW = screenDim.x
   local scrollSpeed = cameraTranslation*(2/3) +1
   local backgroundOffset = math.floor(scrollSpeed /backgroundW /2 +1)
 
   while #tbl *backgroundW - (scrollSpeed % backgroundW) < screenDim.x do
-    table.insert(tbl,{backgroundTexture, 0 -scrollSpeed +(#tbl - backgroundOffset) *backgroundW, 0, 0, screenDim.x /backgroundW, screenDim.y /backgroundTexture:getHeight()})
+    table.insert(tbl,{backgroundTexture, 0 -scrollSpeed +(#tbl - backgroundOffset) *backgroundW, 0, 0, screenDim.x /backgroundTexture:getWidth(), screenDim.y /backgroundTexture:getHeight()})
   end
 
   return tbl
