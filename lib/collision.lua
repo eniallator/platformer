@@ -10,7 +10,7 @@ collision.getBlock = function(block)
   return false
 end
 
-collision.detectEntity = function(x, y, currEntity)
+collision.detectEntity = function(x, y, currEntity, attribute)
   for i=1,#mapGrid do
     for j=1,#mapGrid[i] do
       if type(mapGrid[i][j]) == "table" then
@@ -29,7 +29,7 @@ collision.detectEntity = function(x, y, currEntity)
           yOff = currBlock.offSet.y *(screenDim.y/200)
         end
 
-        if currBlock.solid and (j -1) *blockSize +xOff < x +currEntity.dim.w and x <= (j -1) *blockSize +xDim +xOff and (i -1) *blockSize +yOff < y +currEntity.dim.h and y <= (i -1) *blockSize +yDim +yOff then
+        if currBlock[attribute] and (j -1) *blockSize +xOff < x +currEntity.dim.w and x <= (j -1) *blockSize +xDim +xOff and (i -1) *blockSize +yOff < y +currEntity.dim.h and y <= (i -1) *blockSize +yDim +yOff then
           return true
         end
       end

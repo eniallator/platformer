@@ -32,7 +32,7 @@ function love.load()
     {name = "dirt", solid = true},
     {name = "grass", solid = true},
     {name = "sand", solid = true},
-    {name = "lava", dim = {w = 20, h = 8}, offSet = {x = 0, y = 2}, bigTexture = true}
+    {name = "lava", kill = true, dim = {w = 20, h = 8}, offSet = {x = 0, y = 2}, bigTexture = true}
   }
   cameraTranslation = 0
   selected = "menu"
@@ -53,6 +53,9 @@ function love.load()
 end
 
 function love.resize(w, h)
+  entity.player.pos.y = entity.player.pos.y *h /screenDim.y
+  entity.player.pos.x = entity.player.pos.x *(h /20 /(screenDim.y /20))
+
   updateInternalWindowSize()
 end
 

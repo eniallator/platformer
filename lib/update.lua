@@ -6,7 +6,7 @@ update.camera = function()
       cameraTranslation = -(255*blockSize - screenDim.x)
 
     else
-      cameraTranslation = cameraTranslation - entity.player.vel.x
+      cameraTranslation = -entity.player.pos.x +screenDim.x /2 -entity.player.dim.w /2
     end
 
   else

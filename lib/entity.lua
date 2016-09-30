@@ -15,14 +15,22 @@ local function applyVelForces(currEntity)
 end
 
 local function updatePos(currEntity)
-  if not collision.detectEntity(currEntity.pos.x + currEntity.vel.x, currEntity.pos.y, currEntity) and currEntity.pos.x + currEntity.vel.x > 0  and currEntity.pos.x + currEntity.vel.x + currEntity.dim.w <= 255*blockSize then
+  local xBoundLimit = currEntity.pos.x +currEntity.vel.x > 0 and currEntity.pos.x +currEntity.vel.x +currEntity.dim.w <= 255 *blockSize
+  local yBoundLimit = currEntity.pos.y + currEntity.dim.h + currEntity.vel.y < screenDim.y
+
+  if collision.detectEntity(currEntity.pos.x + currEntity.vel.x, currEntity.pos.y + currEntity.vel.y, currEntity, "kill") and xBoundLimit and yBoundLimit then
+    currEntity.reset()
+    return
+  end
+
+  if not collision.detectEntity(currEntity.pos.x + currEntity.vel.x, currEntity.pos.y, currEntity, "solid") and xBoundLimit then
     currEntity.pos.x = currEntity.pos.x + currEntity.vel.x
 
   else
     currEntity.vel.x = 0
   end
 
-  if currEntity.pos.y + currEntity.dim.h + currEntity.vel.y < screenDim.y and not collision.detectEntity(currEntity.pos.x, currEntity.pos.y + currEntity.vel.y, currEntity) then
+  if not collision.detectEntity(currEntity.pos.x, currEntity.pos.y + currEntity.vel.y, currEntity, "solid") and yBoundLimit then
     currEntity.pos.y = currEntity.pos.y + currEntity.vel.y
     currEntity.onGround = false
 
@@ -32,7 +40,6 @@ local function updatePos(currEntity)
     currEntity.onGround = true
   end
 end
-
 local function checkUp(currEntity)
   local upPressed = false
 
