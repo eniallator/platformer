@@ -10,13 +10,31 @@ display.loadTextures = function()
       dirt = love.graphics.newImage("assets/textures/blocks/dirt.png"),
       grass = love.graphics.newImage("assets/textures/blocks/grass.png"),
       sand = love.graphics.newImage("assets/textures/blocks/sand.png"),
-      lava = love.graphics.newImage("assets/textures/blocks/lava.png")
+      lava = {img = love.graphics.newImage("assets/textures/blocks/lava_animated.png"), frameHeight = 10, updateRate = 10, updateTime = 1, currFrame = 0},
+      spawnPoint = love.graphics.newImage("assets/textures/blocks/checkpoint.png"),
+      checkPoint = love.graphics.newImage("assets/textures/blocks/checkpoint.png")
     },
 
     other = {
       background = love.graphics.newImage("assets/textures/other/background.png")
     }
   }
+end
+
+display.animatedTile = function(tbl, x, y, sx, sy)
+  local imgDim = {tbl.img:getDimensions()}
+
+  if newTick then
+    tbl.updateTime = (tbl.updateTime +1) %tbl.updateRate
+    newTick = false
+  end
+
+  if tbl.updateTime == 0 then
+    tbl.currFrame = (tbl.currFrame +1) %(imgDim[2] /tbl.frameHeight)
+  end
+
+  local quad = love.graphics.newQuad(1, tbl.currFrame *tbl.frameHeight, imgDim[1], tbl.frameHeight, imgDim[1], imgDim[2])
+  love.graphics.draw(tbl.img, quad, x, y, 0, sx, sy)
 end
 
 display.map = function()
@@ -27,7 +45,13 @@ display.map = function()
 
       if type(currTable) == "table" then
         local currImage = texture.block[currTable.block]
-        love.graphics.draw(currImage, ((j +cameraOffset) -1) *blockSize, (i -1) *blockSize, 0, screenDim.y/200, screenDim.y /200)
+
+        if type(currImage) == "table" then
+          display.animatedTile(currImage, ((j +cameraOffset) -1) *blockSize, (i -1) *blockSize, screenDim.y/200, screenDim.y /200)
+
+        else
+          love.graphics.draw(currImage, ((j +cameraOffset) -1) *blockSize, (i -1) *blockSize, 0, screenDim.y/200, screenDim.y /200)
+        end
       end
     end
   end

@@ -19,7 +19,7 @@ local function updatePos(currEntity)
   local yBoundLimit = currEntity.pos.y + currEntity.dim.h + currEntity.vel.y < screenDim.y
 
   if collision.detectEntity(currEntity.pos.x + currEntity.vel.x, currEntity.pos.y + currEntity.vel.y, currEntity, "kill") and xBoundLimit and yBoundLimit then
-    currEntity.reset()
+    currEntity.kill()
     return
   end
 
@@ -40,6 +40,7 @@ local function updatePos(currEntity)
     currEntity.onGround = true
   end
 end
+
 local function checkUp(currEntity)
   local upPressed = false
 
@@ -73,7 +74,7 @@ local function getInput(currEntity)
   end
 end
 
-entity.player = {pos = {x = 1, y = 1}, vel = {x = 0, y = 0}, dim = {w = screenDim.y /37.5, h = screenDim.y /18.75}, xCounter = 0}
+entity.player = {pos = {x = 1, y = 1}, spawnPos = {x = 1, y = 1}, vel = {x = 0, y = 0}, dim = {w = screenDim.y /37.5, h = screenDim.y /18.75}, xCounter = 0}
 
 entity.player.texture = {
   still = love.graphics.newImage("assets/textures/player/player.still.png"),
@@ -89,10 +90,34 @@ entity.player.update = function()
   applyVelForces(entity.player)
   getInput(entity.player)
   updatePos(entity.player)
+
+  local player = entity.player
+  local checkPoint = {collision.detectEntity(player.pos.x, player.pos.y, player, "checkPoint")}
+
+  if checkPoint[1] then
+    player.spawnPos.x = checkPoint[1] *blockSize -blockSize /2 -player.dim.w /2
+    player.spawnPos.y = checkPoint[2] *blockSize +blockSize -player.dim.h
+  end
+end
+
+entity.player.kill = function()
+  entity.player.pos = {x = entity.player.spawnPos.x, y = entity.player.spawnPos.y}
 end
 
 entity.player.reset = function()
-  entity.player.pos, entity.player.vel = {x = 1, y = 1}, {x = 0, y = 0}
+  local spawnPoint = {1,1}
+
+  for i=1, #mapGrid do
+    for j=1,#mapGrid[i] do
+      if type(mapGrid[i][j]) == "table" and mapGrid[i][j].block == "spawnPoint" then
+        spawnPoint[1] = j *blockSize -blockSize /2 -entity.player.dim.w /2
+        spawnPoint[2] = i *blockSize +blockSize -entity.player.dim.h
+      end
+    end
+  end
+
+  entity.player.pos = {x = spawnPoint[1], y = spawnPoint[2]}
+  entity.player.vel = {x = 0, y = 0}
 end
 
 entity.player.display = function()

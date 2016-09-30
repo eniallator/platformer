@@ -3,6 +3,7 @@ love.graphics.setDefaultFilter("nearest", "nearest")
 local function updateInternalWindowSize()
   screenDim.x, screenDim.y = love.graphics.getDimensions()
   blockSize = screenDim.y/20
+  love.graphics.setFont(love.graphics.newFont(screenDim.x/40))
 end
 
 function love.load()
@@ -32,7 +33,9 @@ function love.load()
     {name = "dirt", solid = true},
     {name = "grass", solid = true},
     {name = "sand", solid = true},
-    {name = "lava", kill = true, dim = {w = 20, h = 8}, offSet = {x = 0, y = 2}, bigTexture = true}
+    {name = "lava", kill = true, dim = {w = 20, h = 8}, offSet = {x = 0, y = 2}, bigTexture = true},
+    {name = "spawnPoint", spawnPoint = true},
+    {name = "checkPoint", checkPoint = true}
   }
   cameraTranslation = 0
   selected = "menu"
@@ -48,8 +51,6 @@ function love.load()
       map.writeTable(mapData, "maps/" .. name .. mapExtension)
     end
   end
-
-  love.graphics.setFont(love.graphics.newFont(screenDim.x/40))
 end
 
 function love.resize(w, h)
@@ -76,7 +77,7 @@ function love.update()
 
     if utilsData.alert.selected then
       local currAlert = utilsData.alert[utilsData.alert.selected]
-      alert.getInput(currAlert.buttons, currAlert.dimensions)
+      alert.getInput(currAlert.buttons, currAlert.dimensions())
     end
 
   elseif utilsData.dropMenu.selected then
@@ -128,6 +129,7 @@ end
 
 function love.draw()
   love.graphics.translate(cameraTranslation, 0)
+  newTick = true
 
   if utilsData.textBox.selected then
     display.background()
@@ -137,11 +139,11 @@ function love.draw()
     end
 
     local currTextBox = utilsData.textBox[utilsData.textBox.selected]
-    textBox.display(currTextBox.title, textBox.currText, currTextBox.dimensions)
+    textBox.display(currTextBox.title, textBox.currText, currTextBox.dimensions())
 
     if utilsData.alert.selected then
       local currAlert = utilsData.alert[utilsData.alert.selected]
-      alert.display(currAlert.message, currAlert.buttons, currAlert.dimensions)
+      alert.display(currAlert.message, currAlert.buttons, currAlert.dimensions())
     end
 
   elseif utilsData.dropMenu.selected then
@@ -181,7 +183,13 @@ function love.draw()
 
       for i=1, #blockMenuTable do
         local currBlock = blockMenuTable[i]
-        love.graphics.draw(currBlock.texture, currBlock.x -cameraTranslation, currBlock.y, 0, blockSize /currBlock.texture:getWidth(), blockSize /currBlock.texture:getHeight())
+
+        if type(currBlock.texture) == "table" then
+          display.animatedTile(currBlock.texture, currBlock.x -cameraTranslation, currBlock.y, blockSize /currBlock.texture.img:getWidth(), blockSize /currBlock.texture.frameHeight)
+
+        else
+          love.graphics.draw(currBlock.texture, currBlock.x -cameraTranslation, currBlock.y, 0, blockSize /currBlock.texture:getWidth(), blockSize /currBlock.texture:getHeight())
+        end
       end
 
       collision.updateMouseCursor(blockMenuTable)

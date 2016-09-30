@@ -11,7 +11,7 @@ end
 
 utilsData.textBox.saveMap = {
   title ="Map Name:", acceptedKeys = "^%w$",
-  dimensions = {x = screenDim.x /2 -150, y = screenDim.y /2 - 35, w = 300, h = 70},
+  dimensions = function () local font = love.graphics.getFont() return {x = screenDim.x /2 -screenDim.x /(5 +1 /3), y = screenDim.y /2 - screenDim.y / (25 +5 /7), w = screenDim.x /(2 +2 /3), h = 25 +font:getHeight("Lp") *2} end,
 
   func = function (mapName)
     if love.filesystem.exists("maps/" .. mapName .. mapExtension) then
@@ -27,7 +27,7 @@ utilsData.textBox.saveMap = {
 
 utilsData.alert.fileExists = {
   message = "File exists! overwrite file?",
-  dimensions = {x = screenDim.x /2 -150, y = screenDim.y /2 -120, w = 300, h = 70},
+  dimensions = function() local font = love.graphics.getFont() return {x = screenDim.x /2 -screenDim.x /(5 +1 /3), y = screenDim.y /2 - screenDim.y / (25 +5 /7) - (35 +font:getHeight("Lp") *2), w = screenDim.x /(2 +2 /3), h = 25 +font:getHeight("Lp") *2} end,
   buttons = {
     {
       name = "Yes",

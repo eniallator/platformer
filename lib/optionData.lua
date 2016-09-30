@@ -213,6 +213,7 @@ optionData.escMenu = {
           cameraTranslation = 0
         end
 
+        entity.player.reset()
         selected = "game"
       end
     end

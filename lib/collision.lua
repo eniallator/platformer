@@ -11,9 +11,9 @@ collision.getBlock = function(block)
 end
 
 collision.detectEntity = function(x, y, currEntity, attribute)
-  for i=1,#mapGrid do
-    for j=1,#mapGrid[i] do
-      if type(mapGrid[i][j]) == "table" then
+  for i = math.floor((y -1) /blockSize), math.ceil((y +currEntity.dim.h +1) /blockSize) do
+    for j = math.floor((x -1) /blockSize), math.ceil((x +currEntity.dim.w +1) /blockSize) do
+      if mapGrid[i] and type(mapGrid[i][j]) == "table" then
 
         local currBlock = blocks[collision.getBlock(mapGrid[i][j].block)]
         local xDim, yDim = blockSize, blockSize
@@ -30,7 +30,7 @@ collision.detectEntity = function(x, y, currEntity, attribute)
         end
 
         if currBlock[attribute] and (j -1) *blockSize +xOff < x +currEntity.dim.w and x <= (j -1) *blockSize +xDim +xOff and (i -1) *blockSize +yOff < y +currEntity.dim.h and y <= (i -1) *blockSize +yDim +yOff then
-          return true
+          return j, i
         end
       end
     end
