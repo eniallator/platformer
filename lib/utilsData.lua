@@ -10,7 +10,7 @@ local function saveMap(mapName)
 end
 
 utilsData.textBox.saveMap = {
-  title ="Map Name:", acceptedKeys = "^%w$",
+  title ="Map Name:", acceptedKeys = "^[%w%s]$",
   dimensions = function () local font = love.graphics.getFont() return {x = screenDim.x /2 -screenDim.x /(5 +1 /3), y = screenDim.y /2 - screenDim.y / (25 +5 /7), w = screenDim.x /(2 +2 /3), h = 25 +font:getHeight("Lp") *2} end,
 
   func = function (mapName)

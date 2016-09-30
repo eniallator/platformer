@@ -99,7 +99,11 @@ textBox.getInput = function(selectedTextBox)
 
       local char = keys.currKey
 
-      if keys.currKey:find(selectedTextBox.acceptedKeys) then
+      if char == "space" then
+        char = " "
+      end
+
+      if char:find(selectedTextBox.acceptedKeys) then
         local upperCaseXOR = 0
 
         if keys.state.rshift or keys.state.lshift then
