@@ -102,6 +102,7 @@ end
 
 entity.player.kill = function()
   entity.player.pos = {x = entity.player.spawnPos.x, y = entity.player.spawnPos.y}
+  entity.player.vel = {x = 0, y = 0}
 end
 
 entity.player.reset = function()
@@ -117,6 +118,7 @@ entity.player.reset = function()
   end
 
   entity.player.pos = {x = spawnPoint[1], y = spawnPoint[2]}
+  entity.player.spawnPos = {x = spawnPoint[1], y = spawnPoint[2]}
   entity.player.vel = {x = 0, y = 0}
 end
 
