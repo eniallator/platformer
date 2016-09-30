@@ -1,5 +1,13 @@
 local update = {}
 
+update.forces = function()
+  moveSpeed = screenDim.y /2000
+  jumpHeight = -screenDim.y /120
+  gravity = screenDim.y /200
+  drag = screenDim.y /625
+  friction = screenDim.y /(600 /0.93)
+end
+
 update.camera = function()
   local playerDim = entity.player.dim()
   if entity.player.pos.x + playerDim.w/2 > screenDim.x/2  then

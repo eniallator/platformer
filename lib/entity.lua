@@ -1,8 +1,3 @@
-local moveSpeed = 0.3
-local jumpHeight = -5
-local gravity = 3
-local drag = 0.96
-local friction = 0.93
 local entity = {}
 
 local function applyVelForces(currEntity)

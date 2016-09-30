@@ -26,6 +26,7 @@ function love.load()
 
   display.loadTextures()
   textBox.reset()
+  update.forces()
 
   mapCreatorScrollSpeed = 5
   blocks = {
@@ -58,6 +59,7 @@ function love.resize(w, h)
   entity.player.pos.x = entity.player.pos.x *(h /20 /(screenDim.y /20))
 
   updateInternalWindowSize()
+  update.forces()
 end
 
 function love.keypressed(key)
