@@ -15,8 +15,9 @@ local function applyVelForces(currEntity)
 end
 
 local function updatePos(currEntity)
-  local xBoundLimit = currEntity.pos.x +currEntity.vel.x > 0 and currEntity.pos.x +currEntity.vel.x +currEntity.dim.w <= 255 *blockSize
-  local yBoundLimit = currEntity.pos.y + currEntity.dim.h + currEntity.vel.y < screenDim.y
+  local currEntityDim = currEntity.dim()
+  local xBoundLimit = currEntity.pos.x +currEntity.vel.x > 0 and currEntity.pos.x +currEntity.vel.x +currEntityDim.w <= 255 *blockSize
+  local yBoundLimit = currEntity.pos.y + currEntityDim.h + currEntity.vel.y < screenDim.y
 
   if collision.detectEntity(currEntity.pos.x + currEntity.vel.x, currEntity.pos.y + currEntity.vel.y, currEntity, "kill") and xBoundLimit and yBoundLimit then
     currEntity.kill()
@@ -74,7 +75,7 @@ local function getInput(currEntity)
   end
 end
 
-entity.player = {pos = {x = 1, y = 1}, spawnPos = {x = 1, y = 1}, vel = {x = 0, y = 0}, dim = {w = screenDim.y /37.5, h = screenDim.y /18.75}, xCounter = 0}
+entity.player = {pos = {x = 1, y = 1}, spawnPos = {x = 1, y = 1}, vel = {x = 0, y = 0}, dim = function() return {w = screenDim.y /37.5, h = screenDim.y /18.75} end, xCounter = 0}
 
 entity.player.texture = {
   still = love.graphics.newImage("assets/textures/player/player.still.png"),
@@ -95,8 +96,9 @@ entity.player.update = function()
   local checkPoint = {collision.detectEntity(player.pos.x, player.pos.y, player, "checkPoint")}
 
   if checkPoint[1] then
-    player.spawnPos.x = checkPoint[1] *blockSize -blockSize /2 -player.dim.w /2
-    player.spawnPos.y = checkPoint[2] *blockSize +blockSize -player.dim.h
+    local playerDim = player.dim()
+    player.spawnPos.x = checkPoint[1] *blockSize -blockSize /2 -playerDim.w /2
+    player.spawnPos.y = checkPoint[2] *blockSize +blockSize -playerDim.h
   end
 end
 
@@ -111,8 +113,9 @@ entity.player.reset = function()
   for i=1, #mapGrid do
     for j=1,#mapGrid[i] do
       if type(mapGrid[i][j]) == "table" and mapGrid[i][j].block == "spawnPoint" then
-        spawnPoint[1] = j *blockSize -blockSize /2 -entity.player.dim.w /2
-        spawnPoint[2] = i *blockSize +blockSize -entity.player.dim.h
+        local playerDim = entity.player.dim()
+        spawnPoint[1] = j *blockSize -blockSize /2 -playerDim.w /2
+        spawnPoint[2] = i *blockSize +blockSize -playerDim.h
       end
     end
   end
@@ -126,9 +129,10 @@ entity.player.display = function()
   local player = entity.player
   player.xCounter = (player.xCounter + player.vel.x) % 30
   local xOffset, scaleOffset, currTexture
+  local playerDim = player.dim()
 
   if player.lastDir == "r" or not player.lastDir then
-    xOffset = -1 *player.dim.w
+    xOffset = -1 *playerDim.w
     scaleOffset = -1
 
   else
@@ -151,7 +155,7 @@ entity.player.display = function()
     currTexture = player.texture.still
   end
 
-  love.graphics.draw(currTexture, player.pos.x - xOffset, player.pos.y, 0, scaleOffset * (player.dim.w /currTexture:getWidth()), player.dim.h /currTexture:getHeight())
+  love.graphics.draw(currTexture, player.pos.x - xOffset, player.pos.y, 0, scaleOffset * (playerDim.w /currTexture:getWidth()), playerDim.h /currTexture:getHeight())
 end
 
 return entity

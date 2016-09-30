@@ -1,12 +1,13 @@
 local update = {}
 
 update.camera = function()
-  if entity.player.pos.x + entity.player.dim.w/2 > screenDim.x/2  then
-    if entity.player.pos.x + entity.player.dim.w/2 > 255*blockSize - screenDim.x/2 then
+  local playerDim = entity.player.dim()
+  if entity.player.pos.x + playerDim.w/2 > screenDim.x/2  then
+    if entity.player.pos.x + playerDim.w/2 > 255*blockSize - screenDim.x/2 then
       cameraTranslation = -(255*blockSize - screenDim.x)
 
     else
-      cameraTranslation = -entity.player.pos.x +screenDim.x /2 -entity.player.dim.w /2
+      cameraTranslation = -entity.player.pos.x +screenDim.x /2 -playerDim.w /2
     end
 
   else
