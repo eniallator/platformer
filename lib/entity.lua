@@ -95,6 +95,10 @@ entity.player.update = function()
     player.spawnPos.x = checkPoint[1] *blockSize -blockSize /2 -playerDim.w /2
     player.spawnPos.y = checkPoint[2] *blockSize +blockSize -playerDim.h
   end
+
+  if collision.detectEntity(player.pos.x, player.pos.y, player, "goal") then
+    -- Reached the end goal in the map
+  end
 end
 
 entity.player.kill = function()

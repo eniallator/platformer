@@ -14,7 +14,8 @@ display.loadTextures = function()
       brick = love.graphics.newImage("assets/textures/blocks/brick.png"),
       lava = {img = love.graphics.newImage("assets/textures/blocks/lava_animated.png"), frameHeight = 10, updateRate = 10, updateTime = 1, currFrame = 0},
       spawnPoint = love.graphics.newImage("assets/textures/blocks/checkpoint.png"),
-      checkPoint = love.graphics.newImage("assets/textures/blocks/checkpoint.png")
+      checkPoint = love.graphics.newImage("assets/textures/blocks/checkpoint.png"),
+      goal = love.graphics.newImage("assets/textures/blocks/goal.png")
     },
 
     other = {
@@ -47,12 +48,14 @@ display.map = function()
 
       if type(currTable) == "table" then
         local currImage = texture.block[currTable.block]
+        local currBlock = blocks[collision.getBlock(currTable.block)]
+        local scale = currBlock.scale or 1
 
         if type(currImage) == "table" then
-          display.animatedTile(currImage, ((j +cameraOffset) -2) *blockSize, (i -1) *blockSize, screenDim.y/200, screenDim.y /200)
+          display.animatedTile(currImage, ((j +cameraOffset) -2) *blockSize, (i -1) *blockSize, screenDim.y/200 *scale, screenDim.y /200 *scale)
 
         else
-          love.graphics.draw(currImage, ((j +cameraOffset) -2) *blockSize, (i -1) *blockSize, 0, screenDim.y/200, screenDim.y /200)
+          love.graphics.draw(currImage, ((j +cameraOffset) -2) *blockSize, (i -1) *blockSize, 0, screenDim.y/200 *scale, screenDim.y /200 *scale)
         end
       end
     end

@@ -51,7 +51,8 @@ function love.load()
     {name = "brick", solid = true},
     {name = "lava", kill = true, dim = {w = 20, h = 8}, offSet = {x = 0, y = 2}, bigTexture = true},
     {name = "spawnPoint", spawnPoint = true},
-    {name = "checkPoint", checkPoint = true}
+    {name = "checkPoint", checkPoint = true},
+    {name = "goal", goal = true, scale = 0.5}
   }
   cameraTranslation = 0
   selected = "menu"
