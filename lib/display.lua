@@ -39,18 +39,18 @@ end
 
 display.map = function()
   for i=1,#mapGrid do
-    for j=1,screenDim.x/blockSize + blockSize*2 do
+    for j=1,screenDim.x/blockSize + blockSize*2 +1 do
       local cameraOffset = math.ceil(-cameraTranslation /blockSize -1)
-      local currTable = mapGrid[i][j +cameraOffset]
+      local currTable = mapGrid[i][j +cameraOffset -1]
 
       if type(currTable) == "table" then
         local currImage = texture.block[currTable.block]
 
         if type(currImage) == "table" then
-          display.animatedTile(currImage, ((j +cameraOffset) -1) *blockSize, (i -1) *blockSize, screenDim.y/200, screenDim.y /200)
+          display.animatedTile(currImage, ((j +cameraOffset) -2) *blockSize, (i -1) *blockSize, screenDim.y/200, screenDim.y /200)
 
         else
-          love.graphics.draw(currImage, ((j +cameraOffset) -1) *blockSize, (i -1) *blockSize, 0, screenDim.y/200, screenDim.y /200)
+          love.graphics.draw(currImage, ((j +cameraOffset) -2) *blockSize, (i -1) *blockSize, 0, screenDim.y/200, screenDim.y /200)
         end
       end
     end
