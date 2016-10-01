@@ -34,6 +34,7 @@ function love.load()
     {name = "dirt", solid = true},
     {name = "grass", solid = true},
     {name = "sand", solid = true},
+    {name = "wood", solid = true},
     {name = "lava", kill = true, dim = {w = 20, h = 8}, offSet = {x = 0, y = 2}, bigTexture = true},
     {name = "spawnPoint", spawnPoint = true},
     {name = "checkPoint", checkPoint = true}
