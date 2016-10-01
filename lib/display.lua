@@ -11,6 +11,7 @@ display.loadTextures = function()
       grass = love.graphics.newImage("assets/textures/blocks/grass.png"),
       sand = love.graphics.newImage("assets/textures/blocks/sand.png"),
       wood = love.graphics.newImage("assets/textures/blocks/wood.png"),
+      brick = love.graphics.newImage("assets/textures/blocks/brick.png"),
       lava = {img = love.graphics.newImage("assets/textures/blocks/lava_animated.png"), frameHeight = 10, updateRate = 10, updateTime = 1, currFrame = 0},
       spawnPoint = love.graphics.newImage("assets/textures/blocks/checkpoint.png"),
       checkPoint = love.graphics.newImage("assets/textures/blocks/checkpoint.png")
