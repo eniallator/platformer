@@ -13,11 +13,12 @@ end
 
 alert.display = function(message, buttons, dim)
   local font = love.graphics.getFont()
+  local translatedX = dim.x -cameraTranslation
 
   love.graphics.setColor(100, 100, 100)
-  love.graphics.rectangle("fill", dim.x, dim.y, dim.w, dim.h)
+  love.graphics.rectangle("fill", translatedX, dim.y, dim.w, dim.h)
   love.graphics.setColor(255, 255, 255)
-  love.graphics.print(message, dim.x +5, dim.y +5)
+  love.graphics.print(message, translatedX +5, dim.y +5)
 
   local buttonTable = createButtonTable(buttons, dim)
 
