@@ -1,14 +1,27 @@
 love.graphics.setDefaultFilter("nearest", "nearest")
 
-local function updateInternalWindowSize()
-  screenDim.x, screenDim.y = love.graphics.getDimensions()
+local function updateInternalWindowSize(w, h)
+  if w/h == aspectRatio then
+    borders = {x = 0, y = 0}
+
+  elseif w/h > aspectRatio then
+    borders.x = (w -(h *aspectRatio))
+    borders.y = 0
+
+  else
+    borders.y = (h -(w /aspectRatio))
+    borders.x = 0
+  end
+
+  screenDim.x, screenDim.y = w -borders.x +1, h -borders.y
   blockSize = screenDim.y/20
   love.graphics.setFont(love.graphics.newFont(screenDim.x/40))
 end
 
 function love.load()
   screenDim = {}
-  updateInternalWindowSize()
+  aspectRatio = 4/3
+  updateInternalWindowSize(800, 600)
 
   defaultMaps = require "lib/defaultMaps"
   optionData = require "lib/optionData"
@@ -60,7 +73,7 @@ function love.resize(w, h)
   entity.player.pos.y = entity.player.pos.y *h /screenDim.y
   entity.player.pos.x = entity.player.pos.x *(h /20 /(screenDim.y /20))
 
-  updateInternalWindowSize()
+  updateInternalWindowSize(w, h)
   update.forces()
 end
 
@@ -200,5 +213,11 @@ function love.draw()
     end
 
     display.escMenu()
+  end
+
+  if borders.x > 0 then
+    love.graphics.setColor(0, 0, 0)
+    love.graphics.rectangle("fill", screenDim.x -1 -cameraTranslation, 0, borders.x, screenDim.y)
+    love.graphics.setColor(255, 255, 255)
   end
 end

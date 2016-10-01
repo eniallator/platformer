@@ -1,11 +1,11 @@
 local update = {}
 
 update.forces = function()
-  moveSpeed = screenDim.y /2000
+  moveSpeed = screenDim.y / (600 /0.3)
   jumpHeight = -screenDim.y /120
   gravity = screenDim.y /200
   drag = 1.07
-  friction = screenDim.y /(600 /0.93)
+  friction = screenDim.y /(600 /1.07)
 end
 
 update.camera = function()
