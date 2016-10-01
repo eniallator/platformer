@@ -1,8 +1,8 @@
 local entity = {}
 
 local function applyVelForces(currEntity)
-  currEntity.vel.x = currEntity.vel.x * drag
-  currEntity.vel.y = currEntity.vel.y + 0.1 * gravity
+  currEntity.vel.x = currEntity.vel.x /drag
+  currEntity.vel.y = currEntity.vel.y +0.1 *gravity
 
   if currEntity.onGround then
     currEntity.vel.x = currEntity.vel.x * friction

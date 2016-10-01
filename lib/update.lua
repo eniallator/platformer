@@ -4,7 +4,7 @@ update.forces = function()
   moveSpeed = screenDim.y /2000
   jumpHeight = -screenDim.y /120
   gravity = screenDim.y /200
-  drag = screenDim.y /625
+  drag = 1.07
   friction = screenDim.y /(600 /0.93)
 end
 
