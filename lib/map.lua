@@ -127,13 +127,20 @@ local function checkEmpty(tbl)
 end
 
 local function checkBlockRow(tbl, block, width, x, y)
+  local allSame = true
+
   for i=1,width do
-    if not tbl[y] or not (tbl[y][x] and tbl[y][x].block == block) then
-      return false
+    if tbl[y] and type(tbl[y][x]) == "table" then
+      if tbl[y][x].block ~= block then
+        allSame = false
+      end
+
+    else
+      allSame = false
     end
   end
 
-  return true
+  return allSame
 end
 
 local function copyTable(tbl)
