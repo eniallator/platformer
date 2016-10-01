@@ -129,9 +129,9 @@ end
 local function checkBlockRow(tbl, block, width, x, y)
   local allSame = true
 
-  for i=1,width do
-    if tbl[y] and type(tbl[y][x]) == "table" then
-      if tbl[y][x].block ~= block then
+  for i=0,width -1 do
+    if tbl[y] and type(tbl[y][x +i]) == "table" then
+      if tbl[y][x +i].block ~= block then
         allSame = false
       end
 
