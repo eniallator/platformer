@@ -97,7 +97,7 @@ entity.player.update = function()
   end
 
   if collision.detectEntity(player.pos.x, player.pos.y, player, "goal") then
-    -- Reached the end goal in the map
+    reachedGoal = true
   end
 end
 

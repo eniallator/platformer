@@ -22,6 +22,7 @@ update.camera = function()
     cameraTranslation = 0
   end
 
+  cameraTranslation = cameraTranslation + borders.x /2
 end
 
 update.mapCreatorinteract = function()
@@ -68,6 +69,7 @@ update.escMenu = function()
   if escMenuOn then
     firstLoad = true
     local clickedBox = collision.clickBox(optionData.escMenu.display())
+    collision.updateMouseCursor(optionData.escMenu.display())
 
     if clickedBox then
       optionData.escMenu.funcs[clickedBox]()
@@ -88,6 +90,16 @@ update.checkEscButton = function()
   end
 
   return false
+end
+
+update.winMenu = function()
+  local winMenuData = optionData.winMenu.display()
+  local clickedBox = collision.clickBox(winMenuData)
+  collision.updateMouseCursor(winMenuData)
+
+  if clickedBox then
+    optionData.winMenu.funcs[clickedBox]()
+  end
 end
 
 return update

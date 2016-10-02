@@ -52,7 +52,7 @@ function love.load()
     {name = "lava", kill = true, dim = {w = 20, h = 8}, offSet = {x = 0, y = 2}, bigTexture = true},
     {name = "spawnPoint", spawnPoint = true},
     {name = "checkPoint", checkPoint = true},
-    {name = "goal", goal = true, scale = 0.5}
+    {name = "goal", goal = true, scale = 0.5, dim = {w = 8, h = 19}, offSet = {x = 1, y = 1}}
   }
   cameraTranslation = 0
   selected = "menu"
@@ -102,17 +102,23 @@ function love.update()
     dropMenu.getInput(utilsData.dropMenu[utilsData.dropMenu.selected], utilsData.dropMenu.mapName)
 
   elseif selected == "game" then
-    if not escMenuOn then
-      entity.player.update()
-      update.camera()
-    end
+    if not reachedGoal then
+      if not escMenuOn then
+        entity.player.update()
+        update.camera()
+      end
 
-    update.escMenu()
+      update.escMenu()
+
+    else
+      update.winMenu()
+    end
 
   elseif selected == "menu" then
     local menuDisplayed = optionData[currMenu].display()
     local clickedBox = collision.clickBox(menuDisplayed)
     local rightClickedBox = collision.rightClickBox(menuDisplayed)
+    collision.updateMouseCursor(menuDisplayed)
 
     if clickedBox then
       optionData[currMenu].funcs[clickedBox](menuDisplayed[clickedBox])
@@ -121,8 +127,6 @@ function love.update()
       optionData[currMenu].funcs[rightClickedBox](menuDisplayed[rightClickedBox], true)
     end
 
-    collision.updateMouseCursor(menuDisplayed)
-
   elseif selected == "createMap" then
     update.mapCreatorPos()
     update.mapCreatorBlockMenu()
@@ -130,6 +134,7 @@ function love.update()
     if mapCreatorMenu then
       local blockMenuTable = optionData.blockMenu.display()
       local blockClicked = collision.clickBox(blockMenuTable)
+      collision.updateMouseCursor(blockMenuTable)
 
       if blockClicked == "prevPage" or blockClicked == "nextPage" then
         optionData.blockMenu.funcs[blockClicked]()
@@ -146,7 +151,7 @@ function love.update()
 end
 
 function love.draw()
-  love.graphics.translate(cameraTranslation, 0)
+  love.graphics.translate(cameraTranslation +borders.x /2, borders.y /2)
   newTick = true
 
   if utilsData.textBox.selected then
@@ -184,6 +189,7 @@ function love.draw()
     entity.player.display()
     display.map()
     display.escMenu()
+    display.winMenu()
 
   elseif selected == "menu" then
     display.background()
@@ -218,7 +224,8 @@ function love.draw()
 
   if borders.x > 0 then
     love.graphics.setColor(0, 0, 0)
-    love.graphics.rectangle("fill", screenDim.x -1 -cameraTranslation, 0, borders.x, screenDim.y)
+    love.graphics.rectangle("fill", -cameraTranslation +screenDim.x , 0, borders.x /2, screenDim.y)
+    love.graphics.rectangle("fill", -cameraTranslation -borders.x /2, 0, borders.x /2, screenDim.y)
     love.graphics.setColor(255, 255, 255)
   end
 end

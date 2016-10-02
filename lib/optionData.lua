@@ -145,6 +145,7 @@ optionData.main = {
       formattedMap = {}
       map.makeGrid(256, screenDim.y/blockSize)
       firstLoad = true
+      resetPlayer = true
     end
   }
 }
@@ -215,7 +216,14 @@ optionData.escMenu = {
           cameraTranslation = 0
         end
 
-        entity.player.reset()
+        if resetPlayer then
+          entity.player.reset()
+          resetPlayer = false
+          
+        else
+          entity.player.pos = {x = entity.player.spawnPos.x, y = entity.player.spawnPos.y}
+        end
+
         selected = "game"
       end
     end
@@ -238,6 +246,27 @@ optionData.blockMenu = {
   funcs = {
     nextPage = function() currBlockPage = currBlockPage + 1 end,
     prevPage = function() currBlockPage = currBlockPage - 1 end
+  }
+}
+
+optionData.winMenu = {
+  display = function()
+    local default = {w = screenDim.x /4, h = screenDim.y /8}
+    default.x = screenDim.x /2 - default.w /2
+    local boxGap = screenDim.y/30
+
+    return {
+      backToMenu = {name = "Back To Menu", x = default.x, y = screenDim.y /2 -default.h /2, w = default.w, h = default.h}
+    }
+  end,
+
+  funcs = {
+    backToMenu = function()
+      selected = "menu"
+      currMenu = "main"
+      cameraTranslation = 0
+      reachedGoal = false
+    end
   }
 }
 

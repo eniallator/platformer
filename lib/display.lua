@@ -94,13 +94,20 @@ display.box = function(box)
   love.graphics.printf(box.name, box.x + box.w/2 - font:getWidth(box.name)/2 -cameraTranslation, box.y + box.h/2 - font:getHeight(box.name)/2,box.w)
 end
 
-display.escMenu = function()
-  if escMenuOn then
-    for _, box in pairs(optionData.escMenu.display()) do
-
+local function displayTbl(tbl, condition)
+  if condition then
+    for _, box in pairs(tbl) do
       display.box(box)
     end
   end
+end
+
+display.escMenu = function()
+  displayTbl(optionData.escMenu.display(), escMenuOn)
+end
+
+display.winMenu = function()
+  displayTbl(optionData.winMenu.display(), reachedGoal)
 end
 
 return display

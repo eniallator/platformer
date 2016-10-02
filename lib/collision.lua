@@ -45,6 +45,7 @@ local function detectCollision(tbl)
   local mouseCoords = {love.mouse.getPosition()}
 
   for name,box in pairs(tbl) do
+    box.y = box.y + borders.y /2
     if mouseCoords[1] >= box.x and mouseCoords[1] <= box.x + box.w and mouseCoords[2] >= box.y and mouseCoords[2] <= box.y + box.h then
 
       return name
