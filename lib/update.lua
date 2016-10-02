@@ -94,7 +94,7 @@ end
 
 update.winMenu = function()
   local winMenuData = optionData.winMenu.display()
-  local clickedBox = collision.clickBox(winMenuData)
+  local clickedBox = collision.clickBox(winMenuData, true)
   collision.updateMouseCursor(winMenuData)
 
   if clickedBox then
