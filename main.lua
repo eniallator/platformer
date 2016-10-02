@@ -116,9 +116,9 @@ function love.update()
 
   elseif selected == "menu" then
     local menuDisplayed = optionData[currMenu].display()
-    local clickedBox = collision.clickBox(menuDisplayed)
-    local rightClickedBox = collision.rightClickBox(menuDisplayed)
-    collision.updateMouseCursor(menuDisplayed)
+    local clickedBox = collision.clickBox(menuDisplayed, true)
+    local rightClickedBox = collision.rightClickBox(menuDisplayed, true)
+    collision.updateMouseCursor(menuDisplayed, true)
 
     if clickedBox then
       optionData[currMenu].funcs[clickedBox](menuDisplayed[clickedBox])
