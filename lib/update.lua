@@ -46,17 +46,17 @@ end
 update.mapCreatorBlockMenu = function()
   mapCreatorMenu = false
 
-  if love.keyboard.isDown("m") then
+  if love.keyboard.isDown(config.controls.mapCreator.blockMenu) then
     mapCreatorMenu = true
   end
 end
 
 update.mapCreatorPos = function()
-  if love.keyboard.isDown("right") and cameraTranslation > -(255*blockSize - screenDim.x) +mapCreatorScrollSpeed -1 then
+  if love.keyboard.isDown(config.controls.mapCreator.scrollRight) and cameraTranslation > -(255*blockSize - screenDim.x) +mapCreatorScrollSpeed -1 then
     cameraTranslation = cameraTranslation - mapCreatorScrollSpeed
   end
 
-  if love.keyboard.isDown("left") and cameraTranslation < -mapCreatorScrollSpeed +1 then
+  if love.keyboard.isDown(config.controls.mapCreator.scrollLeft) and cameraTranslation < -mapCreatorScrollSpeed +1 then
     cameraTranslation = cameraTranslation + mapCreatorScrollSpeed
   end
 end

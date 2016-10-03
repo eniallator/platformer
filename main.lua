@@ -30,6 +30,7 @@ function love.load()
   display = require "lib/display"
   update = require "lib/update"
   entity = require "lib/entity"
+  config = require "lib/config"
   map = require "lib/map"
   dropMenu = require "lib/utils/dropMenu"
   textBox = require "lib/utils/textBox"

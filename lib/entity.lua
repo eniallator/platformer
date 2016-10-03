@@ -40,7 +40,7 @@ end
 local function checkUp(currEntity)
   local upPressed = false
 
-  if love.keyboard.isDown("up") then
+  if love.keyboard.isDown(config.controls.game.jump) then
     if not currEntity.stillDown then
       upPressed = true
     end
@@ -65,12 +65,12 @@ local function getInput(currEntity)
     currEntity.jumpsLeft = currEntity.jumpsLeft - 1
   end
 
-  if love.keyboard.isDown("right") then
+  if love.keyboard.isDown(config.controls.game.right) then
     currEntity.vel.x = currEntity.vel.x + moveSpeed
     currEntity.lastDir = "r"
   end
 
-  if love.keyboard.isDown("left") then
+  if love.keyboard.isDown(config.controls.game.left) then
     currEntity.vel.x = currEntity.vel.x - moveSpeed
     currEntity.lastDir = "l"
   end
