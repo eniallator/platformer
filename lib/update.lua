@@ -22,12 +22,12 @@ update.camera = function()
     cameraTranslation = 0
   end
 
-  cameraTranslation = cameraTranslation + borders.x /2
+  cameraTranslation = cameraTranslation
 end
 
 update.mapCreatorinteract = function()
   local mouseCoords = {love.mouse.getPosition()}
-  mouseCoords[1] = mouseCoords[1] - cameraTranslation
+  mouseCoords[1] = mouseCoords[1] -cameraTranslation -borders.x /2
 
   if mouseCoords[1] > 0 and mouseCoords[1] + cameraTranslation < screenDim.x and mouseCoords[2] > 0 and mouseCoords[2] < screenDim.y then
     if mouse.left.held and not firstLoad then

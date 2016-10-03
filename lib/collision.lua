@@ -45,12 +45,8 @@ local function detectCollision(tbl, addBorder)
   local mouseCoords = {love.mouse.getPosition()}
 
   for name,box in pairs(tbl) do
-    local newY = box.y + borders.y /2
-    local newX = box.x
-
-    if addBorder then
-      newX = box.x + borders.x /2
-    end
+    local newY = box.y +borders.y /2
+    local newX = box.x +borders.x /2
 
     if mouseCoords[1] >= newX and mouseCoords[1] <= newX + box.w and mouseCoords[2] >= newY and mouseCoords[2] <= newY + box.h then
       return name
@@ -60,22 +56,22 @@ local function detectCollision(tbl, addBorder)
   return false
 end
 
-collision.clickBox = function(displayedTbl, addBorder)
+collision.clickBox = function(displayedTbl)
   if mouse.left.clicked then
-    return detectCollision(displayedTbl, addBorder)
+    return detectCollision(displayedTbl)
   end
 end
 
-collision.rightClickBox = function(displayedTbl, addBorder)
+collision.rightClickBox = function(displayedTbl)
   if mouse.right.clicked then
-    return detectCollision(displayedTbl, addBorder)
+    return detectCollision(displayedTbl)
   end
 end
 
 local handCursor = love.mouse.getSystemCursor("hand")
 
-collision.updateMouseCursor = function(displayedTbl, addBorder)
-  if detectCollision(displayedTbl, addBorder) then
+collision.updateMouseCursor = function(displayedTbl)
+  if detectCollision(displayedTbl) then
     love.mouse.setCursor(handCursor)
   end
 end

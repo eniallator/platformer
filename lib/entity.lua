@@ -12,7 +12,7 @@ end
 local function updatePos(currEntity)
   local currEntityDim = currEntity.dim()
   local xBoundLimit = currEntity.pos.x +currEntity.vel.x > 0 and currEntity.pos.x +currEntity.vel.x +currEntityDim.w <= 255 *blockSize
-  local yBoundLimit = currEntity.pos.y + currEntityDim.h + currEntity.vel.y < screenDim.y
+  local yBoundLimit = currEntity.pos.y +currEntityDim.h +currEntity.vel.y < screenDim.y
 
   if collision.detectEntity(currEntity.pos.x + currEntity.vel.x, currEntity.pos.y + currEntity.vel.y, currEntity, "kill") and xBoundLimit and yBoundLimit then
     currEntity.kill()

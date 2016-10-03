@@ -219,9 +219,10 @@ optionData.escMenu = {
         if resetPlayer then
           entity.player.reset()
           resetPlayer = false
-          
+
         else
           entity.player.pos = {x = entity.player.spawnPos.x, y = entity.player.spawnPos.y}
+          entity.player.vel = {x = 0, y = 0}
         end
 
         selected = "game"
