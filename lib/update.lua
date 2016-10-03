@@ -2,7 +2,7 @@ local update = {}
 
 update.forces = function()
   moveSpeed = screenDim.y / (600 /0.3)
-  jumpHeight = -screenDim.y /120
+  jumpHeight = -screenDim.y /(600/4.5)
   gravity = screenDim.y /200
   drag = 1.07
   friction = 1.07
