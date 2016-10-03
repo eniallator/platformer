@@ -30,7 +30,7 @@ local function updatePos(currEntity)
     currEntity.pos.y = currEntity.pos.y + currEntity.vel.y
     currEntity.onGround = false
 
-  else
+  elseif currEntity.vel.y > 0 then
     currEntity.jumpsLeft = 2
     currEntity.vel.y = 0
     currEntity.onGround = true
@@ -55,7 +55,13 @@ end
 
 local function getInput(currEntity)
   if checkUp(currEntity) and currEntity.jumpsLeft and currEntity.jumpsLeft > 0 then
-    currEntity.vel.y = currEntity.vel.y + jumpHeight
+    if currEntity.vel.y > 0 then
+      currEntity.vel.y = jumpHeight
+
+    else
+      currEntity.vel.y = currEntity.vel.y + jumpHeight
+    end
+
     currEntity.jumpsLeft = currEntity.jumpsLeft - 1
   end
 
