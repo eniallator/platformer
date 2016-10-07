@@ -16,7 +16,7 @@ local function updatePos(currEntity)
 
   if collision.detectEntity(currEntity.pos.x + currEntity.vel.x, currEntity.pos.y + currEntity.vel.y, currEntity, "kill") and xBoundLimit and yBoundLimit then
     currEntity.kill()
-    -- Make screen flash red
+    screenRed = 150
     return
   end
 

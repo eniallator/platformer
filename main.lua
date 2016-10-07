@@ -157,6 +157,15 @@ function love.draw()
   love.graphics.translate(cameraTranslation +borders.x /2, borders.y /2)
   newTick = true
 
+  if screenRed and screenRed < 255 then
+    screenRed = screenRed + 3
+
+  else
+    screenRed = 255
+  end
+
+  love.graphics.setColor(255, screenRed, screenRed)
+
   if utilsData.textBox.selected then
     display.background()
 
@@ -187,7 +196,6 @@ function love.draw()
     dropMenu.display(utilsData.dropMenu[utilsData.dropMenu.selected], utilsData.dropMenu.coords)
 
   elseif selected == "game" then
-    love.graphics.setColor(255, 255, 255)
     display.background()
     entity.player.display()
     display.map()
@@ -229,6 +237,5 @@ function love.draw()
     love.graphics.setColor(0, 0, 0)
     love.graphics.rectangle("fill", -cameraTranslation +screenDim.x , 0, borders.x /2, screenDim.y)
     love.graphics.rectangle("fill", -cameraTranslation -borders.x /2, 0, borders.x /2, screenDim.y)
-    love.graphics.setColor(255, 255, 255)
   end
 end
