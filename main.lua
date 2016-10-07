@@ -41,6 +41,7 @@ function love.load()
   display.loadTextures()
   textBox.reset()
   update.forces()
+  controls.loadControls()
 
   mapCreatorScrollSpeed = 5
   blocks = {

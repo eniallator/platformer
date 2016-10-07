@@ -80,7 +80,7 @@ local function loadOptionFuncs(page, menuName, func)
   }
 
   if menuName == "controls" then
-    optionData[menuName].funcs.apply = function() end
+    optionData[menuName].funcs.apply = controls.applyChanges
   end
 
   for k,v in pairs(page) do
