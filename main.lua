@@ -30,7 +30,7 @@ function love.load()
   display = require "lib/display"
   update = require "lib/update"
   entity = require "lib/entity"
-  config = require "lib/config"
+  controls = require "lib/controls"
   map = require "lib/map"
   dropMenu = require "lib/utils/dropMenu"
   textBox = require "lib/utils/textBox"
@@ -90,6 +90,7 @@ end
 function love.update()
   love.mouse.setCursor()
   mouse.updateState()
+  controls.getKeyInput()
 
   if utilsData.textBox.selected then
     textBox.getInput(utilsData.textBox[utilsData.textBox.selected])
@@ -121,7 +122,7 @@ function love.update()
     local rightClickedBox = collision.rightClickBox(menuDisplayed, true)
     collision.updateMouseCursor(menuDisplayed, true)
 
-    if clickedBox then
+  if clickedBox then
       optionData[currMenu].funcs[clickedBox](menuDisplayed[clickedBox])
 
     elseif rightClickedBox and currMenu == "play" then

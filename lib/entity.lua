@@ -16,6 +16,7 @@ local function updatePos(currEntity)
 
   if collision.detectEntity(currEntity.pos.x + currEntity.vel.x, currEntity.pos.y + currEntity.vel.y, currEntity, "kill") and xBoundLimit and yBoundLimit then
     currEntity.kill()
+    -- Make screen flash red
     return
   end
 
@@ -40,7 +41,7 @@ end
 local function checkUp(currEntity)
   local upPressed = false
 
-  if love.keyboard.isDown(config.controls.game.jump) then
+  if love.keyboard.isDown(controls[controls.findName("game.jump")].key) then
     if not currEntity.stillDown then
       upPressed = true
     end
@@ -65,12 +66,12 @@ local function getInput(currEntity)
     currEntity.jumpsLeft = currEntity.jumpsLeft - 1
   end
 
-  if love.keyboard.isDown(config.controls.game.right) then
+  if love.keyboard.isDown(controls[controls.findName("game.right")].key) then
     currEntity.vel.x = currEntity.vel.x + moveSpeed
     currEntity.lastDir = "r"
   end
 
-  if love.keyboard.isDown(config.controls.game.left) then
+  if love.keyboard.isDown(controls[controls.findName("game.left")].key) then
     currEntity.vel.x = currEntity.vel.x - moveSpeed
     currEntity.lastDir = "l"
   end

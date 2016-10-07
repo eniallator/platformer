@@ -41,7 +41,7 @@ collision.detectEntity = function(x, y, currEntity, attribute)
   return false
 end
 
-local function detectCollision(tbl, addBorder)
+local function detectCollision(tbl)
   local mouseCoords = {love.mouse.getPosition()}
 
   for name,box in pairs(tbl) do

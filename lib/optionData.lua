@@ -1,5 +1,5 @@
 local loadedMaps
-local currPlayPage = 1
+local currOptionPage = 1
 local currBlockPage = 1
 local otherTranslation = 0
 local optionData = {}
@@ -16,83 +16,110 @@ local function filterFiles(oldTbl)
   return newTbl
 end
 
-local function loadMapOptions()
-  local mapIcon = {w = screenDim.x /2, h = screenDim.y /16}
-  local boxGap = screenDim.y/40
-  loadedMaps = filterFiles(love.filesystem.getDirectoryItems("maps"))
+local function tblToStr(tbl)
+  local outTbl = {}
 
-  mapPages = {}
-
-  for i=1, #loadedMaps do
-    if i % 8 == 1 then
-      mapPages[math.floor(i/8 +1)] = {}
-      currY = screenDim.y /2 - (mapIcon.h + boxGap) *3 - boxGap - screenDim.y /20
-    end
-
-    table.insert(mapPages[math.floor((i -1) /8 +1)], {name = loadedMaps[i], x = screenDim.x /2 - mapIcon.w /2, y = currY, w = mapIcon.w, h = mapIcon.h})
-    currY = currY + mapIcon.h + boxGap
-  end
-
-  local returnTbl = {back = {name = "Back", x = screenDim.x /2 - mapIcon.w /2, y = screenDim.y /2 + mapIcon.h *1.5 + (mapIcon.h + boxGap) *3, w = mapIcon.w, h = mapIcon.h}}
-  local pageGap = screenDim.x /40
-
-  if mapPages[currPlayPage +1] then
-    returnTbl.nextPage = {name = "Next Page", x = screenDim.x - screenDim.x /5, y = screenDim.y /2 - (mapIcon.h + boxGap) *3 - boxGap - screenDim.y /20, w = screenDim.x /7, h = currY + boxGap *2 + mapIcon.h *3}
-  end
-
-  if mapPages[currPlayPage -1] then
-    returnTbl.prevPage = {name = "Prev Page", x = screenDim.x /5 - screenDim.x /7, y = screenDim.y /2 - (mapIcon.h + boxGap) *3 - boxGap - screenDim.y /20, w = screenDim.x /7, h = currY + boxGap *2 + mapIcon.h *3}
-  end
-
-  if mapPages[1] then
-    for k,v in pairs(mapPages[currPlayPage]) do
-      returnTbl[k] = v
+  for i=1, #controls do
+    if controls.waitForPress ~= i then
+      table.insert(outTbl, {controls[i].name .. ": " .. controls[i].key, i})
+    else
+      table.insert(outTbl, {"Press new key to set", i})
     end
   end
 
-  loadPlayFuncs(mapPages[currPlayPage])
-
-  return returnTbl
+  return outTbl
 end
 
-function loadPlayFuncs(page)
-  optionData.play.funcs = {
+local function generatePages(tbl)
+  local outTbl = {}
+  local dim = {w = screenDim.x /2, h = screenDim.y /16}
+  local boxGap = screenDim.y/40
+
+  for i=1, #tbl do
+    if i % 8 == 1 then
+      outTbl[math.floor(i/8 +1)] = {}
+      currY = screenDim.y /2 - (dim.h + boxGap) *3 - boxGap - screenDim.y /20
+    end
+
+    local tblToInsert = {x = screenDim.x /2 - dim.w /2, y = currY, w = dim.w, h = dim.h}
+
+    if type(tbl[i]) == "table" then
+      tblToInsert.name = tbl[i][1]
+      tblToInsert.controlIndex = tbl[i][2]
+
+    else
+      tblToInsert.name = tbl[i]
+    end
+
+    table.insert(outTbl[math.floor((i -1) /8 +1)], tblToInsert)
+    currY = currY + dim.h + boxGap
+  end
+
+  return outTbl
+end
+
+local function loadOptionFuncs(page, menuName, func)
+  optionData[menuName].funcs = {
     nextPage = function(_, rmb)
       if not rmb then
-        currPlayPage = currPlayPage + 1
+        currOptionPage = currOptionPage + 1
       end
     end,
 
     prevPage = function(_, rmb)
       if not rmb then
-        currPlayPage = currPlayPage - 1
+        currOptionPage = currOptionPage - 1
       end
     end,
 
     back = function(_, rmb)
       if not rmb then
-        currMenu = "main" currPlayPage = 1
+        currMenu = "main" currOptionPage = 1
       end
     end
   }
 
-  if page then
-    for k,v in pairs(page) do
-      optionData.play.funcs[k] = function(box, rmb)
-        if not rmb then
-          formattedMap = map.readTable("maps/" .. box.name .. ".map")
-          map.makeGrid(256, screenDim.y/blockSize)
-          selected = "game"
-          currMenu = "main"
-          entity.player.reset()
+  if menuName == "controls" then
+    optionData[menuName].funcs.apply = function() end
+  end
 
-        else
-          utilsData.dropMenu.selected = "playMap"
-          utilsData.dropMenu.mapName = box.name
-        end
+  for k,v in pairs(page) do
+    optionData[menuName].funcs[k] = func
+  end
+end
+
+local function loadOptions(list, menuName, func)
+  local mapIcon = {w = screenDim.x /2, h = screenDim.y /16}
+  local boxGap = screenDim.y/40
+  local listPages = generatePages(list)
+  local pageGap = screenDim.x /40
+  local returnTbl = {back = {name = "Back", x = screenDim.x /2 - mapIcon.w /2, y = screenDim.y /2 + mapIcon.h *1.5 + (mapIcon.h + boxGap) *3, w = mapIcon.w, h = mapIcon.h}}
+
+  if menuName == "controls" then
+    returnTbl.back.w = mapIcon.w /2 -pageGap /2
+    returnTbl.apply = {name = "Apply", x = screenDim.x /2 +pageGap /2, y = screenDim.y /2 + mapIcon.h *1.5 + (mapIcon.h + boxGap) *3, w = mapIcon.w /2 -pageGap /2, h = mapIcon.h}
+  end
+
+  if listPages[currOptionPage +1] then
+    returnTbl.nextPage = {name = "Next Page", x = screenDim.x - screenDim.x /5, y = screenDim.y /2 - (mapIcon.h + boxGap) *3 - boxGap - screenDim.y /20, w = screenDim.x /7, h = currY + boxGap *2 + mapIcon.h *3}
+  end
+
+  if listPages[currOptionPage -1] then
+    returnTbl.prevPage = {name = "Prev Page", x = screenDim.x /5 - screenDim.x /7, y = screenDim.y /2 - (mapIcon.h + boxGap) *3 - boxGap - screenDim.y /20, w = screenDim.x /7, h = currY + boxGap *2 + mapIcon.h *3}
+  end
+
+  if listPages[1] then
+    for k,v in pairs(listPages[currOptionPage]) do
+      if menuName == "controls" and v.name == controls.waitForPress then
+        v.name = "Press a key to change"
       end
+
+      returnTbl[k] = v
     end
   end
+
+  loadOptionFuncs(listPages[currOptionPage], menuName, func)
+  return returnTbl
 end
 
 local function loadBlockOptions()
@@ -137,7 +164,7 @@ optionData.main = {
   end,
 
   funcs = {
-    play = function() currMenu = "play" end,
+    play = function() currMenu = "play" currOptionPage = 1 end,
     settings = function() currMenu = "options" end,
 
     createMap = function()
@@ -157,13 +184,25 @@ optionData.options = {
     local boxGap = screenDim.y/30
 
     return {
-      back = {name = "Back", x = default.x, y = screenDim.y/2 - default.h/2, w = default.w, h = default.h}
+      controls = {name = "Controls", x = default.x, y = screenDim.y/2 - boxGap/2 - default.h, w = default.w, h = default.h},
+      back = {name = "Back", x = default.x, y = screenDim.y/2 + boxGap/2, w = default.w, h = default.h}
     }
   end,
 
   funcs = {
-    back = function() currMenu = "main" end
+    back = function() currMenu = "main" end,
+    controls = function() currMenu = "controls" currOptionPage = 1 end
   }
+}
+
+optionData.controls = {
+  display = function()
+    return loadOptions(tblToStr(controls), "controls",
+      function(box)
+        controls.waitForPress = box.controlIndex
+      end
+    )
+  end
 }
 
 optionData.escMenu = {
@@ -233,8 +272,21 @@ optionData.escMenu = {
 
 optionData.play = {
   display = function()
+    return loadOptions(filterFiles(love.filesystem.getDirectoryItems("maps")), "play",
+      function(box, rmb)
+        if not rmb then
+          formattedMap = map.readTable("maps/" .. box.name .. ".map")
+          map.makeGrid(256, screenDim.y/blockSize)
+          selected = "game"
+          currMenu = "main"
+          entity.player.reset()
 
-    return loadMapOptions()
+        else
+          utilsData.dropMenu.selected = "playMap"
+          utilsData.dropMenu.mapName = box.name
+        end
+      end
+    )
   end
 }
 
