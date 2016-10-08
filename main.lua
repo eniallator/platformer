@@ -15,7 +15,7 @@ local function updateInternalWindowSize(w, h)
 
   screenDim.x, screenDim.y = w -borders.x +1, h -borders.y
   blockSize = screenDim.y/20
-  love.graphics.setFont(love.graphics.newFont(screenDim.x/40))
+  love.graphics.setFont(love.graphics.newFont("assets/Psilly.otf", screenDim.x/40))
 end
 
 function love.load()
