@@ -21,6 +21,10 @@ controls.getKeyInput = function()
     controls[controls.waitForPress].key = keys.currKey
     controls.waitForPress = nil
   end
+
+  if mouse.left.clicked then
+    controls.waitForPress = nil
+  end
 end
 
 controls.applyChanges = function()
