@@ -83,8 +83,10 @@ local function loadOptionFuncs(page, menuName, func)
     optionData[menuName].funcs.apply = controls.applyChanges
   end
 
-  for k,v in pairs(page) do
-    optionData[menuName].funcs[k] = func
+  if page then
+    for k,v in pairs(page) do
+      optionData[menuName].funcs[k] = func
+    end
   end
 end
 
