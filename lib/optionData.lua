@@ -267,6 +267,7 @@ optionData.escMenu = {
         end
 
         selected = "game"
+        timeCounter = 0
       end
     end
   }
@@ -282,6 +283,7 @@ optionData.play = {
           selected = "game"
           currMenu = "main"
           entity.player.reset()
+          timeCounter = 0
 
         else
           utilsData.dropMenu.selected = "playMap"

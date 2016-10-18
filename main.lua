@@ -60,6 +60,7 @@ function love.load()
   selected = "menu"
   currMenu = "main"
   mapExtension = ".map"
+  timeCounter = 0
 
   if not love.filesystem.isDirectory("maps") then
     love.filesystem.createDirectory("maps")
@@ -109,6 +110,7 @@ function love.update()
       if not escMenuOn then
         entity.player.update()
         update.camera()
+        timeCounter = timeCounter + 1
       end
 
       update.escMenu()
@@ -199,6 +201,7 @@ function love.draw()
     display.background()
     entity.player.display()
     display.map()
+    display.timeCounter()
     display.escMenu()
     display.winMenu()
 

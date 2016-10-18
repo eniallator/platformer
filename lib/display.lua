@@ -110,4 +110,14 @@ display.winMenu = function()
   displayTbl(optionData.winMenu.display(), reachedGoal)
 end
 
+display.timeCounter = function()
+  love.graphics.setFont(love.graphics.newFont("assets/Psilly.otf", screenDim.x/20))
+  love.graphics.setColor(255, 255, 255)
+
+  local time = timeCounter /60
+  love.graphics.print(time -time %0.01, -cameraTranslation)
+
+  love.graphics.setFont(love.graphics.newFont("assets/Psilly.otf", screenDim.x/40))
+end
+
 return display
