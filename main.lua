@@ -215,24 +215,7 @@ function love.draw()
   elseif selected == "createMap" then
     display.background()
     display.map()
-
-    if mapCreatorMenu then
-      local blockMenuTable = optionData.blockMenu.display()
-
-      for i=1, #blockMenuTable do
-        local currBlock = blockMenuTable[i]
-
-        if type(currBlock.texture) == "table" then
-          display.animatedTile(currBlock.texture, currBlock.x -cameraTranslation, currBlock.y, blockSize /currBlock.texture.img:getWidth(), blockSize /currBlock.texture.frameHeight)
-
-        else
-          love.graphics.draw(currBlock.texture, currBlock.x -cameraTranslation, currBlock.y, 0, blockSize /currBlock.texture:getWidth(), blockSize /currBlock.texture:getHeight())
-        end
-      end
-
-      collision.updateMouseCursor(blockMenuTable)
-    end
-
+    display.blockMenu()
     display.escMenu()
   end
 

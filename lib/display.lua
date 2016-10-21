@@ -102,6 +102,28 @@ local function displayTbl(tbl, condition)
   end
 end
 
+display.blockMenu = function()
+  if mapCreatorMenu then
+    local blockMenuTable = optionData.blockMenu.display()
+    love.graphics.setColor(150, 150, 150)
+    love.graphics.rectangle("fill", screenDim.x /20, screenDim.y -screenDim.y /9, screenDim.x -screenDim.x /20 *2, blockSize *2)
+    love.graphics.setColor(255, 255, 255)
+
+    for i=1, #blockMenuTable do
+      local currBlock = blockMenuTable[i]
+
+      if type(currBlock.texture) == "table" then
+        display.animatedTile(currBlock.texture, currBlock.x -cameraTranslation, currBlock.y, blockSize /currBlock.texture.img:getWidth(), blockSize /currBlock.texture.frameHeight)
+
+      else
+        love.graphics.draw(currBlock.texture, currBlock.x -cameraTranslation, currBlock.y, 0, blockSize /currBlock.texture:getWidth(), blockSize /currBlock.texture:getHeight())
+      end
+    end
+
+    collision.updateMouseCursor(blockMenuTable)
+  end
+end
+
 display.escMenu = function()
   displayTbl(optionData.escMenu.display(), escMenuOn)
 end
