@@ -13,8 +13,8 @@ end
 collision.detectEntity = function(x, y, currEntity, attribute)
   local currEntityDim = currEntity.dim()
 
-  for i = math.floor((y -1) /blockSize), math.ceil((y +currEntityDim.h +1) /blockSize) do
-    for j = math.floor((x -1) /blockSize), math.ceil((x +currEntityDim.w +1) /blockSize) do
+  for i = math.ceil((y +currEntityDim.h +1) /blockSize), math.floor((y -1) /blockSize), -1 do
+    for j = math.ceil((x +currEntityDim.w +1) /blockSize), math.floor((x -1) /blockSize), -1 do
       if mapGrid[i] and type(mapGrid[i][j]) == "table" then
 
         local currBlock = blocks[collision.getBlock(mapGrid[i][j].block)]
