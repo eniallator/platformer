@@ -29,7 +29,7 @@ update.mapCreatorinteract = function()
   local mouseCoords = {love.mouse.getPosition()}
   mouseCoords[1] = mouseCoords[1] -cameraTranslation -borders.x /2
 
-  if mouseCoords[1] > 0 and mouseCoords[1] + cameraTranslation < screenDim.x and mouseCoords[2] > 0 and mouseCoords[2] < screenDim.y then
+  if not (mapCreatorMenu and collision.hoverOverBox({{x = screenDim.x /60 -cameraTranslation, y = screenDim.y -screenDim.y /9, w = screenDim.x -screenDim.x /60 *2, h = blockSize *2}})) and mouseCoords[1] > 0 and mouseCoords[1] + cameraTranslation < screenDim.x and mouseCoords[2] > 0 and mouseCoords[2] < screenDim.y then
     if mouse.left.held and not firstLoad then
       map.placeBlock(mouseCoords)
 

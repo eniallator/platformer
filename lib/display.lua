@@ -102,11 +102,17 @@ local function displayTbl(tbl, condition)
   end
 end
 
+local function displayBlockMenuButton(tbl)
+  love.graphics.setFont(love.graphics.newFont("assets/Psilly.otf", screenDim.x/60))
+  display.box(tbl)
+  love.graphics.setFont(love.graphics.newFont("assets/Psilly.otf", screenDim.x/40))
+end
+
 display.blockMenu = function()
   if mapCreatorMenu then
     local blockMenuTable = optionData.blockMenu.display()
-    love.graphics.setColor(150, 150, 150)
-    love.graphics.rectangle("fill", screenDim.x /20, screenDim.y -screenDim.y /9, screenDim.x -screenDim.x /20 *2, blockSize *2)
+    love.graphics.setColor(120, 120, 120)
+    love.graphics.rectangle("fill", screenDim.x /60 -cameraTranslation, screenDim.y -screenDim.y /9, screenDim.x -screenDim.x /60 *2, blockSize *2)
     love.graphics.setColor(255, 255, 255)
 
     for i=1, #blockMenuTable do
@@ -118,6 +124,14 @@ display.blockMenu = function()
       else
         love.graphics.draw(currBlock.texture, currBlock.x -cameraTranslation, currBlock.y, 0, blockSize /currBlock.texture:getWidth(), blockSize /currBlock.texture:getHeight())
       end
+    end
+
+    if blockMenuTable.nextPage then
+      displayBlockMenuButton(blockMenuTable.nextPage)
+    end
+
+    if blockMenuTable.prevPage then
+      displayBlockMenuButton(blockMenuTable.prevPage)
     end
 
     collision.updateMouseCursor(blockMenuTable)

@@ -41,7 +41,7 @@ collision.detectEntity = function(x, y, currEntity, attribute)
   return false
 end
 
-local function detectCollision(tbl)
+collision.hoverOverBox = function(tbl)
   local mouseCoords = {love.mouse.getPosition()}
 
   for name,box in pairs(tbl) do
@@ -58,20 +58,20 @@ end
 
 collision.clickBox = function(displayedTbl)
   if mouse.left.clicked then
-    return detectCollision(displayedTbl)
+    return collision.hoverOverBox(displayedTbl)
   end
 end
 
 collision.rightClickBox = function(displayedTbl)
   if mouse.right.clicked then
-    return detectCollision(displayedTbl)
+    return collision.hoverOverBox(displayedTbl)
   end
 end
 
 local handCursor = love.mouse.getSystemCursor("hand")
 
 collision.updateMouseCursor = function(displayedTbl)
-  if detectCollision(displayedTbl) then
+  if collision.hoverOverBox(displayedTbl) then
     love.mouse.setCursor(handCursor)
   end
 end

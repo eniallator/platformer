@@ -142,11 +142,11 @@ local function loadBlockOptions()
   end
 
   if returnTbl[currBlockPage + 1] then
-    returnTbl[currBlockPage].nextPage = {name = "Next", x = screenDim.x -(screenDim.x /(40/3) - blockSize), y = screenDim.y -screenDim.y /12, w = blockSize, h = blockSize}
+    returnTbl[currBlockPage].nextPage = {name = "Next", x = screenDim.x -(screenDim.x /(40/1) +blockSize), y = screenDim.y -screenDim.y /12, w = blockSize, h = blockSize}
   end
 
   if returnTbl[currBlockPage - 1] then
-    returnTbl[currBlockPage].prevPage = {name = "Prev", x = screenDim.x /(40/3) - blockSize, y = screenDim.y -screenDim.y /12, w = blockSize, h = blockSize}
+    returnTbl[currBlockPage].prevPage = {name = "Prev", x = screenDim.x /(40/1), y = screenDim.y -screenDim.y /12, w = blockSize, h = blockSize}
   end
 
   return returnTbl[currBlockPage]

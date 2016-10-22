@@ -146,7 +146,6 @@ function love.update()
 
       elseif blockClicked then
         selectedBlockIndex = blockMenuTable[blockClicked].blockIndex
-        firstLoad = true
       end
     end
 
