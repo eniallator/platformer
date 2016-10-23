@@ -28,6 +28,7 @@ function love.load()
   collision = require "lib/collision"
   utilsData = require "lib/utilsData"
   display = require "lib/display"
+  credits = require "lib/credits"
   update = require "lib/update"
   entity = require "lib/entity"
   controls = require "lib/controls"
@@ -124,6 +125,7 @@ function love.update()
     local clickedBox = collision.clickBox(menuDisplayed, true)
     local rightClickedBox = collision.rightClickBox(menuDisplayed, true)
     collision.updateMouseCursor(menuDisplayed, true)
+    credits.update()
 
   if clickedBox then
       optionData[currMenu].funcs[clickedBox](menuDisplayed[clickedBox])
@@ -206,6 +208,7 @@ function love.draw()
 
   elseif selected == "menu" then
     display.background()
+    credits.display()
 
     for _, box in pairs(optionData[currMenu].display()) do
       display.box(box)
