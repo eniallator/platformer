@@ -1,2 +1,2 @@
 # platformer
-Me and Avriox's attempt at a platformer in Love2D
+My first attempt at creating a 2D side scroller platformer game

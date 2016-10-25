@@ -44,9 +44,9 @@ local function generateIcons(font, maxPrefixSize, iconSize)
     local rowY = screenDim.y -(font:getHeight(key) +5) *(#credits -i +1) -10
     local iconNum = 0
 
-    for key, val in pairs(credits[i]) do
-      if key ~= "prefix" and key ~= "name" then
-        local currIcon = {type = key, url = val}
+    for websiteName, url in pairs(credits[i]) do
+      if websiteName ~= "prefix" and websiteName ~= "name" then
+        local currIcon = {type = websiteName, url = url}
 
         currIcon.x = 50 +maxPrefixSize +font:getWidth(credits[i].name) +iconNum *(iconSize +5)
         currIcon.y = rowY
@@ -68,14 +68,14 @@ credits.display = function()
     local maxPrefixSize = getMaxPrefixSize(font)
     local iconList = generateIcons(font, maxPrefixSize)
 
-    for key,val in pairs(iconList) do
-      local currIcon = credits.websiteIcons[val.type]
-      love.graphics.draw(currIcon, val.x, val.y, 0, val.w /currIcon:getWidth(), val.h /currIcon:getHeight())
+    for name,box in pairs(iconList) do
+      local currIcon = credits.websiteIcons[box.type]
+      love.graphics.draw(currIcon, box.x, box.y, 0, box.w /currIcon:getWidth(), box.h /currIcon:getHeight())
     end
 
     for i=1,#credits do
       love.graphics.print(credits[i], 15, screenDim.y -(font:getHeight(credits[i]) +2) *(#credits -i +1) -10)
-      local rowY = screenDim.y -(font:getHeight(key) +5) *(#credits -i +1) -10
+      local rowY = screenDim.y -(font:getHeight(credits[i]) +5) *(#credits -i +1) -10
       local iconsDrawn = 0
 
       love.graphics.print(credits[i].prefix, 15, rowY)
