@@ -38,17 +38,17 @@ end
 
 local function generateIcons(font, maxPrefixSize, iconSize)
   local iconTbl = {}
-  local iconSize = screenDim.y/27
+  local iconSize = screenDim.y / 27
 
   for i=1,#credits do
-    local rowY = screenDim.y -(font:getHeight(key) +5) *(#credits -i +1) -10
+    local rowY = screenDim.y - (font:getHeight(credits[i]) + 5) * (#credits - i + 1) - 10
     local iconNum = 0
 
     for websiteName, url in pairs(credits[i]) do
       if websiteName ~= "prefix" and websiteName ~= "name" then
         local currIcon = {type = websiteName, url = url}
 
-        currIcon.x = 50 +maxPrefixSize +font:getWidth(credits[i].name) +iconNum *(iconSize +5)
+        currIcon.x = 50 + maxPrefixSize + font:getWidth(credits[i].name) + iconNum * (iconSize + 5)
         currIcon.y = rowY
         currIcon.w = iconSize
         currIcon.h = iconSize
@@ -62,24 +62,28 @@ local function generateIcons(font, maxPrefixSize, iconSize)
   return iconTbl
 end
 
+local function displayIcons(font, maxPrefixSize)
+  local iconList = generateIcons(font, maxPrefixSize)
+
+  for name,box in pairs(iconList) do
+    local currIcon = credits.websiteIcons[box.type]
+    love.graphics.draw(currIcon, box.x, box.y, 0, box.w / currIcon:getWidth(), box.h / currIcon:getHeight())
+  end
+end
+
 credits.display = function()
   if currMenu == "main" then
     local font = love.graphics.getFont()
     local maxPrefixSize = getMaxPrefixSize(font)
-    local iconList = generateIcons(font, maxPrefixSize)
-
-    for name,box in pairs(iconList) do
-      local currIcon = credits.websiteIcons[box.type]
-      love.graphics.draw(currIcon, box.x, box.y, 0, box.w /currIcon:getWidth(), box.h /currIcon:getHeight())
-    end
+    displayIcons(font, maxPrefixSize)
 
     for i=1,#credits do
-      love.graphics.print(credits[i], 15, screenDim.y -(font:getHeight(credits[i]) +2) *(#credits -i +1) -10)
-      local rowY = screenDim.y -(font:getHeight(credits[i]) +5) *(#credits -i +1) -10
+      love.graphics.print(credits[i], 15, screenDim.y -(font:getHeight(credits[i]) + 2) * (#credits - i + 1) - 10)
+      local rowY = screenDim.y -(font:getHeight(credits[i]) + 5) * (#credits - i + 1) - 10
       local iconsDrawn = 0
 
       love.graphics.print(credits[i].prefix, 15, rowY)
-      love.graphics.print(":  " .. credits[i].name, 25 +maxPrefixSize, rowY)
+      love.graphics.print(":  " .. credits[i].name, 25 + maxPrefixSize, rowY)
     end
   end
 end

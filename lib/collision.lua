@@ -10,28 +10,62 @@ collision.getBlock = function(block)
   return false
 end
 
-collision.detectEntity = function(x, y, currEntity, attribute)
-  local currEntityDim = currEntity.dim()
+local function collideAxis(box1, box2, axis, dim)
+  if box1[axis] < box2[axis] + box2[dim] and box2[axis] <= box1[axis] + box1[dim] then
+    return true
+  end
 
-  for i = math.ceil((y +currEntityDim.h +1) /blockSize), math.floor((y -1) /blockSize), -1 do
-    for j = math.ceil((x +currEntityDim.w +1) /blockSize), math.floor((x -1) /blockSize), -1 do
+  return false
+end
+
+collision.rectangles = function(box1,box2)
+  if collideAxis(box1, box2, "x", "w") and collideAxis(box1, box2, "y", "h") then
+    return true
+  end
+
+  return false
+end
+
+collision.detectEntity = function(pos, currEntity, attribute)
+  local currEntityDim = currEntity.dim()
+  local gridCoordinates = {
+    yMax = math.ceil((pos.y + currEntityDim.h + 1) / blockSize),
+    xMax = math.ceil((pos.x + currEntityDim.w + 1) / blockSize),
+    yMin = math.floor((pos.y - 1) / blockSize),
+    xMin = math.floor((pos.x - 1) / blockSize)
+  }
+  local entityBounds = {
+    x = pos.x,
+    y = pos.y,
+    w = currEntityDim.w,
+    h = currEntityDim.h
+  }
+
+  for i = gridCoordinates.yMax, gridCoordinates.yMin, -1 do
+    for j = gridCoordinates.xMax, gridCoordinates.xMin, -1 do
       if mapGrid[i] and type(mapGrid[i][j]) == "table" then
 
         local currBlock = blocks[collision.getBlock(mapGrid[i][j].block)]
-        local xDim, yDim = blockSize, blockSize
-        local xOff, yOff = 0, 0
+        local pixelSize = (blockSize/10)
+
+        local tileBounds = {
+          x = (j - 1) * blockSize,
+          y = (i - 1) * blockSize,
+          w = blockSize,
+          h = blockSize
+        }
 
         if currBlock.dim then
-          xDim = currBlock.dim.w *(screenDim.y/200)
-          yDim = currBlock.dim.h *(screenDim.y/200)
+          tileBounds.w = currBlock.dim.w * pixelSize
+          tileBounds.h = currBlock.dim.h * pixelSize
         end
 
         if currBlock.offSet then
-          xOff = currBlock.offSet.x *(screenDim.y/200)
-          yOff = currBlock.offSet.y *(screenDim.y/200)
+          tileBounds.x = tileBounds.x + currBlock.offSet.x * pixelSize
+          tileBounds.y = tileBounds.y + currBlock.offSet.y * pixelSize
         end
 
-        if currBlock[attribute] and (j -1) *blockSize +xOff < x +currEntityDim.w and x <= (j -1) *blockSize +xDim +xOff and (i -1) *blockSize +yOff < y +currEntityDim.h and y <= (i -1) *blockSize +yDim +yOff then
+        if currBlock[attribute] and collision.rectangles(tileBounds, entityBounds) then
           return j, i
         end
       end
@@ -41,14 +75,32 @@ collision.detectEntity = function(x, y, currEntity, attribute)
   return false
 end
 
-collision.hoverOverBox = function(tbl)
+collision.hoverOverBox = function(box)
   local mouseCoords = {love.mouse.getPosition()}
+  local mouseBounds = {
+    x = mouseCoords[1],
+    y = mouseCoords[2],
+    w = 0,
+    h = 0
+  }
 
+  local boxBounds = {
+    x = box.x +borders.x /2,
+    y = box.y +borders.y /2,
+    w = box.w,
+    h = box.h
+  }
+
+  if collision.rectangles(boxBounds, mouseBounds) then
+    return true
+  end
+
+  return false
+end
+
+collision.hoverOverBoxes = function(tbl)
   for name,box in pairs(tbl) do
-    local newY = box.y +borders.y /2
-    local newX = box.x +borders.x /2
-
-    if mouseCoords[1] >= newX and mouseCoords[1] <= newX + box.w and mouseCoords[2] >= newY and mouseCoords[2] <= newY + box.h then
+    if collision.hoverOverBox(box) then
       return name
     end
   end
@@ -58,20 +110,20 @@ end
 
 collision.clickBox = function(displayedTbl)
   if mouse.left.clicked then
-    return collision.hoverOverBox(displayedTbl)
+    return collision.hoverOverBoxes(displayedTbl)
   end
 end
 
 collision.rightClickBox = function(displayedTbl)
   if mouse.right.clicked then
-    return collision.hoverOverBox(displayedTbl)
+    return collision.hoverOverBoxes(displayedTbl)
   end
 end
 
 local handCursor = love.mouse.getSystemCursor("hand")
 
 collision.updateMouseCursor = function(displayedTbl)
-  if collision.hoverOverBox(displayedTbl) then
+  if collision.hoverOverBoxes(displayedTbl) then
     love.mouse.setCursor(handCursor)
   end
 end

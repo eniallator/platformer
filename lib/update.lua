@@ -1,21 +1,23 @@
 local update = {}
 
 update.forces = function()
-  moveSpeed = screenDim.y / (600 /0.4)
-  jumpHeight = -screenDim.y /(600/4.5)
-  gravity = screenDim.y /200
+  moveSpeed = screenDim.y / (600 / 0.4)
+  jumpHeight = - screenDim.y / (600/ 4.5)
+  gravity = screenDim.y / 200
   drag = 1.07
   friction = 1.07
 end
 
 update.camera = function()
   local playerDim = entity.player.dim()
-  if entity.player.pos.x + playerDim.w/2 > screenDim.x/2  then
-    if entity.player.pos.x + playerDim.w/2 > 255*blockSize - screenDim.x/2 then
-      cameraTranslation = -(255*blockSize - screenDim.x)
+  local midPlayerX = entity.player.pos.x + playerDim.w / 2
+
+  if midPlayerX > screenDim.x / 2  then
+    if midPlayerX > 255 * blockSize - screenDim.x / 2 then
+      cameraTranslation = - (255 * blockSize - screenDim.x)
 
     else
-      cameraTranslation = -entity.player.pos.x +screenDim.x /2 -playerDim.w /2
+      cameraTranslation = - entity.player.pos.x + screenDim.x / 2 - playerDim.w / 2
     end
 
   else
@@ -27,9 +29,14 @@ end
 
 update.mapCreatorinteract = function()
   local mouseCoords = {love.mouse.getPosition()}
-  mouseCoords[1] = mouseCoords[1] -cameraTranslation -borders.x /2
+  local blockMenuDim = {
+    x = screenDim.x / 60 - cameraTranslation,
+    y = screenDim.y - screenDim.y / 9,
+    w = screenDim.x - screenDim.x / 60 * 2,
+    h = blockSize * 2
+  }
 
-  if not (mapCreatorMenu and collision.hoverOverBox({{x = screenDim.x /60 -cameraTranslation, y = screenDim.y -screenDim.y /9, w = screenDim.x -screenDim.x /60 *2, h = blockSize *2}})) and mouseCoords[1] > 0 and mouseCoords[1] + cameraTranslation < screenDim.x and mouseCoords[2] > 0 and mouseCoords[2] < screenDim.y then
+  if not (mapCreatorMenu and collision.hoverOverBox(blockMenuDim)) and mouseCoords[1] > 0 and mouseCoords[1] + cameraTranslation < screenDim.x and mouseCoords[2] > 0 and mouseCoords[2] < screenDim.y then
     if mouse.left.held and not firstLoad then
       map.placeBlock(mouseCoords)
 
@@ -52,11 +59,11 @@ update.mapCreatorBlockMenu = function()
 end
 
 update.mapCreatorPos = function()
-  if love.keyboard.isDown(controls[controls.findName("mapCreator.scrollRight")].key) and cameraTranslation > -(255*blockSize - screenDim.x) +mapCreatorScrollSpeed -1 then
+  if love.keyboard.isDown(controls[controls.findName("mapCreator.scrollRight")].key) and cameraTranslation > - (255 * blockSize - screenDim.x) + mapCreatorScrollSpeed - 1 then
     cameraTranslation = cameraTranslation - mapCreatorScrollSpeed
   end
 
-  if love.keyboard.isDown(controls[controls.findName("mapCreator.scrollLeft")].key) and cameraTranslation < -mapCreatorScrollSpeed +1 then
+  if love.keyboard.isDown(controls[controls.findName("mapCreator.scrollLeft")].key) and cameraTranslation < - mapCreatorScrollSpeed + 1 then
     cameraTranslation = cameraTranslation + mapCreatorScrollSpeed
   end
 end
