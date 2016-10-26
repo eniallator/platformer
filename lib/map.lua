@@ -19,7 +19,7 @@ local function getCoords(str)
   local xNum = str:find("x")
   local yNum = str:find("y")
 
-  return tonumber(str:sub(xNum +1, yNum -1)), tonumber(str:sub(yNum +1, #str))
+  return tonumber(str:sub(xNum + 1, yNum - 1)), tonumber(str:sub(yNum + 1, #str))
 end
 
 map.makeGrid = function(x, y)
@@ -31,7 +31,7 @@ map.makeGrid = function(x, y)
 
     for i=1,data.h do
       for j=1,data.w do
-        mapGrid[blockY+i-1][blockX+j-1] = {block = data.block}
+        mapGrid[blockY + i - 1][blockX + j - 1] = {block = data.block}
       end
     end
   end
@@ -43,14 +43,14 @@ map.writeTable = function(tbl, fileToWrite)
   for coords, data in pairs(tbl) do
 
     blockX, blockY = getCoords(coords)
-    writeStr = writeStr .. "x" .. string.char(blockX -1) .. "y" .. string.char(blockY -1) .. "b" .. string.char(collision.getBlock(data.block) -1)
+    writeStr = writeStr .. "x" .. string.char(blockX - 1) .. "y" .. string.char(blockY - 1) .. "b" .. string.char(collision.getBlock(data.block) - 1)
 
     if data.w > 1 then
-      writeStr = writeStr .. "w" .. string.char(data.w -2)
+      writeStr = writeStr .. "w" .. string.char(data.w - 2)
     end
 
     if data.h > 1 then
-      writeStr = writeStr .. "h" .. string.char(data.h -2)
+      writeStr = writeStr .. "h" .. string.char(data.h - 2)
     end
   end
 
@@ -71,35 +71,35 @@ map.readTable = function(fileToRead)
 
   while rawTbl[index] do
     if rawTbl[index] == "x" then
-      index = index +1
-      outKey = "x" .. string.byte(rawTbl[index]) +1
-      index = index +1
+      index = index + 1
+      outKey = "x" .. string.byte(rawTbl[index]) + 1
+      index = index + 1
     end
 
     if rawTbl[index] == "y" then
-      index = index +1
-      outKey = outKey .. "y" .. string.byte(rawTbl[index]) +1
-      index = index +1
+      index = index + 1
+      outKey = outKey .. "y" .. string.byte(rawTbl[index]) + 1
+      index = index + 1
     end
 
     outTbl[outKey] = {}
 
     if rawTbl[index] == "b" then
-      index = index +1
-      outTbl[outKey].block = blocks[string.byte(rawTbl[index]) +1].name
-      index = index +1
+      index = index + 1
+      outTbl[outKey].block = blocks[string.byte(rawTbl[index]) + 1].name
+      index = index + 1
     end
 
     if rawTbl[index] == "w" then
-      index = index +1
-      outTbl[outKey].w = string.byte(rawTbl[index]) +2
-      index = index +1
+      index = index + 1
+      outTbl[outKey].w = string.byte(rawTbl[index]) + 2
+      index = index + 1
     end
 
     if rawTbl[index] == "h" then
-      index = index +1
-      outTbl[outKey].h = string.byte(rawTbl[index]) +2
-      index = index +1
+      index = index + 1
+      outTbl[outKey].h = string.byte(rawTbl[index]) + 2
+      index = index + 1
     end
 
     if not outTbl[outKey].w then
@@ -129,9 +129,9 @@ end
 local function checkBlockRow(tbl, block, width, x, y)
   local allSame = true
 
-  for i=0,width -1 do
-    if tbl[y] and type(tbl[y][x +i]) == "table" then
-      if tbl[y][x +i].block ~= block then
+  for i=0,width - 1 do
+    if tbl[y] and type(tbl[y][x + i]) == "table" then
+      if tbl[y][x + i].block ~= block then
         allSame = false
       end
 
@@ -177,7 +177,7 @@ map.transform = function(mapTbl)
         blocksWidth = blocksWidth + 1
       end
 
-      while checkBlockRow(oldMap, compareBlock, blocksWidth, blockX, blockY +blocksHeight) do
+      while checkBlockRow(oldMap, compareBlock, blocksWidth, blockX, blockY + blocksHeight) do
         blocksHeight = blocksHeight + 1
       end
 
@@ -186,7 +186,7 @@ map.transform = function(mapTbl)
 
       for i=1, blocksHeight do
         for j=1, blocksWidth do
-          oldMap[blockY +i -1][blockX +j -1] = "n"
+          oldMap[blockY + i - 1][blockX + j - 1] = "n"
         end
       end
     end
@@ -197,11 +197,11 @@ map.transform = function(mapTbl)
 end
 
 map.destroyBlock = function(coords)
-  mapGrid[math.ceil(coords[2]/blockSize)][math.ceil(coords[1]/blockSize)] = "n"
+  mapGrid[math.ceil(coords[2] / blockSize)][math.ceil(coords[1] / blockSize)] = "n"
 end
 
 map.placeBlock = function(coords)
-  mapGrid[math.ceil(coords[2]/blockSize)][math.ceil(coords[1]/blockSize)] = {block = blocks[selectedBlockIndex].name}
+  mapGrid[math.ceil(coords[2] / blockSize)][math.ceil(coords[1] / blockSize)] = {block = blocks[selectedBlockIndex].name}
 end
 
 return map

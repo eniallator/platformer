@@ -59,12 +59,7 @@ local function updateControlTbl(compareTbl)
   end
 end
 
-controls.loadControls = function()
-  if not love.filesystem.exists("controls.cfg") then
-    controls.applyChanges()
-    return
-  end
-
+local function controlsToTbl()
   local compareTbl = {}
 
   for line in love.filesystem.lines("controls.cfg") do
@@ -77,6 +72,16 @@ controls.loadControls = function()
     table.insert(compareTbl, {key = key, name = name})
   end
 
+  return compareTbl
+end
+
+controls.loadControls = function()
+  if not love.filesystem.exists("controls.cfg") then
+    controls.applyChanges()
+    return
+  end
+
+  local compareTbl = controlsToTbl()
   updateControlTbl(compareTbl)
 end
 

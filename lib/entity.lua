@@ -1,33 +1,26 @@
 local entity = {}
 
 local function applyVelForces(currEntity)
-  currEntity.vel.x = currEntity.vel.x /drag
-  currEntity.vel.y = currEntity.vel.y +0.1 *gravity
+  currEntity.vel.x = currEntity.vel.x / drag
+  currEntity.vel.y = currEntity.vel.y + 0.1 * gravity
 
   if currEntity.onGround then
-    currEntity.vel.x = currEntity.vel.x /friction
+    currEntity.vel.x = currEntity.vel.x / friction
   end
 end
 
-local function updatePos(currEntity)
-  local currEntityDim = currEntity.dim()
-  local xBoundLimit = currEntity.pos.x +currEntity.vel.x > 0 and currEntity.pos.x +currEntity.vel.x +currEntityDim.w <= 255 *blockSize
-  local yBoundLimit = currEntity.pos.y +currEntityDim.h +currEntity.vel.y < screenDim.y
-
-  if collision.detectEntity({x = currEntity.pos.x + currEntity.vel.x, y = currEntity.pos.y + currEntity.vel.y}, currEntity, "kill") and xBoundLimit and yBoundLimit then
-    currEntity.kill()
-    screenRed = 150
-    return
-  end
-
+local function updateEntityX(currEntity, xBoundLimit)
   if not collision.detectEntity({x = currEntity.pos.x + currEntity.vel.x, y = currEntity.pos.y}, currEntity, "solid") and xBoundLimit then
     currEntity.pos.x = currEntity.pos.x + currEntity.vel.x
 
   else
     currEntity.vel.x = 0
   end
+end
 
+local function updateEntityY(currEntity, yBoundLimit)
   if not collision.detectEntity({x = currEntity.pos.x, y = currEntity.pos.y + currEntity.vel.y}, currEntity, "solid") and yBoundLimit then
+    currEntity.jumpsLeft = currEntity.jumpsLeft == 0 and 0 or 1
     currEntity.pos.y = currEntity.pos.y + currEntity.vel.y
     currEntity.onGround = false
 
@@ -36,6 +29,21 @@ local function updatePos(currEntity)
     currEntity.vel.y = 0
     currEntity.onGround = true
   end
+end
+
+local function updatePos(currEntity)
+  local currEntityDim = currEntity.dim()
+  local xBoundLimit = currEntity.pos.x + currEntity.vel.x > 0 and currEntity.pos.x + currEntity.vel.x + currEntityDim.w <= 255 * blockSize
+  local yBoundLimit = currEntity.pos.y + currEntityDim.h + currEntity.vel.y < screenDim.y
+
+  if collision.detectEntity({x = currEntity.pos.x + currEntity.vel.x, y = currEntity.pos.y + currEntity.vel.y}, currEntity, "kill") and xBoundLimit and yBoundLimit then
+    currEntity.kill()
+    screenRed = 150
+    return
+  end
+
+  updateEntityX(currEntity, xBoundLimit)
+  updateEntityY(currEntity, yBoundLimit)
 end
 
 local function checkUp(currEntity)
@@ -54,7 +62,7 @@ local function checkUp(currEntity)
   return upPressed
 end
 
-local function getInput(currEntity)
+local function updateEntityJump(currEntity)
   if checkUp(currEntity) and currEntity.jumpsLeft and currEntity.jumpsLeft > 0 then
     if currEntity.vel.y > 0 then
       currEntity.vel.y = jumpHeight
@@ -65,6 +73,10 @@ local function getInput(currEntity)
 
     currEntity.jumpsLeft = currEntity.jumpsLeft - 1
   end
+end
+
+local function getInput(currEntity)
+  updateEntityJump(currEntity)
 
   if love.keyboard.isDown(controls[controls.findName("game.right")].key) then
     currEntity.vel.x = currEntity.vel.x + moveSpeed
@@ -98,11 +110,12 @@ entity.player.texture = {
 }
 
 entity.player.update = function()
-  applyVelForces(entity.player)
-  getInput(entity.player)
-  updatePos(entity.player)
-
   local player = entity.player
+
+  applyVelForces(player)
+  getInput(player)
+  updatePos(player)
+
   local playerPos = {x = player.pos.x, y = player.pos.y}
   local checkPoint = {collision.detectEntity(playerPos, player, "checkPoint")}
 
@@ -122,7 +135,7 @@ entity.player.kill = function()
   entity.player.vel = {x = 0, y = 0}
 end
 
-entity.player.reset = function()
+local function findSpawnPoint()
   local spawnPoint = {1,1}
 
   for i=1, #mapGrid do
@@ -135,8 +148,14 @@ entity.player.reset = function()
     end
   end
 
-  entity.player.pos = {x = spawnPoint[1], y = spawnPoint[2]}
-  entity.player.spawnPos = {x = spawnPoint[1], y = spawnPoint[2]}
+  return spawnPoint
+end
+
+entity.player.reset = function()
+  local spawnPointPos = findSpawnPoint()
+
+  entity.player.pos = {x = spawnPointPos[1], y = spawnPointPos[2]}
+  entity.player.spawnPos = {x = spawnPointPos[1], y = spawnPointPos[2]}
   entity.player.vel = {x = 0, y = 0}
 end
 
