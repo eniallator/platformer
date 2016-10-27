@@ -51,13 +51,4 @@ utilsData.alert.fileExists = {
   }
 }
 
-utilsData.dropMenu.playMap = {
-  {
-    name = "Delete",
-    func = function(mapName)
-      love.filesystem.remove("maps/" .. mapName .. mapExtension)
-    end
-  }
-}
-
 return utilsData

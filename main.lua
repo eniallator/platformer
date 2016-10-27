@@ -33,7 +33,6 @@ function love.load()
   entity = require "lib/entity"
   controls = require "lib/controls"
   map = require "lib/map"
-  dropMenu = require "lib/utils/dropMenu"
   textBox = require "lib/utils/textBox"
   alert = require "lib/utils/alert"
   mouse = require "lib/utils/mouse"
@@ -62,7 +61,7 @@ function love.load()
   currMenu = "main"
   mapExtension = ".map"
   timeCounter = 0
-  
+
   map.syncDefaultMaps()
 end
 
@@ -89,9 +88,6 @@ function love.update()
 
   if utilsData.textBox.selected then
     update.textBox()
-
-  elseif utilsData.dropMenu.selected then
-    dropMenu.getInput(utilsData.dropMenu[utilsData.dropMenu.selected], utilsData.dropMenu.mapName)
 
   elseif selected == "game" then
     if not reachedGoal then
@@ -144,7 +140,6 @@ function love.draw()
 
     display.background()
     display.optionMenu()
-    dropMenu.display(utilsData.dropMenu[utilsData.dropMenu.selected], utilsData.dropMenu.coords)
 
   elseif selected == "game" then
     display.background()

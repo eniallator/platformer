@@ -32,26 +32,42 @@ end
 
 local function generatePages(tbl)
   local outTbl = {}
-  local dim = {w = screenDim.x /2, h = screenDim.y /16}
-  local boxGap = screenDim.y/40
+  local dim = {w = screenDim.x / 2, h = screenDim.y / 16}
+  local boxGap = screenDim.y / 40
+
+  if currMenu == "play" then
+    dim.w = screenDim.x * (3 / 8) - boxGap / 2
+    outTbl.deleteNames = {}
+  end
 
   for i=1, #tbl do
     if i % 8 == 1 then
-      outTbl[math.floor(i/8 +1)] = {}
-      currY = screenDim.y /2 - (dim.h + boxGap) *3 - boxGap - screenDim.y /20
+      outTbl[math.floor(i / 8 + 1)] = {mapNames = {}}
+      currY = screenDim.y / 2 - (dim.h + boxGap) * 3 - boxGap - screenDim.y / 20
+
+      if currMenu == "play" then
+        outTbl[math.floor(i / 8 + 1)].deleteNames = {}
+      end
     end
 
-    local tblToInsert = {x = screenDim.x /2 - dim.w /2, y = currY, w = dim.w, h = dim.h}
+    local mapNameTbl = {x = screenDim.x / 2 - screenDim.x / 4, y = currY, w = dim.w, h = dim.h}
 
     if type(tbl[i]) == "table" then
-      tblToInsert.name = tbl[i][1]
-      tblToInsert.controlIndex = tbl[i][2]
+      mapNameTbl.name = tbl[i][1]
+      mapNameTbl.controlIndex = tbl[i][2]
 
     else
-      tblToInsert.name = tbl[i]
+      mapNameTbl.name = tbl[i]
     end
 
-    table.insert(outTbl[math.floor((i -1) /8 +1)], tblToInsert)
+    local yIndex = math.floor((i - 1) / 8 + 1)
+    table.insert(outTbl[yIndex].mapNames, mapNameTbl)
+
+    if currMenu == "play" then
+      local deleteMapTbl = {mapName = tbl[i], name = "Delete", x = mapNameTbl.x + mapNameTbl.w + boxGap, y = currY, w = screenDim.x * (1 / 8) - boxGap / 2, h = dim.h}
+      table.insert(outTbl[yIndex].deleteNames, deleteMapTbl)
+    end
+
     currY = currY + dim.h + boxGap
   end
 
@@ -84,8 +100,14 @@ local function loadOptionFuncs(page, menuName, func)
   end
 
   if page then
-    for k,v in pairs(page) do
+    for k,v in pairs(page.mapNames) do
       optionData[menuName].funcs[k] = func
+
+      if menuName == "play" then
+        optionData[menuName].funcs["delete:" .. k] = function(box, rmb)
+          love.filesystem.remove("maps/" .. box.mapName .. mapExtension)
+        end
+      end
     end
   end
 end
@@ -111,12 +133,16 @@ local function loadOptions(list, menuName, func)
   end
 
   if listPages[1] then
-    for k,v in pairs(listPages[currOptionPage]) do
+    for k,v in pairs(listPages[currOptionPage].mapNames) do
       if menuName == "controls" and v.name == controls.waitForPress then
         v.name = "Press a key to change"
       end
 
       returnTbl[k] = v
+
+      if menuName == "play" then
+        returnTbl["delete:" .. k] = listPages[currOptionPage].deleteNames[k]
+      end
     end
   end
 
@@ -276,19 +302,13 @@ optionData.escMenu = {
 optionData.play = {
   display = function()
     return loadOptions(filterFiles(love.filesystem.getDirectoryItems("maps")), "play",
-      function(box, rmb)
-        if not rmb then
-          formattedMap = map.readTable("maps/" .. box.name .. ".map")
-          map.makeGrid(256, screenDim.y/blockSize)
-          selected = "game"
-          currMenu = "main"
-          entity.player.reset()
-          timeCounter = 0
-
-        else
-          utilsData.dropMenu.selected = "playMap"
-          utilsData.dropMenu.mapName = box.name
-        end
+      function(box)
+        formattedMap = map.readTable("maps/" .. box.name .. ".map")
+        map.makeGrid(256, screenDim.y/blockSize)
+        selected = "game"
+        currMenu = "main"
+        entity.player.reset()
+        timeCounter = 0
       end
     )
   end
