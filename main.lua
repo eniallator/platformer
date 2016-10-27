@@ -43,6 +43,7 @@ function love.load()
   textBox.reset()
   update.forces()
   controls.loadControls()
+  map.syncDefaultMaps()
 
   mapCreatorScrollSpeed = 5
   blocks = {
@@ -62,16 +63,6 @@ function love.load()
   currMenu = "main"
   mapExtension = ".map"
   timeCounter = 0
-
-  if not love.filesystem.isDirectory("maps") then
-    love.filesystem.createDirectory("maps")
-  end
-
-  for name,mapData in pairs(defaultMaps) do
-    if not love.filesystem.exists("maps/" .. name .. mapExtension) then
-      map.writeTable(mapData, "maps/" .. name .. mapExtension)
-    end
-  end
 end
 
 function love.resize(w, h)
@@ -96,12 +87,7 @@ function love.update()
   controls.getKeyInput()
 
   if utilsData.textBox.selected then
-    textBox.getInput(utilsData.textBox[utilsData.textBox.selected])
-
-    if utilsData.alert.selected then
-      local currAlert = utilsData.alert[utilsData.alert.selected]
-      alert.getInput(currAlert.buttons, currAlert.dimensions())
-    end
+    update.textBox()
 
   elseif utilsData.dropMenu.selected then
     dropMenu.getInput(utilsData.dropMenu[utilsData.dropMenu.selected], utilsData.dropMenu.mapName)
@@ -121,36 +107,13 @@ function love.update()
     end
 
   elseif selected == "menu" then
-    local menuDisplayed = optionData[currMenu].display()
-    local clickedBox = collision.clickBox(menuDisplayed, true)
-    local rightClickedBox = collision.rightClickBox(menuDisplayed, true)
-    collision.updateMouseCursor(menuDisplayed, true)
     credits.update()
-
-  if clickedBox then
-      optionData[currMenu].funcs[clickedBox](menuDisplayed[clickedBox])
-
-    elseif rightClickedBox and currMenu == "play" then
-      optionData[currMenu].funcs[rightClickedBox](menuDisplayed[rightClickedBox], true)
-    end
+    update.optionMenu()
 
   elseif selected == "createMap" then
     update.mapCreatorPos()
     update.mapCreatorBlockMenu()
-
-    if mapCreatorMenu then
-      local blockMenuTable = optionData.blockMenu.display()
-      local blockClicked = collision.clickBox(blockMenuTable)
-      collision.updateMouseCursor(blockMenuTable)
-
-      if blockClicked == "prevPage" or blockClicked == "nextPage" then
-        optionData.blockMenu.funcs[blockClicked]()
-
-      elseif blockClicked then
-        selectedBlockIndex = blockMenuTable[blockClicked].blockIndex
-      end
-    end
-
+    update.selectedMapCreatorBlock()
     update.escMenu()
     update.mapCreatorinteract()
   end
@@ -160,29 +123,17 @@ function love.draw()
   love.graphics.translate(cameraTranslation +borders.x /2, borders.y /2)
   newTick = true
 
-  if screenRed and screenRed < 255 then
-    screenRed = screenRed + 3
+  if screenRed and screenRed > 0 then
+    screenRed = screenRed - 3
 
   else
-    screenRed = 255
+    screenRed = 0
   end
 
-  love.graphics.setColor(255, screenRed, screenRed)
+  love.graphics.setColor(255, 255 - screenRed, 255 - screenRed)
 
   if utilsData.textBox.selected then
-    display.background()
-
-    if utilsData.textBox.selected == "saveMap" then
-      display.map()
-    end
-
-    local currTextBox = utilsData.textBox[utilsData.textBox.selected]
-    textBox.display(currTextBox.title, textBox.currText, currTextBox.dimensions())
-
-    if utilsData.alert.selected then
-      local currAlert = utilsData.alert[utilsData.alert.selected]
-      alert.display(currAlert.message, currAlert.buttons, currAlert.dimensions())
-    end
+    display.textBox()
 
   elseif utilsData.dropMenu.selected then
     if not utilsData.dropMenu.coords then
@@ -191,11 +142,7 @@ function love.draw()
     end
 
     display.background()
-
-    for _, box in pairs(optionData[currMenu].display()) do
-      display.box(box)
-    end
-
+    display.optionMenu()
     dropMenu.display(utilsData.dropMenu[utilsData.dropMenu.selected], utilsData.dropMenu.coords)
 
   elseif selected == "game" then
@@ -209,10 +156,7 @@ function love.draw()
   elseif selected == "menu" then
     display.background()
     credits.display()
-
-    for _, box in pairs(optionData[currMenu].display()) do
-      display.box(box)
-    end
+    display.optionMenu()
 
   elseif selected == "createMap" then
     display.background()
@@ -223,7 +167,7 @@ function love.draw()
 
   if borders.x > 0 then
     love.graphics.setColor(0, 0, 0)
-    love.graphics.rectangle("fill", -cameraTranslation +screenDim.x , 0, borders.x /2, screenDim.y)
-    love.graphics.rectangle("fill", -cameraTranslation -borders.x /2, 0, borders.x /2, screenDim.y)
+    love.graphics.rectangle("fill", - cameraTranslation + screenDim.x , 0, borders.x / 2, screenDim.y)
+    love.graphics.rectangle("fill", - cameraTranslation - borders.x / 2, 0, borders.x / 2, screenDim.y)
   end
 end

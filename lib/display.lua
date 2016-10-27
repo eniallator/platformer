@@ -155,4 +155,26 @@ display.timeCounter = function()
   love.graphics.setFont(love.graphics.newFont("assets/Psilly.otf", screenDim.x / 40))
 end
 
+display.optionMenu = function()
+  for _, box in pairs(optionData[currMenu].display()) do
+    display.box(box)
+  end
+end
+
+display.textBox = function()
+  display.background()
+
+  if utilsData.textBox.selected == "saveMap" then
+    display.map()
+  end
+
+  local currTextBox = utilsData.textBox[utilsData.textBox.selected]
+  textBox.display(currTextBox.title, textBox.currText, currTextBox.dimensions())
+
+  if utilsData.alert.selected then
+    local currAlert = utilsData.alert[utilsData.alert.selected]
+    alert.display(currAlert.message, currAlert.buttons, currAlert.dimensions())
+  end
+end
+
 return display

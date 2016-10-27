@@ -38,7 +38,7 @@ local function updatePos(currEntity)
 
   if collision.detectEntity({x = currEntity.pos.x + currEntity.vel.x, y = currEntity.pos.y + currEntity.vel.y}, currEntity, "kill") and xBoundLimit and yBoundLimit then
     currEntity.kill()
-    screenRed = 150
+    screenRed = 100
     return
   end
 

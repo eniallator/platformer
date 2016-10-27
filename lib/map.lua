@@ -197,11 +197,23 @@ map.transform = function(mapTbl)
 end
 
 map.destroyBlock = function(coords)
-  mapGrid[math.ceil(coords[2] / blockSize)][math.ceil(coords[1] / blockSize)] = "n"
+  mapGrid[math.ceil(coords.y / blockSize)][math.ceil(coords.x / blockSize)] = "n"
 end
 
 map.placeBlock = function(coords)
-  mapGrid[math.ceil(coords[2] / blockSize)][math.ceil(coords[1] / blockSize)] = {block = blocks[selectedBlockIndex].name}
+  mapGrid[math.ceil(coords.y / blockSize)][math.ceil(coords.x / blockSize)] = {block = blocks[selectedBlockIndex].name}
+end
+
+map.syncDefaultMaps = function()
+  if not love.filesystem.isDirectory("maps") then
+    love.filesystem.createDirectory("maps")
+  end
+
+  for name,mapData in pairs(defaultMaps) do
+    if not love.filesystem.exists("maps/" .. name .. mapExtension) then
+      map.writeTable(mapData, "maps/" .. name .. mapExtension)
+    end
+  end
 end
 
 return map

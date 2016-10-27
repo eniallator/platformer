@@ -28,7 +28,11 @@ update.camera = function()
 end
 
 update.mapCreatorinteract = function()
-  local mouseCoords = {love.mouse.getPosition()}
+  local mouseCoords = {}
+  mouseCoords.x, mouseCoords.y = love.mouse.getPosition()
+  mouseCoords.x = mouseCoords.x - borders.x / 2
+  mouseCoords.y = mouseCoords.y - borders.y / 2
+
   local blockMenuDim = {
     x = screenDim.x / 60 - cameraTranslation,
     y = screenDim.y - screenDim.y / 9,
@@ -36,7 +40,7 @@ update.mapCreatorinteract = function()
     h = blockSize * 2
   }
 
-  if not (mapCreatorMenu and collision.hoverOverBox(blockMenuDim)) and mouseCoords[1] > 0 and mouseCoords[1] + cameraTranslation < screenDim.x and mouseCoords[2] > 0 and mouseCoords[2] < screenDim.y then
+  if not (mapCreatorMenu and collision.hoverOverBox(blockMenuDim)) and mouseCoords.x > 0 and mouseCoords.x + cameraTranslation < screenDim.x and mouseCoords.y > 0 and mouseCoords.y < screenDim.y then
     if mouse.left.held and not firstLoad then
       map.placeBlock(mouseCoords)
 
@@ -55,6 +59,21 @@ update.mapCreatorBlockMenu = function()
 
   if love.keyboard.isDown(controls[controls.findName("mapCreator.blockMenu")].key) then
     mapCreatorMenu = true
+  end
+end
+
+update.selectedMapCreatorBlock = function()
+  if mapCreatorMenu then
+    local blockMenuTable = optionData.blockMenu.display()
+    local blockClicked = collision.clickBox(blockMenuTable)
+    collision.updateMouseCursor(blockMenuTable)
+
+    if blockClicked == "prevPage" or blockClicked == "nextPage" then
+      optionData.blockMenu.funcs[blockClicked]()
+
+    elseif blockClicked then
+      selectedBlockIndex = blockMenuTable[blockClicked].blockIndex
+    end
   end
 end
 
@@ -106,6 +125,29 @@ update.winMenu = function()
 
   if clickedBox then
     optionData.winMenu.funcs[clickedBox]()
+  end
+end
+
+update.optionMenu = function()
+  local menuDisplayed = optionData[currMenu].display()
+  local clickedBox = collision.clickBox(menuDisplayed, true)
+  local rightClickedBox = collision.rightClickBox(menuDisplayed, true)
+  collision.updateMouseCursor(menuDisplayed, true)
+
+  if clickedBox then
+    optionData[currMenu].funcs[clickedBox](menuDisplayed[clickedBox])
+
+  elseif rightClickedBox and currMenu == "play" then
+    optionData[currMenu].funcs[rightClickedBox](menuDisplayed[rightClickedBox], true)
+  end
+end
+
+update.textBox = function()
+  textBox.getInput(utilsData.textBox[utilsData.textBox.selected])
+
+  if utilsData.alert.selected then
+    local currAlert = utilsData.alert[utilsData.alert.selected]
+    alert.getInput(currAlert.buttons, currAlert.dimensions())
   end
 end
 
