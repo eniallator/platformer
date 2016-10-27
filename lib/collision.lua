@@ -47,7 +47,10 @@ collision.detectEntity = function(pos, currEntity, attribute)
 
         local currBlock = blocks[collision.getBlock(mapGrid[i][j].block)]
         local pixelSize = (blockSize/10)
-        local tilePos = {x = (j - 1) * blockSize, y = (i - 1) * blockSize}
+        local tilePos = {
+          x = (j - 1) * blockSize,
+          y = (i - 1) * blockSize
+        }
 
         local tileBounds = {
           x = currBlock.offSet and tilePos.x + currBlock.offSet.x * pixelSize or tilePos.x,

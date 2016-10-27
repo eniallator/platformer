@@ -43,7 +43,6 @@ function love.load()
   textBox.reset()
   update.forces()
   controls.loadControls()
-  map.syncDefaultMaps()
 
   mapCreatorScrollSpeed = 5
   blocks = {
@@ -63,6 +62,8 @@ function love.load()
   currMenu = "main"
   mapExtension = ".map"
   timeCounter = 0
+  
+  map.syncDefaultMaps()
 end
 
 function love.resize(w, h)
