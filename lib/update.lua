@@ -144,7 +144,9 @@ end
 
 update.textBox = function()
   textBox.getInput(utilsData.textBox[utilsData.textBox.selected])
+end
 
+update.alert = function()
   if utilsData.alert.selected then
     local currAlert = utilsData.alert[utilsData.alert.selected]
     alert.getInput(currAlert.buttons, currAlert.dimensions())

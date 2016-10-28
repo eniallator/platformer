@@ -170,7 +170,9 @@ display.textBox = function()
 
   local currTextBox = utilsData.textBox[utilsData.textBox.selected]
   textBox.display(currTextBox.title, textBox.currText, currTextBox.dimensions())
+end
 
+display.alert = function()
   if utilsData.alert.selected then
     local currAlert = utilsData.alert[utilsData.alert.selected]
     alert.display(currAlert.message, currAlert.buttons, currAlert.dimensions())

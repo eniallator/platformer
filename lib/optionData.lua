@@ -105,7 +105,8 @@ local function loadOptionFuncs(page, menuName, func)
 
       if menuName == "play" then
         optionData[menuName].funcs["delete:" .. k] = function(box, rmb)
-          love.filesystem.remove("maps/" .. box.mapName .. mapExtension)
+          utilsData.alert.selected = "deleteMapConfirm"
+          utilsData.alert.deleteMapConfirm.selectedMap = box.mapName
         end
       end
     end

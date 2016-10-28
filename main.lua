@@ -85,6 +85,7 @@ function love.update()
   love.mouse.setCursor()
   mouse.updateState()
   controls.getKeyInput()
+  update.alert()
 
   if utilsData.textBox.selected then
     update.textBox()
@@ -132,15 +133,6 @@ function love.draw()
   if utilsData.textBox.selected then
     display.textBox()
 
-  elseif utilsData.dropMenu.selected then
-    if not utilsData.dropMenu.coords then
-      utilsData.dropMenu.coords = {}
-      utilsData.dropMenu.coords.x, utilsData.dropMenu.coords.y = love.mouse.getPosition()
-    end
-
-    display.background()
-    display.optionMenu()
-
   elseif selected == "game" then
     display.background()
     entity.player.display()
@@ -160,6 +152,8 @@ function love.draw()
     display.blockMenu()
     display.escMenu()
   end
+  
+  display.alert()
 
   if borders.x > 0 then
     love.graphics.setColor(0, 0, 0)
