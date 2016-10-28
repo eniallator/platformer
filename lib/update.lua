@@ -1,5 +1,23 @@
 local update = {}
 
+update.internalWindowSize = function(w, h)
+  if w/h == aspectRatio then
+    borders = {x = 0, y = 0}
+
+  elseif w/h > aspectRatio then
+    borders.x = (w -(h *aspectRatio))
+    borders.y = 0
+
+  else
+    borders.y = (h -(w /aspectRatio))
+    borders.x = 0
+  end
+
+  screenDim.x, screenDim.y = w -borders.x +1, h -borders.y
+  blockSize = screenDim.y/20
+  love.graphics.setFont(love.graphics.newFont("assets/Psilly.otf", screenDim.x/40))
+end
+
 update.forces = function()
   moveSpeed = screenDim.y / (600 / 0.4)
   jumpHeight = - screenDim.y / (600/ 4.5)

@@ -179,4 +179,23 @@ display.alert = function()
   end
 end
 
+display.makeScreenRed = function()
+  if screenRed and screenRed > 0 then
+    screenRed = screenRed - 3
+
+  else
+    screenRed = 0
+  end
+
+  love.graphics.setColor(255, 255 - screenRed, 255 - screenRed)
+end
+
+display.borders = function()
+  if borders.x > 0 then
+    love.graphics.setColor(0, 0, 0)
+    love.graphics.rectangle("fill", - cameraTranslation + screenDim.x , 0, borders.x / 2, screenDim.y)
+    love.graphics.rectangle("fill", - cameraTranslation - borders.x / 2, 0, borders.x / 2, screenDim.y)
+  end
+end
+
 return display
