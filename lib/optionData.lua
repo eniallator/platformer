@@ -50,7 +50,12 @@ local function generatePages(tbl)
       end
     end
 
-    local mapNameTbl = {x = screenDim.x / 2 - screenDim.x / 4, y = currY, w = dim.w, h = dim.h}
+    local mapNameTbl = {
+      x = screenDim.x / 2 - screenDim.x / 4,
+      y = currY,
+      w = not map.checkDefaultMapName(tbl[i]) and dim.w or screenDim.x / 2,
+      h = dim.h
+    }
 
     if type(tbl[i]) == "table" then
       mapNameTbl.name = tbl[i][1]
@@ -63,8 +68,15 @@ local function generatePages(tbl)
     local yIndex = math.floor((i - 1) / 8 + 1)
     table.insert(outTbl[yIndex].mapNames, mapNameTbl)
 
-    if currMenu == "play" then
-      local deleteMapTbl = {mapName = tbl[i], name = "Delete", x = mapNameTbl.x + mapNameTbl.w + boxGap, y = currY, w = screenDim.x * (1 / 8) - boxGap / 2, h = dim.h}
+    if currMenu == "play" and not map.checkDefaultMapName(tbl[i]) then
+      local deleteMapTbl = {
+        mapName = tbl[i],
+        name = "Delete",
+        x = mapNameTbl.x + mapNameTbl.w + boxGap,
+        y = currY, w = screenDim.x * (1 / 8) - boxGap / 2,
+        h = dim.h
+      }
+      
       table.insert(outTbl[yIndex].deleteNames, deleteMapTbl)
     end
 

@@ -20,7 +20,7 @@ end
 
 local function updateEntityY(currEntity, yBoundLimit)
   if not collision.detectEntity({x = currEntity.pos.x, y = currEntity.pos.y + currEntity.vel.y}, currEntity, "solid") and yBoundLimit then
-    currEntity.inAir = currEntity.inAir and currEntity.inAir + 1 or 1
+    currEntity.inAir = currEntity.inAir and currEntity.inAir + 1 or 0
     currEntity.jumpsLeft = currEntity.jumpsLeft == 0 and 0 or currEntity.inAir > 8 and 1 or currEntity.jumpsLeft
     currEntity.pos.y = currEntity.pos.y + currEntity.vel.y
     currEntity.onGround = false
@@ -29,7 +29,7 @@ local function updateEntityY(currEntity, yBoundLimit)
     currEntity.jumpsLeft = 2
     currEntity.vel.y = 0
     currEntity.onGround = true
-    currEntity.inAir = 0
+    currEntity.inAir = false
   end
 end
 
@@ -119,12 +119,13 @@ entity.player.update = function()
   updatePos(player)
 
   local playerPos = {x = player.pos.x, y = player.pos.y}
-  local checkPoint = {collision.detectEntity(playerPos, player, "checkPoint")}
+  local checkPoint = {}
+  checkPoint.x,checkPoint.y = collision.detectEntity(playerPos, player, "checkPoint")
 
-  if checkPoint[1] then
+  if checkPoint.x then
     local playerDim = player.dim()
-    player.spawnPos.x = checkPoint[1] * blockSize - blockSize / 2 - playerDim.w / 2
-    player.spawnPos.y = checkPoint[2] * blockSize + blockSize - playerDim.h
+    player.spawnPos.x = checkPoint.x * blockSize - blockSize / 2 - playerDim.w / 2
+    player.spawnPos.y = checkPoint.y * blockSize + blockSize - playerDim.h
   end
 
   if collision.detectEntity(playerPos, player, "goal") then
@@ -138,14 +139,14 @@ entity.player.kill = function()
 end
 
 local function findSpawnPoint()
-  local spawnPoint = {1,1}
+  local spawnPoint = {x = 1, y = 1}
 
   for i=1, #mapGrid do
     for j=1,#mapGrid[i] do
       if type(mapGrid[i][j]) == "table" and mapGrid[i][j].block == "spawnPoint" then
         local playerDim = entity.player.dim()
-        spawnPoint[1] = j * blockSize - blockSize / 2 - playerDim.w / 2
-        spawnPoint[2] = i * blockSize + blockSize - playerDim.h
+        spawnPoint.x = j * blockSize - blockSize / 2 - playerDim.w / 2
+        spawnPoint.y = i * blockSize + blockSize - playerDim.h
       end
     end
   end
@@ -156,8 +157,8 @@ end
 entity.player.reset = function()
   local spawnPointPos = findSpawnPoint()
 
-  entity.player.pos = {x = spawnPointPos[1], y = spawnPointPos[2]}
-  entity.player.spawnPos = {x = spawnPointPos[1], y = spawnPointPos[2]}
+  entity.player.pos = {x = spawnPointPos.x, y = spawnPointPos.y}
+  entity.player.spawnPos = {x = spawnPointPos.x, y = spawnPointPos.y}
   entity.player.vel = {x = 0, y = 0}
 end
 
