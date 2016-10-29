@@ -102,7 +102,14 @@ local function loadOptionFuncs(page, menuName, func)
 
     back = function(_, rmb)
       if not rmb then
-        currMenu = "main" currOptionPage = 1
+        if currMenu == "controls" then
+          currMenu = "options"
+
+        else
+          currMenu = "main"
+        end
+
+        currOptionPage = 1
       end
     end
   }
