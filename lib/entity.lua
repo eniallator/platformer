@@ -20,7 +20,8 @@ end
 
 local function updateEntityY(currEntity, yBoundLimit)
   if not collision.detectEntity({x = currEntity.pos.x, y = currEntity.pos.y + currEntity.vel.y}, currEntity, "solid") and yBoundLimit then
-    currEntity.jumpsLeft = currEntity.jumpsLeft == 0 and 0 or 1
+    currEntity.inAir = currEntity.inAir and currEntity.inAir + 1 or 1
+    currEntity.jumpsLeft = currEntity.jumpsLeft == 0 and 0 or currEntity.inAir > 8 and 1 or currEntity.jumpsLeft
     currEntity.pos.y = currEntity.pos.y + currEntity.vel.y
     currEntity.onGround = false
 
@@ -28,6 +29,7 @@ local function updateEntityY(currEntity, yBoundLimit)
     currEntity.jumpsLeft = 2
     currEntity.vel.y = 0
     currEntity.onGround = true
+    currEntity.inAir = 0
   end
 end
 
