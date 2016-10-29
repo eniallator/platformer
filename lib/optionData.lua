@@ -76,7 +76,7 @@ local function generatePages(tbl)
         y = currY, w = screenDim.x * (1 / 8) - boxGap / 2,
         h = dim.h
       }
-      
+
       table.insert(outTbl[yIndex].deleteNames, deleteMapTbl)
     end
 
@@ -214,6 +214,7 @@ optionData.main = {
       map.makeGrid(256, screenDim.y/blockSize)
       firstLoad = true
       resetPlayer = true
+      showBlockMenuHelpText = true
     end
   }
 }

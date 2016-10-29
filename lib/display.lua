@@ -108,13 +108,42 @@ local function displayBlockMenuButton(tbl)
   love.graphics.setFont(love.graphics.newFont("assets/Psilly.otf", screenDim.x/40))
 end
 
+local function blockMenuBackground()
+  love.graphics.setColor(120, 120, 120)
+  love.graphics.rectangle("fill", screenDim.x / 60 - cameraTranslation, screenDim.y - screenDim.y / 9, screenDim.x - screenDim.x / 60 * 2, blockSize * 2)
+  love.graphics.setColor(255, 255, 255)
+end
+
+local function blockMenuNavButtons(blockMenuTable)
+  if blockMenuTable.nextPage then
+    displayBlockMenuButton(blockMenuTable.nextPage)
+  end
+
+  if blockMenuTable.prevPage then
+    displayBlockMenuButton(blockMenuTable.prevPage)
+  end
+end
+
+local function blockMenuHelpText()
+  if showBlockMenuHelpText then
+    local font = love.graphics.getFont()
+    local blockMenuKeyIndex = controls.findName("mapCreator.blockMenu")
+    local blockMenuKey = controls[blockMenuKeyIndex].key
+    local text = "Press " .. blockMenuKey .. " to open the block menu"
+    
+    love.graphics.print(text, 0, screenDim.y - font:getHeight(text))
+  end
+end
+
 display.blockMenu = function()
+  blockMenuHelpText()
+
   if mapCreatorMenu then
     local blockMenuTable = optionData.blockMenu.display()
+    showBlockMenuHelpText = false
     collision.updateMouseCursor(blockMenuTable)
-    love.graphics.setColor(120, 120, 120)
-    love.graphics.rectangle("fill", screenDim.x / 60 - cameraTranslation, screenDim.y - screenDim.y / 9, screenDim.x - screenDim.x / 60 * 2, blockSize * 2)
-    love.graphics.setColor(255, 255, 255)
+    blockMenuBackground()
+    blockMenuNavButtons(blockMenuTable)
 
     for i=1, #blockMenuTable do
       local currBlock = blockMenuTable[i]
@@ -125,14 +154,6 @@ display.blockMenu = function()
       else
         love.graphics.draw(currBlock.texture, currBlock.x - cameraTranslation, currBlock.y, 0, blockSize / currBlock.texture:getWidth(), blockSize / currBlock.texture:getHeight())
       end
-    end
-
-    if blockMenuTable.nextPage then
-      displayBlockMenuButton(blockMenuTable.nextPage)
-    end
-
-    if blockMenuTable.prevPage then
-      displayBlockMenuButton(blockMenuTable.prevPage)
     end
   end
 end
