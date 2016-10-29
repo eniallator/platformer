@@ -75,10 +75,16 @@ local function checkText(selectedTextBox)
     textInput = textInput .. textBox.currText[i]
   end
 
-  if selectedTextBox.func(textInput) then
+  local funcOutput = selectedTextBox.func(textInput)
+
+  if funcOutput == "stop" then
     textBox.stopped = true
 
+  elseif funcOutput then
+    return funcOutput
+
   else
+
     return true
   end
 end
@@ -135,7 +141,7 @@ textBox.getInput = function(selectedTextBox)
         textBox.focusedChar = textBox.focusedChar +1
 
       elseif char == "return" then
-        if checkText(selectedTextBox) then
+        if checkText(selectedTextBox) == "stop" then
           textBox.reset()
         end
 

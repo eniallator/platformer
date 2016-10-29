@@ -167,7 +167,7 @@ end
 update.alert = function()
   if utilsData.alert.selected then
     local currAlert = utilsData.alert[utilsData.alert.selected]
-    alert.getInput(currAlert.buttons, currAlert.dimensions())
+    alert.getInput(currAlert)
   end
 end
 

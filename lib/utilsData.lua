@@ -14,10 +14,14 @@ utilsData.textBox.saveMap = {
   dimensions = function () local font = love.graphics.getFont() return {x = screenDim.x /2 -screenDim.x /(5 +1 /3), y = screenDim.y /2 - screenDim.y / (25 +5 /7), w = screenDim.x /(2 +2 /3), h = 25 +font:getHeight("Lp") *2} end,
 
   func = function (mapName)
-    if love.filesystem.exists("maps/" .. mapName .. mapExtension) then
+    if map.checkDefaultMapName(mapName) then
+      utilsData.alert.selected = "defaultMapFileExists"
+      return "continue"
+
+    elseif love.filesystem.exists("maps/" .. mapName .. mapExtension) then
       utilsData.alert.selected = "fileExists"
       mapFileName = mapName
-      return true
+      return "stop"
 
     else
       saveMap(mapName)
@@ -52,6 +56,15 @@ utilsData.alert.fileExists = {
       end
     }
   }
+}
+
+utilsData.alert.defaultMapFileExists = {
+  message = "Can't overwrite default maps!",
+  dimensions = function()
+    local font = love.graphics.getFont()
+    return {x = screenDim.x /2 -screenDim.x /(5 +1 /3), y = screenDim.y /2 - screenDim.y / (25 +5 /7) - (20 +font:getHeight("Lp")), w = screenDim.x /(2 +2 /3), h = 10 +font:getHeight("Lp")}
+  end,
+  time = 120
 }
 
 utilsData.alert.deleteMapConfirm = {
