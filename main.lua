@@ -1,6 +1,7 @@
 function love.load()
   screenDim = {}
   aspectRatio = 4/3
+  love.graphics.setDefaultFilter("nearest", "nearest")
 
   defaultMaps = require "lib/defaultMaps"
   optionData = require "lib/optionData"
@@ -17,7 +18,6 @@ function love.load()
   mouse = require "lib/utils/mouse"
   keys = require "lib/utils/keys"
 
-  love.graphics.setDefaultFilter("nearest", "nearest")
   update.internalWindowSize(800, 600)
   display.loadTextures()
   textBox.reset()
