@@ -37,6 +37,7 @@ local function checkTimer(currAlert)
 
     if currAlert.currTime > currAlert.time then
       utilsData.alert.selected = nil
+      currAlert.currTime = nil
     end
   end
 end
