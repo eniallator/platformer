@@ -131,7 +131,7 @@ local function blockMenuHelpText()
     local blockMenuKey = controls[blockMenuKeyIndex].key
     local text = "Press " .. blockMenuKey .. " to open the block menu"
 
-    love.graphics.print(text, 0, screenDim.y - font:getHeight(text))
+    love.graphics.print(text, - cameraTranslation, screenDim.y - font:getHeight(text))
   end
 end
 

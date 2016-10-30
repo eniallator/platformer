@@ -30,13 +30,16 @@ local function updateEntityY(currEntity, yBoundLimit)
     currEntity.vel.y = 0
     currEntity.onGround = true
     currEntity.inAir = false
+
+  else
+    currEntity.vel.y = currEntity.vel.y * 0.5
   end
 end
 
 local function updatePos(currEntity)
   local currEntityDim = currEntity.dim()
   local xBoundLimit = currEntity.pos.x + currEntity.vel.x > 0 and currEntity.pos.x + currEntity.vel.x + currEntityDim.w <= 255 * blockSize
-  local yBoundLimit = currEntity.pos.y + currEntityDim.h + currEntity.vel.y < screenDim.y
+  local yBoundLimit = currEntity.pos.y + currEntity.vel.y > 0 and currEntity.pos.y + currEntityDim.h + currEntity.vel.y < screenDim.y
 
   if collision.detectEntity({x = currEntity.pos.x + currEntity.vel.x, y = currEntity.pos.y + currEntity.vel.y}, currEntity, "kill") and xBoundLimit and yBoundLimit then
     currEntity.kill()
