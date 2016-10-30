@@ -48,7 +48,7 @@ end
 update.mapCreatorinteract = function()
   local mouseCoords = {}
   mouseCoords.x, mouseCoords.y = love.mouse.getPosition()
-  mouseCoords.x = mouseCoords.x - borders.x / 2
+  mouseCoords.x = mouseCoords.x - borders.x / 2 - cameraTranslation
   mouseCoords.y = mouseCoords.y - borders.y / 2
 
   local blockMenuDim = {
