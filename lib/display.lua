@@ -13,13 +13,14 @@ display.loadTextures = function()
       wood = love.graphics.newImage("assets/textures/blocks/wood.png"),
       brick = love.graphics.newImage("assets/textures/blocks/brick.png"),
       lava = {img = love.graphics.newImage("assets/textures/blocks/lava_animated.png"), frameHeight = 10, updateRate = 10, updateTime = 1, currFrame = 0},
-      spawnPoint = love.graphics.newImage("assets/textures/blocks/checkpoint.png"),
+      spawnPoint = love.graphics.newImage("assets/textures/blocks/spawnpoint.png"),
       checkPoint = love.graphics.newImage("assets/textures/blocks/checkpoint.png"),
       goal = love.graphics.newImage("assets/textures/blocks/goal.png")
     },
 
     other = {
-      background = love.graphics.newImage("assets/textures/other/background.png")
+      background = love.graphics.newImage("assets/textures/other/background.png"),
+      blockMenuBackground = love.graphics.newImage("assets/textures/other/block_menu_background.png")
     }
   }
 end
@@ -94,6 +95,14 @@ display.box = function(box)
   love.graphics.printf(box.name, box.x + box.w / 2 - font:getWidth(box.name) / 2 - cameraTranslation, box.y + box.h / 2 - font:getHeight(box.name) / 2, box.w)
 end
 
+display.boxTexture = function(box)
+  local font = love.graphics.getFont()
+  local texture = texture.other.menuButton
+
+  love.graphics.draw(texture, box.x - cameraTranslation, box.y, 0, box.w / texture:getWidth(), box.h / texture:getHeight())
+  love.graphics.printf(box.name, box.x + box.w / 2 - font:getWidth(box.name) / 2 - cameraTranslation, box.y + box.h / 2 - font:getHeight(box.name) / 2, box.w)
+end
+
 local function displayTbl(tbl, condition)
   if condition then
     for _, box in pairs(tbl) do
@@ -109,8 +118,16 @@ local function displayBlockMenuButton(tbl)
 end
 
 local function blockMenuBackground()
-  love.graphics.setColor(120, 120, 120)
-  love.graphics.rectangle("fill", screenDim.x / 60 - cameraTranslation, screenDim.y - screenDim.y / 9, screenDim.x - screenDim.x / 60 * 2, blockSize * 2)
+  local texture = texture.other.blockMenuBackground
+  local dim = {
+    x = screenDim.x / 60 - cameraTranslation,
+    y = screenDim.y - screenDim.y / 9,
+    w = screenDim.x - screenDim.x / 60 * 2,
+    h = blockSize * 2
+  }
+
+  love.graphics.setColor(180, 180, 180)
+  love.graphics.draw(texture, dim.x, dim.y, 0, dim.w / texture:getWidth(), dim.h / texture:getHeight())
   love.graphics.setColor(255, 255, 255)
 end
 

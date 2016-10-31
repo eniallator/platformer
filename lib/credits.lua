@@ -4,15 +4,21 @@ local credits = {
     name = ""
   },
   {
-    prefix = "Coding by",
+    prefix = "Coder",
     name = "eniallator",
     youtube = "https://www.youtube.com/c/en1allat0r",
     twitter = "https://twitter.com/mceniallator"
   },
   {
-    prefix = "Art by",
+    prefix = "Artist",
     name = "Sairtoume",
     soundcloud = "https://soundcloud.com/user-380605931"
+  },
+  {
+    prefix = "Artist",
+    name = "SacredRedstone",
+    youtube = "https://www.youtube.com/user/SacredRedstone",
+    twitter = "https://twitter.com/SacredRedstone"
   }
 }
 
@@ -22,11 +28,11 @@ credits.websiteIcons = {
   soundcloud = love.graphics.newImage("assets/textures/icons/soundcloud.png")
 }
 
-local function getMaxPrefixSize(font)
+local function getMaxTextSize(font, textType)
   local size = 0
 
   for i=1,#credits do
-    local currWidth = font:getWidth(credits[i].prefix)
+    local currWidth = font:getWidth(credits[i][textType])
 
     if currWidth > size then
       size = currWidth
@@ -39,6 +45,7 @@ end
 local function generateIcons(font, maxPrefixSize, iconSize)
   local iconTbl = {}
   local iconSize = screenDim.y / 27
+  local maxNameSize = getMaxTextSize(font, "name")
 
   for i=1,#credits do
     local rowY = screenDim.y - (font:getHeight(credits[i]) + 5) * (#credits - i + 1) - 10
@@ -48,7 +55,7 @@ local function generateIcons(font, maxPrefixSize, iconSize)
       if websiteName ~= "prefix" and websiteName ~= "name" then
         local currIcon = {type = websiteName, url = url}
 
-        currIcon.x = 50 + maxPrefixSize + font:getWidth(credits[i].name) + iconNum * (iconSize + 5)
+        currIcon.x = 50 + maxNameSize + maxPrefixSize + iconNum * (iconSize + 5)
         currIcon.y = rowY
         currIcon.w = iconSize
         currIcon.h = iconSize
@@ -74,7 +81,7 @@ end
 credits.display = function()
   if currMenu == "main" then
     local font = love.graphics.getFont()
-    local maxPrefixSize = getMaxPrefixSize(font)
+    local maxPrefixSize = getMaxTextSize(font, "prefix")
     displayIcons(font, maxPrefixSize)
 
     for i=1,#credits do
@@ -91,7 +98,7 @@ end
 credits.update = function()
   if currMenu == "main" then
     local font = love.graphics.getFont()
-    local iconList = generateIcons(font, getMaxPrefixSize(font))
+    local iconList = generateIcons(font, getMaxTextSize(font, "prefix"))
 
     collision.updateMouseCursor(iconList)
     local clickedIcon = collision.clickBox(iconList)
