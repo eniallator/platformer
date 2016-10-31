@@ -25,6 +25,7 @@ utilsData.textBox.saveMap = {
 
     else
       saveMap(mapName)
+      textBox.reset()
     end
   end
 }
