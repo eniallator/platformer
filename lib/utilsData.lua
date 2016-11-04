@@ -65,7 +65,7 @@ utilsData.alert.defaultMapFileExists = {
     local font = love.graphics.getFont()
     return {x = screenDim.x /2 -screenDim.x /(5 +1 /3), y = screenDim.y /2 - screenDim.y / (25 +5 /7) - (20 +font:getHeight("Lp")), w = screenDim.x /(2 +2 /3), h = 10 +font:getHeight("Lp")}
   end,
-  time = 120
+  duration = 120
 }
 
 utilsData.alert.deleteMapConfirm = {

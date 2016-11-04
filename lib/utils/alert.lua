@@ -32,12 +32,12 @@ alert.display = function(currAlert)
 end
 
 local function checkTimer(currAlert)
-  if currAlert.time then
-    currAlert.currTime = currAlert.currTime and currAlert.currTime + 1 or 1
+  if currAlert.duration then
+    currAlert.elapsedTime = currAlert.elapsedTime and currAlert.elapsedTime + 1 or 1
 
-    if currAlert.currTime > currAlert.time then
+    if currAlert.elapsedTime > currAlert.duration then
       utilsData.alert.selected = nil
-      currAlert.currTime = nil
+      currAlert.elapsedTime = nil
     end
   end
 end

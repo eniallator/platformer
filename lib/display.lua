@@ -1,7 +1,5 @@
 local display = {}
 
-local xCounter = 0
-
 display.loadTextures = function()
 
   texture = {
@@ -20,6 +18,7 @@ display.loadTextures = function()
 
     other = {
       background = love.graphics.newImage("assets/textures/other/background.png"),
+      menuButton = love.graphics.newImage("assets/textures/other/block_menu_background.png"),
       blockMenuBackground = love.graphics.newImage("assets/textures/other/block_menu_background.png")
     }
   }
@@ -86,18 +85,9 @@ display.background = function()
   end
 end
 
-display.box = function(box)
+local function displayBoxTexture(box)
   local font = love.graphics.getFont()
-
-  love.graphics.setColor(150, 150, 150)
-  love.graphics.rectangle("fill", box.x - cameraTranslation, box.y, box.w, box.h)
-  love.graphics.setColor(255, 255, 255)
-  love.graphics.printf(box.name, box.x + box.w / 2 - font:getWidth(box.name) / 2 - cameraTranslation, box.y + box.h / 2 - font:getHeight(box.name) / 2, box.w)
-end
-
-display.boxTexture = function(box)
-  local font = love.graphics.getFont()
-  local texture = texture.other.menuButton
+  local texture = texture.block.wood
 
   love.graphics.draw(texture, box.x - cameraTranslation, box.y, 0, box.w / texture:getWidth(), box.h / texture:getHeight())
   love.graphics.printf(box.name, box.x + box.w / 2 - font:getWidth(box.name) / 2 - cameraTranslation, box.y + box.h / 2 - font:getHeight(box.name) / 2, box.w)
@@ -106,14 +96,14 @@ end
 local function displayTbl(tbl, condition)
   if condition then
     for _, box in pairs(tbl) do
-      display.box(box)
+      displayBoxTexture(box)
     end
   end
 end
 
 local function displayBlockMenuButton(tbl)
   love.graphics.setFont(love.graphics.newFont("assets/Psilly.otf", screenDim.x/60))
-  display.box(tbl)
+  displayBoxTexture(tbl)
   love.graphics.setFont(love.graphics.newFont("assets/Psilly.otf", screenDim.x/40))
 end
 
@@ -126,7 +116,7 @@ local function blockMenuBackground()
     h = blockSize * 2
   }
 
-  love.graphics.setColor(180, 180, 180)
+  love.graphics.setColor(150, 150, 150)
   love.graphics.draw(texture, dim.x, dim.y, 0, dim.w / texture:getWidth(), dim.h / texture:getHeight())
   love.graphics.setColor(255, 255, 255)
 end
@@ -166,10 +156,23 @@ display.blockMenu = function()
       local currBlock = blockMenuTable[i]
 
       if type(currBlock.texture) == "table" then
-        display.animatedTile(currBlock.texture, currBlock.x - cameraTranslation, currBlock.y, blockSize / currBlock.texture.img:getWidth(), blockSize / currBlock.texture.frameHeight)
+        display.animatedTile(
+          currBlock.texture,
+          currBlock.x - cameraTranslation,
+          currBlock.y,
+          blockSize / currBlock.texture.img:getWidth(),
+          blockSize / currBlock.texture.frameHeight
+        )
 
       else
-        love.graphics.draw(currBlock.texture, currBlock.x - cameraTranslation, currBlock.y, 0, blockSize / currBlock.texture:getWidth(), blockSize / currBlock.texture:getHeight())
+        love.graphics.draw(
+          currBlock.texture,
+          currBlock.x - cameraTranslation,
+          currBlock.y,
+          0,
+          blockSize / currBlock.texture:getWidth(),
+          blockSize / currBlock.texture:getHeight()
+        )
       end
     end
   end
@@ -195,7 +198,7 @@ end
 
 display.optionMenu = function()
   for _, box in pairs(optionData[currMenu].display()) do
-    display.box(box)
+    displayBoxTexture(box)
   end
 end
 
