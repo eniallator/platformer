@@ -62,9 +62,16 @@ function love.keyreleased(key)
   keys.updateState(key, false)
 end
 
+function love.mousepressed(x, y, button, isTouch)
+  mouse.updateState(true, x, y, button)
+end
+
+function love.mousereleased(x, y, button, isTouch)
+  mouse.updateState(false, x, y, button)
+end
+
 function love.update()
   love.mouse.setCursor()
-  mouse.updateState()
   controls.getKeyInput()
   update.alert()
 
