@@ -161,7 +161,9 @@ update.optionMenu = function()
 end
 
 update.textBox = function()
-  textBox.getInput(utilsData.textBox[utilsData.textBox.selected])
+  if utilsData.textBox.selected then
+    textBox.getInput(utilsData.textBox[utilsData.textBox.selected])
+  end
 end
 
 update.alert = function()

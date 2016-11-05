@@ -12,6 +12,15 @@ local function createButtonTable(buttons, dim, display)
   return tbl
 end
 
+local function displayButton(box)
+  local font = love.graphics.getFont()
+
+  love.graphics.setColor(150, 150, 150)
+  love.graphics.rectangle("fill", box.x - cameraTranslation, box.y, box.w, box.h)
+  love.graphics.setColor(255, 255, 255)
+   love.graphics.printf(box.name, box.x + box.w / 2 - font:getWidth(box.name) / 2 - cameraTranslation, box.y + box.h / 2 - font:getHeight(box.name) / 2, box.w)
+ end
+
 alert.display = function(currAlert)
   local font = love.graphics.getFont()
   local dim = currAlert.dimensions()
@@ -25,7 +34,7 @@ alert.display = function(currAlert)
   local buttonTable = createButtonTable(currAlert.buttons, dim)
 
   for _,box in pairs(buttonTable) do
-    display.box(box)
+    displayButton(box)
   end
 
   collision.updateMouseCursor(buttonTable)

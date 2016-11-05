@@ -30,6 +30,15 @@ local function createButtonTable(tbl, coords)
   return outTbl
 end
 
+local function displayButton(box)
+  local font = love.graphics.getFont()
+
+  love.graphics.setColor(150, 150, 150)
+  love.graphics.rectangle("fill", box.x - cameraTranslation, box.y, box.w, box.h)
+  love.graphics.setColor(255, 255, 255)
+   love.graphics.printf(box.name, box.x + box.w / 2 - font:getWidth(box.name) / 2 - cameraTranslation, box.y + box.h / 2 - font:getHeight(box.name) / 2, box.w)
+ end
+
 dropMenu.display = function(buttons, coords)
   local font = love.graphics.getFont()
   local maxWidth, maxLength = tableProperties(font, buttons)
@@ -51,7 +60,7 @@ dropMenu.display = function(buttons, coords)
   love.graphics.rectangle("fill", coords.x, coords.y, maxWidth +10, 5 +maxLength *(font:getHeight("l") +5))
 
   for _, box in pairs(buttonTable) do
-    display.box(box)
+    displayButton(box)
   end
 
   collision.updateMouseCursor(buttonTable)

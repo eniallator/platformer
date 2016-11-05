@@ -73,10 +73,10 @@ end
 function love.update()
   love.mouse.setCursor()
   controls.getKeyInput()
-  update.alert()
 
-  if utilsData.textBox.selected then
+  if utilsData.textBox.selected or utilsData.alert.selected then
     update.textBox()
+    update.alert()
 
   elseif selected == "game" then
     if not reachedGoal then
