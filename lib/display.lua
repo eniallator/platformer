@@ -24,7 +24,7 @@ display.loadTextures = function()
 
     other = {
       background = love.graphics.newImage("assets/textures/other/background.png"),
-      menuButton = love.graphics.newImage("assets/textures/other/block_menu_background.png"),
+      menuButton = love.graphics.newImage("assets/textures/other/menu_button.png"),
       blockMenuBackground = love.graphics.newImage("assets/textures/other/block_menu_background.png")
     }
   }
@@ -106,7 +106,7 @@ end
 
 local function displayBoxTexture(box)
   local font = love.graphics.getFont()
-  local texture = texture.block.wood
+  local texture = texture.other.menuButton
 
   love.graphics.draw(texture, box.x - cameraTranslation, box.y, 0, box.w / texture:getWidth(), box.h / texture:getHeight())
   love.graphics.printf(box.name, box.x + box.w / 2 - font:getWidth(box.name) / 2 - cameraTranslation, box.y + box.h / 2 - font:getHeight(box.name) / 2, box.w)

@@ -103,6 +103,8 @@ function love.update()
     update.escMenu()
     update.mapCreatorinteract()
   end
+
+  mouse.updateClicked()
 end
 
 function love.draw()
