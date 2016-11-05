@@ -41,14 +41,14 @@ local function updatePos(currEntity)
   local xBoundLimit = currEntity.pos.x + currEntity.vel.x > 0 and currEntity.pos.x + currEntity.vel.x + currEntityDim.w <= 255 * blockSize
   local yBoundLimit = currEntity.pos.y + currEntity.vel.y > 0 and currEntity.pos.y + currEntityDim.h + currEntity.vel.y < screenDim.y
 
-  if collision.detectEntity({x = currEntity.pos.x + currEntity.vel.x, y = currEntity.pos.y + currEntity.vel.y}, currEntity, "kill") and xBoundLimit and yBoundLimit then
+  updateEntityX(currEntity, xBoundLimit)
+  updateEntityY(currEntity, yBoundLimit)
+
+  if collision.detectEntity({x = currEntity.pos.x, y = currEntity.pos.y}, currEntity, "kill") then
     currEntity.kill()
     screenRed = 100
     return
   end
-
-  updateEntityX(currEntity, xBoundLimit)
-  updateEntityY(currEntity, yBoundLimit)
 end
 
 local function checkUp(currEntity)
