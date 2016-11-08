@@ -195,6 +195,10 @@ local function loadBlockOptions()
     returnTbl[currBlockPage].prevPage = {name = "Prev", x = screenDim.x /(40/1), y = screenDim.y -screenDim.y /12, w = blockSize, h = blockSize}
   end
 
+  returnTbl[currBlockPage].toggleMapGrid = {name = "Selected layer: " .. currSelectedGrid, x = 10, y = 10, w = screenDim.x / 3 - 17.5, h = screenDim.y / 16}
+
+  returnTbl[currBlockPage].blockMenuArea = {x = screenDim.x / 60 - cameraTranslation, y = screenDim.y - screenDim.y / 9, w = screenDim.x - screenDim.x / 60 * 2, h = blockSize * 2}
+
   return returnTbl[currBlockPage]
 end
 
@@ -224,6 +228,7 @@ optionData.main = {
       firstLoad = true
       resetPlayer = true
       showBlockMenuHelpText = true
+      currSelectedGrid = "foreground"
     end
   }
 }
@@ -290,6 +295,7 @@ optionData.escMenu = {
     modeSwitch = function()
       if selected == "game" then
         selected = "createMap"
+        currSelectedGrid = "foreground"
 
       else
         local playerDim = entity.player.dim()
@@ -346,7 +352,9 @@ optionData.blockMenu = {
 
   funcs = {
     nextPage = function() currBlockPage = currBlockPage + 1 end,
-    prevPage = function() currBlockPage = currBlockPage - 1 end
+    prevPage = function() currBlockPage = currBlockPage - 1 end,
+    toggleMapGrid = function() currSelectedGrid = currSelectedGrid == "foreground" and "background" or "foreground" end,
+    blockMenuArea = function() end
   }
 }
 

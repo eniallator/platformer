@@ -152,7 +152,7 @@ local function blockMenuBackground()
   love.graphics.setColor(255, 255, 255)
 end
 
-local function blockMenuNavButtons(blockMenuTable)
+local function blockMenuOtherButtons(blockMenuTable)
   if blockMenuTable.nextPage then
     displayBlockMenuButton(blockMenuTable.nextPage)
   end
@@ -160,6 +160,8 @@ local function blockMenuNavButtons(blockMenuTable)
   if blockMenuTable.prevPage then
     displayBlockMenuButton(blockMenuTable.prevPage)
   end
+
+  displayBoxTexture(blockMenuTable.toggleMapGrid)
 end
 
 local function blockMenuHelpText()
@@ -181,7 +183,7 @@ display.blockMenu = function()
     showBlockMenuHelpText = false
     collision.updateMouseCursor(blockMenuTable)
     blockMenuBackground()
-    blockMenuNavButtons(blockMenuTable)
+    blockMenuOtherButtons(blockMenuTable)
 
     for i=1, #blockMenuTable do
       local currBlock = blockMenuTable[i]

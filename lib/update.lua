@@ -58,7 +58,7 @@ update.mapCreatorinteract = function()
     h = blockSize * 2
   }
 
-  if not (mapCreatorMenu and collision.hoverOverBox(blockMenuDim)) and mouseCoords.x > 0 and mouseCoords.x + cameraTranslation < screenDim.x and mouseCoords.y > 0 and mouseCoords.y < screenDim.y then
+  if not (mapCreatorMenu and collision.hoverOverBoxes(optionData.blockMenu.display())) and mouseCoords.x > 0 and mouseCoords.x + cameraTranslation < screenDim.x and mouseCoords.y > 0 and mouseCoords.y < screenDim.y then
     if mouse.left.held and not firstLoad then
       map.placeBlock(mouseCoords)
 
@@ -73,10 +73,11 @@ update.mapCreatorinteract = function()
 end
 
 update.mapCreatorBlockMenu = function()
-  mapCreatorMenu = false
+  local blockMenuKey = controls[controls.findName("mapCreator.blockMenu")].key
+  local keyDown = love.keyboard.isDown(blockMenuKey)
 
-  if love.keyboard.isDown(controls[controls.findName("mapCreator.blockMenu")].key) then
-    mapCreatorMenu = true
+  if not keys.state[blockMenuKey] and keyDown then
+    mapCreatorMenu = not mapCreatorMenu
   end
 end
 
@@ -86,7 +87,7 @@ update.selectedMapCreatorBlock = function()
     local blockClicked = collision.clickBox(blockMenuTable)
     collision.updateMouseCursor(blockMenuTable)
 
-    if blockClicked == "prevPage" or blockClicked == "nextPage" then
+    if blockClicked == "prevPage" or blockClicked == "nextPage" or blockClicked == "toggleMapGrid" or blockClicked == "blockMenuArea" then
       optionData.blockMenu.funcs[blockClicked]()
 
     elseif blockClicked then

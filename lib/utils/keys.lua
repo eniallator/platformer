@@ -4,6 +4,10 @@ local keys = {
 }
 
 keys.updateState = function(key, newMode)
+  if key == controls[controls.findName("mapCreator.blockMenu")].key then
+    update.mapCreatorBlockMenu()
+  end
+
   if key == "capslock" then
     if newMode then
       keys.state.capslock = not keys.state.capslock

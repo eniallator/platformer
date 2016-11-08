@@ -234,11 +234,11 @@ map.transform = function(mapTbl)
 end
 
 map.destroyBlock = function(coords)
-  mapGrid.foreground[math.ceil(coords.y / blockSize)][math.ceil(coords.x / blockSize)] = "n"
+  mapGrid[currSelectedGrid][math.ceil(coords.y / blockSize)][math.ceil(coords.x / blockSize)] = "n"
 end
 
 map.placeBlock = function(coords)
-  mapGrid.foreground[math.ceil(coords.y / blockSize)][math.ceil(coords.x / blockSize)] = {block = blocks[selectedBlockIndex].name}
+  mapGrid[currSelectedGrid][math.ceil(coords.y / blockSize)][math.ceil(coords.x / blockSize)] = {block = blocks[selectedBlockIndex].name}
 end
 
 map.syncDefaultMaps = function()
