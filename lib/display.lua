@@ -84,9 +84,9 @@ end
 display.map = {}
 
 display.map.background = function()
-  love.graphics.setColor(150, 150, 150)
+  love.graphics.setColor(180, 180, 180)
   displayGrid("background")
-  love.graphics.setColor(255, 255, 255)
+  love.graphics.setColor(255, 255 - screenRed, 255 - screenRed)
 end
 
 display.map.foreground = function()
@@ -254,9 +254,9 @@ display.alert = function()
   end
 end
 
-display.makeScreenRed = function()
+display.makeScreenRed = function(tick)
   if screenRed and screenRed > 0 then
-    screenRed = screenRed - 3
+    screenRed = screenRed - 2
 
   else
     screenRed = 0
