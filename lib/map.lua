@@ -77,9 +77,10 @@ local function fileToFormattedTbl(rawTbl)
   local outTbl = {}
   local index = 1
   local outKey
+  local indexCount
 
   while rawTbl[index] do
-    local indexCount = indexCount and indexCount + 1 or 1
+    indexCount = indexCount and indexCount + 1 or 1
     outTbl[indexCount] = {}
 
     while rawTbl[index] and rawTbl[index] ~= "t" do
