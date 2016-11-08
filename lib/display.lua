@@ -46,11 +46,11 @@ display.animatedTile = function(tbl, x, y, sx, sy)
   love.graphics.draw(tbl.img, quad, x, y, 0, sx, sy)
 end
 
-display.map = function()
-  for i=1, #mapGrid do
+local function displayGrid(level)
+  for i=1, #mapGrid[level] do
     for j=1, screenDim.x / blockSize + blockSize * 2 + 1 do
       local cameraOffset = math.ceil(- cameraTranslation / blockSize - 1)
-      local currTable = mapGrid[i][j + cameraOffset - 1]
+      local currTable = mapGrid[level][i][j + cameraOffset - 1]
 
       if type(currTable) == "table" then
         local currImage = texture.block[currTable.block]
@@ -79,6 +79,18 @@ display.map = function()
       end
     end
   end
+end
+
+display.map = {}
+
+display.map.background = function()
+  love.graphics.setColor(150, 150, 150)
+  displayGrid("background")
+  love.graphics.setColor(255, 255, 255)
+end
+
+display.map.foreground = function()
+  displayGrid("foreground")
 end
 
 local function createBackgroundTable(backgroundTexture)
@@ -225,7 +237,8 @@ display.textBox = function()
   display.background()
 
   if utilsData.textBox.selected == "saveMap" then
-    display.map()
+    display.map.background()
+    display.map.foreground()
   end
 
   local currTextBox = utilsData.textBox[utilsData.textBox.selected]

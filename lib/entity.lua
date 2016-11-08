@@ -47,7 +47,6 @@ local function updatePos(currEntity)
   if collision.detectEntity({x = currEntity.pos.x, y = currEntity.pos.y}, currEntity, "kill") then
     currEntity.kill()
     screenRed = 100
-    return
   end
 end
 
@@ -144,9 +143,9 @@ end
 local function findSpawnPoint()
   local spawnPoint = {x = 1, y = 1}
 
-  for i=1, #mapGrid do
-    for j=1,#mapGrid[i] do
-      if type(mapGrid[i][j]) == "table" and mapGrid[i][j].block == "spawnPoint" then
+  for i=1, #mapGrid.foreground do
+    for j=1,#mapGrid.foreground[i] do
+      if type(mapGrid.foreground[i][j]) == "table" and mapGrid.foreground[i][j].block == "spawnPoint" then
         local playerDim = entity.player.dim()
         spawnPoint.x = j * blockSize - blockSize / 2 - playerDim.w / 2
         spawnPoint.y = i * blockSize + blockSize - playerDim.h

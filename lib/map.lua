@@ -22,22 +22,27 @@ local function getCoords(str)
   return tonumber(str:sub(xNum + 1, yNum - 1)), tonumber(str:sub(yNum + 1, #str))
 end
 
-map.makeGrid = function(x, y)
-  mapGrid = createGrid(x, y)
-
-  for coords, data in pairs(formattedMap) do
-
-    blockX, blockY = getCoords(coords)
+local function applyFormattedMap(level)
+  for coords, data in pairs(formattedMap[level]) do
+    local blockX, blockY = getCoords(coords)
 
     for i=1,data.h do
       for j=1,data.w do
-        mapGrid[blockY + i - 1][blockX + j - 1] = {block = data.block}
+        mapGrid[level][blockY + i - 1][blockX + j - 1] = {block = data.block}
       end
     end
   end
 end
 
-map.writeTable = function(tbl, fileToWrite)
+map.makeGrid = function(x, y)
+  mapGrid = {}
+  mapGrid.foreground = createGrid(x, y)
+  mapGrid.background = createGrid(x, y)
+  applyFormattedMap("foreground")
+  applyFormattedMap("background")
+end
+
+local function formattedTblToStr(tbl)
   local writeStr = ""
 
   for coords, data in pairs(tbl) do
@@ -54,7 +59,75 @@ map.writeTable = function(tbl, fileToWrite)
     end
   end
 
-  love.filesystem.write(fileToWrite, writeStr)
+  return writeStr
+end
+
+map.writeTable = function(tbl, fileToWrite)
+  local outStr = ""
+  outStr = outStr .. formattedTblToStr(tbl.foreground)
+
+  if tbl.background then
+    outStr = outStr .. "t" .. formattedTblToStr(tbl.background)
+  end
+
+  love.filesystem.write(fileToWrite, outStr)
+end
+
+local function fileToFormattedTbl(rawTbl)
+  local outTbl = {}
+  local index = 1
+  local outKey
+
+  while rawTbl[index] do
+    local indexCount = indexCount and indexCount + 1 or 1
+    outTbl[indexCount] = {}
+
+    while rawTbl[index] and rawTbl[index] ~= "t" do
+      if rawTbl[index] == "x" then
+        index = index + 1
+        outKey = "x" .. string.byte(rawTbl[index]) + 1
+        index = index + 1
+      end
+
+      if rawTbl[index] == "y" then
+        index = index + 1
+        outKey = outKey .. "y" .. string.byte(rawTbl[index]) + 1
+        index = index + 1
+      end
+
+      outTbl[indexCount][outKey] = {}
+
+      if rawTbl[index] == "b" then
+        index = index + 1
+        outTbl[indexCount][outKey].block = blocks[string.byte(rawTbl[index]) + 1].name
+        index = index + 1
+      end
+
+      if rawTbl[index] == "w" then
+        index = index + 1
+        outTbl[indexCount][outKey].w = string.byte(rawTbl[index]) + 2
+        index = index + 1
+      end
+
+      if rawTbl[index] == "h" then
+        index = index + 1
+        outTbl[indexCount][outKey].h = string.byte(rawTbl[index]) + 2
+        index = index + 1
+      end
+
+      if not outTbl[indexCount][outKey].w then
+        outTbl[indexCount][outKey].w = 1
+      end
+
+      if not outTbl[indexCount][outKey].h then
+        outTbl[indexCount][outKey].h = 1
+      end
+    end
+
+    index = index + 1
+  end
+
+  return outTbl
 end
 
 map.readTable = function(fileToRead)
@@ -62,55 +135,13 @@ map.readTable = function(fileToRead)
   local rawStr = love.filesystem.read(fileToRead)
 
   for i=1, #rawStr do
-    table.insert(rawTbl,rawStr:sub(i,i))
+    table.insert(rawTbl, rawStr:sub(i, i))
   end
 
+  local formattedArray = fileToFormattedTbl(rawTbl)
   local outTbl = {}
-  local index = 1
-  local outKey
-
-  while rawTbl[index] do
-    if rawTbl[index] == "x" then
-      index = index + 1
-      outKey = "x" .. string.byte(rawTbl[index]) + 1
-      index = index + 1
-    end
-
-    if rawTbl[index] == "y" then
-      index = index + 1
-      outKey = outKey .. "y" .. string.byte(rawTbl[index]) + 1
-      index = index + 1
-    end
-
-    outTbl[outKey] = {}
-
-    if rawTbl[index] == "b" then
-      index = index + 1
-      outTbl[outKey].block = blocks[string.byte(rawTbl[index]) + 1].name
-      index = index + 1
-    end
-
-    if rawTbl[index] == "w" then
-      index = index + 1
-      outTbl[outKey].w = string.byte(rawTbl[index]) + 2
-      index = index + 1
-    end
-
-    if rawTbl[index] == "h" then
-      index = index + 1
-      outTbl[outKey].h = string.byte(rawTbl[index]) + 2
-      index = index + 1
-    end
-
-    if not outTbl[outKey].w then
-      outTbl[outKey].w = 1
-    end
-
-    if not outTbl[outKey].h then
-      outTbl[outKey].h = 1
-    end
-  end
-
+  outTbl.foreground = formattedArray[1] or {}
+  outTbl.background = formattedArray[2] or {}
   return outTbl
 end
 
@@ -158,9 +189,8 @@ local function copyTable(tbl)
   return newTbl
 end
 
-map.transform = function(mapTbl)
+local function createFormattedMapTbl(oldMap)
   local outMap = {}
-  local oldMap = copyTable(mapTbl)
 
   repeat
     local blockY, blockX = checkEmpty(oldMap)
@@ -196,12 +226,19 @@ map.transform = function(mapTbl)
   return outMap
 end
 
+map.transform = function(mapTbl)
+  local outMap = {}
+  outMap.foreground = createFormattedMapTbl(copyTable(mapTbl.foreground))
+  outMap.background = createFormattedMapTbl(copyTable(mapTbl.background))
+  return outMap
+end
+
 map.destroyBlock = function(coords)
-  mapGrid[math.ceil(coords.y / blockSize)][math.ceil(coords.x / blockSize)] = "n"
+  mapGrid.foreground[math.ceil(coords.y / blockSize)][math.ceil(coords.x / blockSize)] = "n"
 end
 
 map.placeBlock = function(coords)
-  mapGrid[math.ceil(coords.y / blockSize)][math.ceil(coords.x / blockSize)] = {block = blocks[selectedBlockIndex].name}
+  mapGrid.foreground[math.ceil(coords.y / blockSize)][math.ceil(coords.x / blockSize)] = {block = blocks[selectedBlockIndex].name}
 end
 
 map.syncDefaultMaps = function()

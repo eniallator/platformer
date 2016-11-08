@@ -43,9 +43,9 @@ collision.detectEntity = function(pos, currEntity, attribute)
 
   for i = gridCoordinates.yMax, gridCoordinates.yMin, -1 do
     for j = gridCoordinates.xMax, gridCoordinates.xMin, -1 do
-      if mapGrid[i] and type(mapGrid[i][j]) == "table" then
+      if mapGrid.foreground[i] and type(mapGrid.foreground[i][j]) == "table" then
 
-        local currBlock = blocks[collision.getBlock(mapGrid[i][j].block)]
+        local currBlock = blocks[collision.getBlock(mapGrid.foreground[i][j].block)]
         local pixelSize = (blockSize/10)
         local tilePos = {
           x = (j - 1) * blockSize,

@@ -18,7 +18,7 @@ function love.load()
   mouse = require "lib/utils/mouse"
   keys = require "lib/utils/keys"
 
-  update.internalWindowSize(800, 600)
+  update.internalWindowSize(love.graphics.getDimensions())
   display.loadTextures()
   textBox.reset()
   update.forces()
@@ -117,8 +117,9 @@ function love.draw()
 
   elseif selected == "game" then
     display.background()
+    display.map.background()
     entity.player.display()
-    display.map()
+    display.map.foreground()
     display.timeCounter()
     display.escMenu()
     display.winMenu()
@@ -130,7 +131,8 @@ function love.draw()
 
   elseif selected == "createMap" then
     display.background()
-    display.map()
+    display.map.background()
+    display.map.foreground()
     display.blockMenu()
     display.escMenu()
   end

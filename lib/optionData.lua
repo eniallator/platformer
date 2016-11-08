@@ -218,6 +218,8 @@ optionData.main = {
     createMap = function()
       selected = "createMap"
       formattedMap = {}
+      formattedMap.foreground = {}
+      formattedMap.background = {}
       map.makeGrid(256, screenDim.y/blockSize)
       firstLoad = true
       resetPlayer = true
@@ -324,6 +326,7 @@ optionData.play = {
   display = function()
     return loadOptions(filterFiles(love.filesystem.getDirectoryItems("maps")), "play",
       function(box)
+        formattedMap = {}
         formattedMap = map.readTable("maps/" .. box.name .. ".map")
         map.makeGrid(256, screenDim.y/blockSize)
         selected = "game"
