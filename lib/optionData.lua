@@ -4,6 +4,25 @@ local currBlockPage = 1
 local otherTranslation = 0
 local optionData = {}
 
+local function sortFiles(fileTbl)
+  local sortedFiles = {}
+  local userMadeMaps = {}
+
+  for i=1, #fileTbl do
+    if defaultMaps[fileTbl[i]] then
+      table.insert(sortedFiles, fileTbl[i])
+    end
+  end
+
+  for i=1, #fileTbl do
+    if not defaultMaps[fileTbl[i]] then
+      table.insert(sortedFiles, fileTbl[i])
+    end
+  end
+
+  return sortedFiles
+end
+
 local function filterFiles(oldTbl)
   newTbl = {}
 
@@ -13,7 +32,9 @@ local function filterFiles(oldTbl)
     end
   end
 
-  return newTbl
+  local sortedTbl = sortFiles(newTbl)
+
+  return sortedTbl
 end
 
 local function tblToStr(tbl)
