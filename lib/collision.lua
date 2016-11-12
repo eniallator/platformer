@@ -94,7 +94,7 @@ end
 
 collision.hoverOverBoxes = function(tbl)
   for name,box in pairs(tbl) do
-    if collision.hoverOverBox(box) then
+    if not box.notButton and collision.hoverOverBox(box) then
       return name
     end
   end

@@ -217,7 +217,7 @@ optionGenerator.loadBlockOptions = function()
 
   returnTbl[optionGenerator.currBlockPage].toggleMapGrid = {name = "Selected layer: " .. currSelectedGrid, x = 10, y = 10, w = screenDim.x / 3 - 17.5, h = screenDim.y / 16}
 
-  returnTbl[optionGenerator.currBlockPage].blockMenuArea = {x = screenDim.x / 60 - cameraTranslation, y = screenDim.y - screenDim.y / 9, w = screenDim.x - screenDim.x / 60 * 2, h = blockSize * 2}
+  returnTbl[optionGenerator.currBlockPage].blockMenuArea = {notButton = true, x = screenDim.x / 60 - cameraTranslation, y = screenDim.y - screenDim.y / 9, w = screenDim.x - screenDim.x / 60 * 2, h = blockSize * 2}
 
   return returnTbl[optionGenerator.currBlockPage]
 end

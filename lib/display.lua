@@ -13,7 +13,7 @@ display.loadTextures = function()
       lava = {
         img = love.graphics.newImage("assets/textures/blocks/lava_animated.png"),
         frameHeight = 10,
-        updateRate = 10,
+        updateRate = 20,
         updateTime = 1,
         currFrame = 0
       },
@@ -36,11 +36,12 @@ display.animatedTile = function(tbl, x, y, sx, sy)
   if newTick then
     tbl.updateTime = (tbl.updateTime + 1) % tbl.updateRate
     newTick = false
+    
+    if tbl.updateTime == 0 then
+      tbl.currFrame = (tbl.currFrame + 1) % (imgDim[2] / tbl.frameHeight)
+    end
   end
 
-  if tbl.updateTime == 0 then
-    tbl.currFrame = (tbl.currFrame + 1) % (imgDim[2] / tbl.frameHeight)
-  end
 
   local quad = love.graphics.newQuad(1, tbl.currFrame * tbl.frameHeight, imgDim[1], tbl.frameHeight, imgDim[1], imgDim[2])
   love.graphics.draw(tbl.img, quad, x, y, 0, sx, sy)
