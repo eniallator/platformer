@@ -36,7 +36,7 @@ display.animatedTile = function(tbl, x, y, sx, sy)
   if newTick then
     tbl.updateTime = (tbl.updateTime + 1) % tbl.updateRate
     newTick = false
-    
+
     if tbl.updateTime == 0 then
       tbl.currFrame = (tbl.currFrame + 1) % (imgDim[2] / tbl.frameHeight)
     end
@@ -117,12 +117,26 @@ display.background = function()
   end
 end
 
+local function textCut(text, maxWidth, font)
+  if font:getWidth(text) < maxWidth then
+    return text
+
+  else
+    while font:getWidth(text .. "...") + 20 >= maxWidth do
+      text = text:sub(1,#text -1)
+    end
+
+    return text .. "..."
+  end
+end
+
 local function displayBoxTexture(box)
   local font = love.graphics.getFont()
   local texture = texture.other.menuButton
+  local shortName = textCut(box.name, box.w, font)
 
   love.graphics.draw(texture, box.x - cameraTranslation, box.y, 0, box.w / texture:getWidth(), box.h / texture:getHeight())
-  love.graphics.printf(box.name, box.x + box.w / 2 - font:getWidth(box.name) / 2 - cameraTranslation, box.y + box.h / 2 - font:getHeight(box.name) / 2, box.w)
+  love.graphics.printf(shortName, box.x + box.w / 2 - font:getWidth(shortName) / 2 - cameraTranslation, box.y + box.h / 2 - font:getHeight(shortName) / 2, box.w)
 end
 
 local function displayTbl(tbl, condition)
