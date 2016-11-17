@@ -38,8 +38,14 @@ map.makeGrid = function(x, y)
   mapGrid = {}
   mapGrid.foreground = createGrid(x, y)
   mapGrid.background = createGrid(x, y)
-  applyFormattedMap("foreground")
-  applyFormattedMap("background")
+
+  if formattedMap["foreground"] then
+    applyFormattedMap("foreground")
+  end
+
+  if formattedMap["background"] then
+    applyFormattedMap("background")
+  end
 end
 
 local function formattedTblToStr(tbl)
@@ -240,18 +246,6 @@ end
 
 map.placeBlock = function(coords)
   mapGrid[currSelectedGrid][math.ceil(coords.y / blockSize)][math.ceil(coords.x / blockSize)] = {block = blocks[selectedBlockIndex].name}
-end
-
-map.syncDefaultMaps = function()
-  if not love.filesystem.isDirectory("maps") then
-    love.filesystem.createDirectory("maps")
-  end
-
-  for name,mapData in pairs(defaultMaps) do
-    if not love.filesystem.exists("maps/" .. name .. mapExtension) then
-      map.writeTable(mapData, "maps/" .. name .. mapExtension)
-    end
-  end
 end
 
 map.checkDefaultMapName = function(compareName)

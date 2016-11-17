@@ -132,7 +132,14 @@ optionData.play = {
     return optionGenerator.loadOptions(optionGenerator.filterFiles(love.filesystem.getDirectoryItems("maps")), "play",
       function(box)
         formattedMap = {}
-        formattedMap = map.readTable("maps/" .. box.name .. ".map")
+
+        if defaultMaps[box.name] then
+          formattedMap = defaultMaps[box.name]
+
+        else
+          formattedMap = map.readTable("maps/" .. box.name .. ".map")
+        end
+
         map.makeGrid(256, screenDim.y/blockSize)
         selected = "game"
         currMenu = "main"

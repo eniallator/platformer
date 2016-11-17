@@ -3,25 +3,6 @@ local optionGenerator = {
   currOptionPage = 1
 }
 
-local function sortFiles(fileTbl)
-  local sortedFiles = {}
-  local userMadeMaps = {}
-
-  for i=1, #fileTbl do
-    if defaultMaps[fileTbl[i]] then
-      table.insert(sortedFiles, fileTbl[i])
-    end
-  end
-
-  for i=1, #fileTbl do
-    if not defaultMaps[fileTbl[i]] then
-      table.insert(sortedFiles, fileTbl[i])
-    end
-  end
-
-  return sortedFiles
-end
-
 optionGenerator.filterFiles = function(oldTbl)
   newTbl = {}
 
@@ -31,9 +12,7 @@ optionGenerator.filterFiles = function(oldTbl)
     end
   end
 
-  local sortedTbl = sortFiles(newTbl)
-
-  return sortedTbl
+  return newTbl
 end
 
 optionGenerator.tblToStr = function(tbl)
@@ -54,13 +33,37 @@ local function generatePages(tbl)
   local outTbl = {}
   local dim = {w = screenDim.x / 2, h = screenDim.y / 16}
   local boxGap = screenDim.y / 40
+  local counter = 0
 
   if currMenu == "play" then
     dim.w = screenDim.x * (3 / 8) - boxGap / 2
     outTbl.deleteNames = {}
+
+    for name,_ in pairs(defaultMaps) do
+      counter = counter + 1
+
+      if counter % 8 == 1 then
+        outTbl[math.floor(counter / 8 + 1)] = {mapNames = {}, deleteNames = {}}
+        currY = screenDim.y / 2 - (dim.h + boxGap) * 3 - boxGap - screenDim.y / 20
+      end
+
+      local yIndex = math.floor((counter - 1) / 8 + 1)
+      local mapNameTbl = {
+        name = name,
+        x = screenDim.x / 2 - screenDim.x / 4,
+        y = currY,
+        w = screenDim.x /2,
+        h = dim.h
+      }
+
+      table.insert(outTbl[yIndex].mapNames, mapNameTbl)
+      currY = currY + dim.h + boxGap
+    end
   end
 
   for i=1, #tbl do
+    i = i + counter
+
     if i % 8 == 1 then
       outTbl[math.floor(i / 8 + 1)] = {mapNames = {}}
       currY = screenDim.y / 2 - (dim.h + boxGap) * 3 - boxGap - screenDim.y / 20
@@ -73,24 +76,24 @@ local function generatePages(tbl)
     local mapNameTbl = {
       x = screenDim.x / 2 - screenDim.x / 4,
       y = currY,
-      w = not map.checkDefaultMapName(tbl[i]) and dim.w or screenDim.x / 2,
+      w = dim.w,
       h = dim.h
     }
 
     if type(tbl[i]) == "table" then
-      mapNameTbl.name = tbl[i][1]
-      mapNameTbl.controlIndex = tbl[i][2]
+      mapNameTbl.name = tbl[i - counter][1]
+      mapNameTbl.controlIndex = tbl[i - counter][2]
 
     else
-      mapNameTbl.name = tbl[i]
+      mapNameTbl.name = tbl[i - counter]
     end
 
     local yIndex = math.floor((i - 1) / 8 + 1)
     table.insert(outTbl[yIndex].mapNames, mapNameTbl)
 
-    if currMenu == "play" and not map.checkDefaultMapName(tbl[i]) then
+    if currMenu == "play" then
       local deleteMapTbl = {
-        mapName = tbl[i],
+        mapName = tbl[i - counter],
         name = "Delete",
         x = mapNameTbl.x + mapNameTbl.w + boxGap,
         y = currY, w = screenDim.x * (1 / 8) - boxGap / 2,

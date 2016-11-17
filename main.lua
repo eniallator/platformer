@@ -2,6 +2,7 @@ function love.load()
   screenDim = {}
   aspectRatio = 4/3
   love.graphics.setDefaultFilter("nearest", "nearest")
+  isSmartPhone = love._os == "Android" or love._os == "iOS"
 
   defaultMaps = require "lib/defaultMaps"
   optionData = require "lib/optionData"
@@ -42,8 +43,6 @@ function love.load()
   currMenu = "main"
   mapExtension = ".map"
   timeCounter = 0
-
-  map.syncDefaultMaps()
 end
 
 function love.resize(w, h)
