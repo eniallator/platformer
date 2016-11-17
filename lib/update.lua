@@ -45,6 +45,73 @@ update.camera = function()
   cameraTranslation = cameraTranslation
 end
 
+local lastMousePos
+local startedDragging
+
+local function mouseOverDragIcon()
+  local currCoords = optionData.smartPhoneMapCreator.toggleBlockMenu
+  local dragIconBox = {
+    x = currCoords.x,
+    y = currCoords.y,
+    w = screenDim.y / 30,
+    h = screenDim.y / 30
+  }
+
+  if collision.hoverOverBox(dragIconBox) then
+    return true
+  end
+
+  return false
+end
+
+local function moveToggleBox()
+  if mouse.left.clicked and mouseOverDragIcon() then
+    startedDragging = true
+  end
+
+  if isSmartPhone then
+    if mouse.left.held then
+      if lastMousePos and startedDragging then
+        local currMousePos = {}
+        local currCoords = optionData.smartPhoneMapCreator.toggleBlockMenu
+        currMousePos.x, currMousePos.y = love.mouse.getPosition()
+
+        nextCoords = {
+          x = currCoords.x + currMousePos.x - lastMousePos.x,
+          y = currCoords.y + currMousePos.y - lastMousePos.y
+        }
+
+        local menu = optionData.smartPhoneMapCreator.display()
+        local offset = {
+          w = menu.toggleBlockMenu.w,
+          h = menu.toggleBlockMenu.h
+        }
+
+        currCoords.x = nextCoords.x + offset.w < screenDim.x
+          and nextCoords.x > 0
+          and nextCoords.x
+          or nextCoords.x > 0 and screenDim.x - offset.w
+          or 0
+
+        currCoords.y =
+          nextCoords.y + offset.h < screenDim.y
+          and nextCoords.y > 0
+          and nextCoords.y
+          or nextCoords.y > 0 and screenDim.y - offset.h
+          or 0
+      end
+
+    else
+      startedDragging = false
+    end
+  end
+
+  lastMousePos = {}
+  lastMousePos.x, lastMousePos.y = love.mouse.getPosition()
+
+  return not (isSmartPhone and collision.hoverOverBoxes(optionData.smartPhoneMapCreator.display()))
+end
+
 update.mapCreatorinteract = function()
   local mouseCoords = {}
   mouseCoords.x, mouseCoords.y = love.mouse.getPosition()
@@ -58,7 +125,11 @@ update.mapCreatorinteract = function()
     h = blockSize * 2
   }
 
-  if not (mapCreatorMenu and collision.hoverOverBoxes(optionData.blockMenu.display())) and mouseCoords.x > 0 and mouseCoords.x + cameraTranslation < screenDim.x and mouseCoords.y > 0 and mouseCoords.y < screenDim.y then
+  if not (mapCreatorMenu and collision.hoverOverBoxes(optionData.blockMenu.display()))
+    and moveToggleBox()
+    and mouseCoords.x > 0 and mouseCoords.x + cameraTranslation < screenDim.x
+    and mouseCoords.y > 0 and mouseCoords.y < screenDim.y then
+
     if mouse.left.held and not firstLoad then
       map.placeBlock(mouseCoords)
 
@@ -73,11 +144,20 @@ update.mapCreatorinteract = function()
 end
 
 update.mapCreatorBlockMenu = function()
-  local blockMenuKey = controls[controls.findName("mapCreator.blockMenu")].key
-  local keyDown = love.keyboard.isDown(blockMenuKey)
+  if not isSmartPhone then
+    local blockMenuKey = controls[controls.findName("mapCreator.blockMenu")].key
+    local keyDown = love.keyboard.isDown(blockMenuKey)
 
-  if not keys.state[blockMenuKey] and keyDown then
-    mapCreatorMenu = not mapCreatorMenu
+    if not keys.state[blockMenuKey] and keyDown then
+      mapCreatorMenu = not mapCreatorMenu
+    end
+
+  else
+    touchedButton = collision.clickBox(optionData.smartPhoneMapCreator.display())
+
+    if touchedButton and not mouseOverDragIcon() then
+      optionData.smartPhoneMapCreator.funcs[touchedButton]()
+    end
   end
 end
 
@@ -87,11 +167,13 @@ update.selectedMapCreatorBlock = function()
     local blockClicked = collision.clickBox(blockMenuTable)
     collision.updateMouseCursor(blockMenuTable)
 
-    if blockClicked == "prevPage" or blockClicked == "nextPage" or blockClicked == "toggleMapGrid" or blockClicked == "blockMenuArea" then
-      optionData.blockMenu.funcs[blockClicked]()
+    if blockClicked ~= "blockMenuArea" then
+      if blockClicked == "prevPage" or blockClicked == "nextPage" or blockClicked == "toggleMapGrid" then
+        optionData.blockMenu.funcs[blockClicked]()
 
-    elseif blockClicked then
-      selectedBlockIndex = blockMenuTable[blockClicked].blockIndex
+      elseif blockClicked then
+        selectedBlockIndex = blockMenuTable[blockClicked].blockIndex
+      end
     end
   end
 end

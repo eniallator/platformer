@@ -25,7 +25,8 @@ display.loadTextures = function()
     other = {
       background = love.graphics.newImage("assets/textures/other/background.png"),
       menuButton = love.graphics.newImage("assets/textures/other/menu_button.png"),
-      blockMenuBackground = love.graphics.newImage("assets/textures/other/block_menu_background.png")
+      blockMenuBackground = love.graphics.newImage("assets/textures/other/block_menu_background.png"),
+      dragIcon = love.graphics.newImage("assets/textures/icons/draggable_icon.png")
     }
   }
 end
@@ -180,7 +181,7 @@ local function blockMenuOtherButtons(blockMenuTable)
 end
 
 local function blockMenuHelpText()
-  if showBlockMenuHelpText then
+  if not isSmartPhone and showBlockMenuHelpText then
     local font = love.graphics.getFont()
     local blockMenuKeyIndex = controls.findName("mapCreator.blockMenu")
     local blockMenuKey = controls[blockMenuKeyIndex].key
@@ -192,6 +193,16 @@ end
 
 display.blockMenu = function()
   blockMenuHelpText()
+
+  if isSmartPhone then
+    for name,box in pairs(optionData.smartPhoneMapCreator.display()) do
+      displayBoxTexture(box)
+    end
+
+    local coords = optionData.smartPhoneMapCreator.toggleBlockMenu
+    local img = texture.other.dragIcon
+    love.graphics.draw(img, coords.x, coords.y, 0, screenDim.y / 30 / img:getWidth(), screenDim.y / 30 / img:getHeight())
+  end
 
   if mapCreatorMenu then
     local blockMenuTable = optionData.blockMenu.display()

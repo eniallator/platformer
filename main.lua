@@ -3,6 +3,9 @@ function love.load()
   aspectRatio = 4/3
   love.graphics.setDefaultFilter("nearest", "nearest")
   isSmartPhone = love._os == "Android" or love._os == "iOS"
+  update = require "lib/update"
+
+  update.internalWindowSize(love.graphics.getDimensions())
 
   defaultMaps = require "lib/defaultMaps"
   optionData = require "lib/optionData"
@@ -11,7 +14,6 @@ function love.load()
   controls = require "lib/controls"
   display = require "lib/display"
   credits = require "lib/credits"
-  update = require "lib/update"
   entity = require "lib/entity"
   map = require "lib/map"
   textBox = require "lib/utils/textBox"
@@ -19,7 +21,6 @@ function love.load()
   mouse = require "lib/utils/mouse"
   keys = require "lib/utils/keys"
 
-  update.internalWindowSize(love.graphics.getDimensions())
   display.loadTextures()
   textBox.reset()
   update.forces()

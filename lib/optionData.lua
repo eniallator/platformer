@@ -7,16 +7,23 @@ optionData.main = {
     default.x = screenDim.x /2 - default.w /2
     local boxGap = screenDim.y/30
 
-    return {
-      play = {name = "Play", x = default.x, y = screenDim.y /2 - default.h *1.5 - boxGap, w = default.w, h = default.h},
-      createMap = {name = "Map Creator", x = default.x, y = screenDim.y /2 - default.h /2, w = default.w, h = default.h},
-      settings = {name = "Settings", x = default.x, y = screenDim.y /2 + default.h /2 + boxGap, w = default.w, h = default.h}
+    local returnTbl = {
+      play = {name = "Play", x = default.x, y = screenDim.y /2 - default.h - boxGap / 2, w = default.w, h = default.h},
+      createMap = {name = "Map Creator", x = default.x, y = screenDim.y /2 + boxGap / 2, w = default.w, h = default.h}
     }
+
+    if not isSmartPhone then
+      returnTbl.play = {name = "Play", x = default.x, y = screenDim.y /2 - default.h *1.5 - boxGap, w = default.w, h = default.h}
+      returnTbl.createMap = {name = "Map Creator", x = default.x, y = screenDim.y /2 - default.h /2, w = default.w, h = default.h}
+      returnTbl.controls = {name = "Controls", x = default.x, y = screenDim.y /2 + default.h /2 + boxGap, w = default.w, h = default.h}
+    end
+
+    return returnTbl
   end,
 
   funcs = {
     play = function() currMenu = "play" optionGenerator.currOptionPage = 1 end,
-    settings = function() currMenu = "options" end,
+    controls = function() currMenu = "controls" end,
 
     createMap = function()
       selected = "createMap"
@@ -29,24 +36,6 @@ optionData.main = {
       showBlockMenuHelpText = true
       currSelectedGrid = "foreground"
     end
-  }
-}
-
-optionData.options = {
-  display = function()
-    local default = {w = screenDim.x /4, h = screenDim.y /8}
-    default.x = screenDim.x /2 - default.w /2
-    local boxGap = screenDim.y/30
-
-    return {
-      controls = {name = "Controls", x = default.x, y = screenDim.y/2 - boxGap/2 - default.h, w = default.w, h = default.h},
-      back = {name = "Back", x = default.x, y = screenDim.y/2 + boxGap/2, w = default.w, h = default.h}
-    }
-  end,
-
-  funcs = {
-    back = function() currMenu = "main" end,
-    controls = function() currMenu = "controls" optionGenerator.currOptionPage = 1 end
   }
 }
 
@@ -182,6 +171,29 @@ optionData.winMenu = {
       cameraTranslation = 0
       reachedGoal = false
     end
+  }
+}
+
+optionData.smartPhoneMapCreator = {
+  toggleBlockMenu = {
+    x = screenDim.x / 2,
+    y = screenDim.y / 2
+  },
+
+  display = function()
+    return {
+      toggleBlockMenu = {
+        name = (mapCreatorMenu and "show" or "hide") .. " block menu",
+        x = optionData.smartPhoneMapCreator.toggleBlockMenu.x,
+        y = optionData.smartPhoneMapCreator.toggleBlockMenu.y,
+        w = screenDim.x / 5,
+        h = screenDim.y / 12
+      }
+    }
+  end,
+
+  funcs = {
+    toggleBlockMenu = function() mapCreatorMenu = not mapCreatorMenu end
   }
 }
 
