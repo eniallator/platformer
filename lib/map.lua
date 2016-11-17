@@ -248,14 +248,4 @@ map.placeBlock = function(coords)
   mapGrid[currSelectedGrid][math.ceil(coords.y / blockSize)][math.ceil(coords.x / blockSize)] = {block = blocks[selectedBlockIndex].name}
 end
 
-map.checkDefaultMapName = function(compareName)
-  for name,_ in pairs(defaultMaps) do
-    if name == compareName then
-      return true
-    end
-  end
-
-  return false
-end
-
 return map
