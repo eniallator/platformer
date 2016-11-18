@@ -18,8 +18,8 @@ local function displayButton(box)
   love.graphics.setColor(150, 150, 150)
   love.graphics.rectangle("fill", box.x - cameraTranslation, box.y, box.w, box.h)
   love.graphics.setColor(255, 255, 255)
-   love.graphics.printf(box.name, box.x + box.w / 2 - font:getWidth(box.name) / 2 - cameraTranslation, box.y + box.h / 2 - font:getHeight(box.name) / 2, box.w)
- end
+  love.graphics.printf(box.name, box.x + box.w / 2 - font:getWidth(box.name) / 2 - cameraTranslation, box.y + box.h / 2 - font:getHeight(box.name) / 2, box.w)
+end
 
 alert.display = function(currAlert)
   local font = love.graphics.getFont()

@@ -237,7 +237,27 @@ display.blockMenu = function()
   end
 end
 
+local function displayButton(box)
+  local font = love.graphics.getFont()
+
+  love.graphics.setColor(150, 150, 150)
+  love.graphics.rectangle("fill", box.x - cameraTranslation, box.y, box.w, box.h)
+  love.graphics.setColor(255, 255, 255)
+  love.graphics.printf(box.name, box.x + box.w / 2 - font:getWidth(box.name) / 2 - cameraTranslation, box.y + box.h / 2 - font:getHeight(box.name) / 2, box.w)
+end
+
 display.escMenu = function()
+  if isSmartPhone and not escMenuOn and not reachedGoal then
+    local box = {
+      name = "esc",
+      y = 0,
+      w = screenDim.x / 15,
+      h = screenDim.y / 25
+    }
+    box.x = screenDim.x / 2 - box.w / 2
+    displayButton(box)
+  end
+
   displayTbl(optionData.escMenu.display(), escMenuOn)
 end
 

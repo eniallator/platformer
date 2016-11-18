@@ -179,17 +179,30 @@ update.selectedMapCreatorBlock = function()
 end
 
 update.mapCreatorPos = function()
-  if love.keyboard.isDown(controls[controls.findName("mapCreator.scrollRight")].key) and cameraTranslation > - (255 * blockSize - screenDim.x) + mapCreatorScrollSpeed - 1 then
-    cameraTranslation = cameraTranslation - mapCreatorScrollSpeed
-  end
+  if not isSmartPhone then
+    if love.keyboard.isDown(controls[controls.findName("mapCreator.scrollRight")].key)
+    and cameraTranslation > - (255 * blockSize - screenDim.x) + mapCreatorScrollSpeed - 1 then
 
-  if love.keyboard.isDown(controls[controls.findName("mapCreator.scrollLeft")].key) and cameraTranslation < - mapCreatorScrollSpeed + 1 then
-    cameraTranslation = cameraTranslation + mapCreatorScrollSpeed
+      cameraTranslation = cameraTranslation - mapCreatorScrollSpeed
+    end
+
+    if love.keyboard.isDown(controls[controls.findName("mapCreator.scrollLeft")].key)
+    and cameraTranslation < - mapCreatorScrollSpeed + 1 then
+
+      cameraTranslation = cameraTranslation + mapCreatorScrollSpeed
+    end
   end
 end
 
 update.escMenu = function()
-  if update.checkEscButton() then
+  local box = {
+    y = 0,
+    w = screenDim.x / 15,
+    h = screenDim.y / 25
+  }
+  box.x = screenDim.x / 2 - box.w / 2
+
+  if update.checkEscButton() or isSmartPhone and collision.clickBox({box}) and not escMenuOn then
     escMenuOn = not escMenuOn
   end
 

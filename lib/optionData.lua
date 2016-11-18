@@ -176,8 +176,8 @@ optionData.winMenu = {
 
 optionData.smartPhoneMapCreator = {
   toggleBlockMenu = {
-    x = screenDim.x / 2,
-    y = screenDim.y / 2
+    x = screenDim.x / 2 - screenDim.x / 10,
+    y = screenDim.y / 2 - screenDim.y / 24
   },
 
   display = function()
