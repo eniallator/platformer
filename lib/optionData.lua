@@ -183,7 +183,7 @@ optionData.smartPhoneMapCreator = {
   display = function()
     return {
       toggleBlockMenu = {
-        name = (mapCreatorMenu and "show" or "hide") .. " block menu",
+        name = (mapCreatorMenu and "hide" or "show") .. " block menu",
         x = optionData.smartPhoneMapCreator.toggleBlockMenu.x,
         y = optionData.smartPhoneMapCreator.toggleBlockMenu.y,
         w = screenDim.x / 5,

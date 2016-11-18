@@ -125,13 +125,7 @@ local function loadOptionFuncs(page, menuName, func)
 
     back = function(_, rmb)
       if not rmb then
-        if currMenu == "controls" then
-          currMenu = "options"
-
-        else
-          currMenu = "main"
-        end
-
+        currMenu = "main"
         optionGenerator.currOptionPage = 1
       end
     end
