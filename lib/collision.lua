@@ -114,10 +114,14 @@ collision.rightClickBox = function(displayedTbl)
   end
 end
 
-local handCursor = love.mouse.getSystemCursor("hand")
+local handCursor
+
+if not isSmartPhone then
+  handCursor = love.mouse.getSystemCursor("hand")
+end
 
 collision.updateMouseCursor = function(displayedTbl)
-  if collision.hoverOverBoxes(displayedTbl) then
+  if not isSmartPhone and collision.hoverOverBoxes(displayedTbl) then
     love.mouse.setCursor(handCursor)
   end
 end

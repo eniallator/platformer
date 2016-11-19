@@ -85,9 +85,10 @@ smartPhone.checkButtonPress = function(arrowType)
     for _,id in pairs(touches) do
       local currTouch = {}
       currTouch.x, currTouch.y = love.touch.getPosition(id)
-      currTouch.x = currTouch.x - cameraTranslation
+      currTouch.x = currTouch.x - cameraTranslation - borders.x / 2
+      currTouch.y = currTouch.y - borders.y / 2
 
-      if mouse.left.held and math.sqrt((abs(currTouch.x) - abs(currArrow.x)) ^ 2 + (abs(currTouch.y) - abs(currArrow.y)) ^ 2) < radius then
+      if math.sqrt((abs(currTouch.x) - abs(currArrow.x)) ^ 2 + (abs(currTouch.y) - abs(currArrow.y)) ^ 2) < radius then
         return true
       end
     end

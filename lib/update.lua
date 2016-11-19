@@ -6,10 +6,12 @@ update.internalWindowSize = function(w, h)
     borders = {x = 0, y = 0}
 
   elseif w/h > aspectRatio then
+    borders = {}
     borders.x = (w -(h *aspectRatio))
     borders.y = 0
 
   else
+    borders = {}
     borders.y = (h -(w /aspectRatio))
     borders.x = 0
   end

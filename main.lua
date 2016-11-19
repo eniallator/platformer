@@ -2,7 +2,7 @@ function love.load()
   screenDim = {}
   aspectRatio = 4/3
   love.graphics.setDefaultFilter("nearest", "nearest")
-  isSmartPhone = love._os == "Android" or love._os == "iOS"
+  isSmartPhone = love._os == "Android" or love._os == "iOS" or true
   update = require "lib/update"
 
   update.internalWindowSize(love.graphics.getDimensions())
@@ -71,7 +71,10 @@ function love.mousereleased(x, y, button, isTouch)
 end
 
 function love.update()
-  love.mouse.setCursor()
+  if not isSmartPhone then
+    love.mouse.setCursor()
+  end
+
   controls.getKeyInput()
 
   if utilsData.textBox.selected or utilsData.alert.selected then
