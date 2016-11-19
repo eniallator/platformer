@@ -1,3 +1,4 @@
+local smartPhone = require "lib/smartPhone"
 local update = {}
 
 update.internalWindowSize = function(w, h)
@@ -127,6 +128,7 @@ update.mapCreatorinteract = function()
 
   if not (mapCreatorMenu and collision.hoverOverBoxes(optionData.blockMenu.display()))
     and moveToggleBox()
+    and not smartPhone.checkButtonPress("right") and not smartPhone.checkButtonPress("left")
     and mouseCoords.x > 0 and mouseCoords.x + cameraTranslation < screenDim.x
     and mouseCoords.y > 0 and mouseCoords.y < screenDim.y then
 
@@ -179,18 +181,18 @@ update.selectedMapCreatorBlock = function()
 end
 
 update.mapCreatorPos = function()
-  if not isSmartPhone then
-    if love.keyboard.isDown(controls[controls.findName("mapCreator.scrollRight")].key)
-    and cameraTranslation > - (255 * blockSize - screenDim.x) + mapCreatorScrollSpeed - 1 then
+  if (not mapCreatorMenu and smartPhone.checkButtonPress("right")
+  or love.keyboard.isDown(controls[controls.findName("mapCreator.scrollRight")].key))
+  and cameraTranslation > - (255 * blockSize - screenDim.x) + mapCreatorScrollSpeed - 1 then
 
-      cameraTranslation = cameraTranslation - mapCreatorScrollSpeed
-    end
+    cameraTranslation = cameraTranslation - mapCreatorScrollSpeed
+  end
 
-    if love.keyboard.isDown(controls[controls.findName("mapCreator.scrollLeft")].key)
-    and cameraTranslation < - mapCreatorScrollSpeed + 1 then
+  if (not mapCreatorMenu and smartPhone.checkButtonPress("left")
+  or love.keyboard.isDown(controls[controls.findName("mapCreator.scrollLeft")].key))
+  and cameraTranslation < - mapCreatorScrollSpeed + 1 then
 
-      cameraTranslation = cameraTranslation + mapCreatorScrollSpeed
-    end
+    cameraTranslation = cameraTranslation + mapCreatorScrollSpeed
   end
 end
 

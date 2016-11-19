@@ -1,3 +1,4 @@
+local smartPhone = require "lib/smartPhone"
 local entity = {}
 
 local function applyVelForces(currEntity)
@@ -53,7 +54,8 @@ end
 local function checkUp(currEntity)
   local upPressed = false
 
-  if love.keyboard.isDown(controls[controls.findName("game.jump")].key) then
+  if isSmartPhone and smartPhone.checkButtonPress("up") or love.keyboard.isDown(controls[controls.findName("game.jump")].key) then
+
     if not currEntity.stillDown then
       upPressed = true
     end
@@ -82,12 +84,12 @@ end
 local function getInput(currEntity)
   updateEntityJump(currEntity)
 
-  if love.keyboard.isDown(controls[controls.findName("game.right")].key) then
+  if isSmartPhone and smartPhone.checkButtonPress("right") or love.keyboard.isDown(controls[controls.findName("game.right")].key) then
     currEntity.vel.x = currEntity.vel.x + moveSpeed
     currEntity.lastDir = "r"
   end
 
-  if love.keyboard.isDown(controls[controls.findName("game.left")].key) then
+  if isSmartPhone and smartPhone.checkButtonPress("left") or love.keyboard.isDown(controls[controls.findName("game.left")].key) then
     currEntity.vel.x = currEntity.vel.x - moveSpeed
     currEntity.lastDir = "l"
   end

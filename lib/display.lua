@@ -1,3 +1,4 @@
+local smartPhone = require "lib/smartPhone"
 local display = {}
 
 display.loadTextures = function()
@@ -26,7 +27,8 @@ display.loadTextures = function()
       background = love.graphics.newImage("assets/textures/other/background.png"),
       menuButton = love.graphics.newImage("assets/textures/other/menu_button.png"),
       blockMenuBackground = love.graphics.newImage("assets/textures/other/block_menu_background.png"),
-      dragIcon = love.graphics.newImage("assets/textures/icons/draggable_icon.png")
+      dragIcon = love.graphics.newImage("assets/textures/icons/draggable_icon.png"),
+      arrowIcon = love.graphics.newImage("assets/textures/icons/arrow_button.png")
     }
   }
 end
@@ -201,7 +203,7 @@ display.blockMenu = function()
 
     local coords = optionData.smartPhoneMapCreator.toggleBlockMenu
     local img = texture.other.dragIcon
-    love.graphics.draw(img, coords.x, coords.y, 0, screenDim.y / 30 / img:getWidth(), screenDim.y / 30 / img:getHeight())
+    love.graphics.draw(img, coords.x - cameraTranslation, coords.y, 0, screenDim.y / 30 / img:getWidth(), screenDim.y / 30 / img:getHeight())
   end
 
   if mapCreatorMenu then
@@ -316,6 +318,15 @@ display.borders = function()
     love.graphics.setColor(0, 0, 0)
     love.graphics.rectangle("fill", - cameraTranslation + screenDim.x , 0, borders.x / 2, screenDim.y)
     love.graphics.rectangle("fill", - cameraTranslation - borders.x / 2, 0, borders.x / 2, screenDim.y)
+  end
+end
+
+display.arrowButtons = function()
+  if selected == "game" then
+    smartPhone.drawArrowButtons()
+
+  elseif not mapCreatorMenu then
+    smartPhone.drawHorzontalButtons()
   end
 end
 
