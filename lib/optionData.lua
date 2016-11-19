@@ -72,7 +72,13 @@ optionData.escMenu = {
 
   funcs = {
     close = function() end,
-    save = function() utilsData.textBox.selected = "saveMap" end,
+    save = function()
+      utilsData.textBox.selected = "saveMap"
+
+      if isSmartPhone then
+        love.keyboard.setTextInput(true)
+      end
+    end,
 
     backToMenu = function()
       selected = "menu"

@@ -2,7 +2,7 @@ function love.load()
   screenDim = {}
   aspectRatio = 4/3
   love.graphics.setDefaultFilter("nearest", "nearest")
-  isSmartPhone = love._os == "Android" or love._os == "iOS" or true
+  isSmartPhone = love._os == "Android" or love._os == "iOS"
   update = require "lib/update"
 
   update.internalWindowSize(love.graphics.getDimensions())

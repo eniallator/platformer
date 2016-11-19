@@ -51,6 +51,10 @@ textBox.reset = function()
   textBox.focusedChar = 1
   textBox.showedText = 1
   textBox.stopped = false
+
+  if isSmartPhone then
+    love.keyboard.setTextInput(false)
+  end
 end
 
 textBox.display = function(title, currentText, dim)
