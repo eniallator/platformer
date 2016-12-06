@@ -26,7 +26,6 @@ function love.load()
   update.forces()
   controls.loadControls()
 
-  mapCreatorScrollSpeed = 5
   blocks = {
     {name = "stone", solid = true},
     {name = "dirt", solid = true},

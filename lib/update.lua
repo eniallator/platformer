@@ -7,18 +7,18 @@ update.internalWindowSize = function(w, h)
 
   elseif w/h > aspectRatio then
     borders = {}
-    borders.x = (w -(h *aspectRatio))
+    borders.x = (w - (h * aspectRatio))
     borders.y = 0
 
   else
     borders = {}
-    borders.y = (h -(w /aspectRatio))
+    borders.y = (h - (w / aspectRatio))
     borders.x = 0
   end
 
-  screenDim.x, screenDim.y = w -borders.x +1, h -borders.y
-  blockSize = screenDim.y/20
-  love.graphics.setFont(love.graphics.newFont("assets/Psilly.otf", screenDim.x/40))
+  screenDim.x, screenDim.y = w - borders.x + 1, h - borders.y
+  blockSize = screenDim.y / 20
+  love.graphics.setFont(love.graphics.newFont("assets/Psilly.otf", screenDim.x / 40))
 end
 
 update.forces = function()
@@ -52,15 +52,9 @@ local lastMousePos
 local startedDragging
 
 local function mouseOverDragIcon()
-  local currCoords = optionData.smartPhoneMapCreator.toggleBlockMenu
-  local dragIconBox = {
-    x = currCoords.x,
-    y = currCoords.y,
-    w = screenDim.y / 30,
-    h = screenDim.y / 30
-  }
+  local dragIconBox = optionData.smartPhoneMapCreator.displayIcon()
 
-  if collision.hoverOverBox(dragIconBox) then
+  if collision.circle(dragIconBox) then
     return true
   end
 
@@ -112,7 +106,7 @@ local function moveToggleBox()
   lastMousePos = {}
   lastMousePos.x, lastMousePos.y = love.mouse.getPosition()
 
-  return not (isSmartPhone and collision.hoverOverBoxes(optionData.smartPhoneMapCreator.display()))
+  return not (isSmartPhone and (collision.hoverOverBoxes(optionData.smartPhoneMapCreator.display()) or startedDragging))
 end
 
 update.mapCreatorinteract = function()
@@ -183,6 +177,8 @@ update.selectedMapCreatorBlock = function()
 end
 
 update.mapCreatorPos = function()
+  local mapCreatorScrollSpeed = screenDim.x / 160
+
   if (not mapCreatorMenu and smartPhone.checkButtonPress("right")
   or love.keyboard.isDown(controls[controls.findName("mapCreator.scrollRight")].key))
   and cameraTranslation > - (255 * blockSize - screenDim.x) + mapCreatorScrollSpeed - 1 then
@@ -199,12 +195,7 @@ update.mapCreatorPos = function()
 end
 
 update.escMenu = function()
-  local box = {
-    y = 0,
-    w = screenDim.x / 15,
-    h = screenDim.y / 25
-  }
-  box.x = screenDim.x / 2 - box.w / 2
+  local box = optionData.smartPhoneEscMenu.display()
 
   if update.checkEscButton() or isSmartPhone and collision.clickBox({box}) and not escMenuOn then
     escMenuOn = not escMenuOn

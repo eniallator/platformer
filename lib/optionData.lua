@@ -180,11 +180,34 @@ optionData.winMenu = {
   }
 }
 
+optionData.smartPhoneEscMenu = {
+  display = function()
+    local box = {
+      name = "esc",
+      y = 0,
+      w = screenDim.x / 5,
+      h = screenDim.y / 15
+    }
+    box.x = screenDim.x - box.w
+
+    return box
+  end
+}
+
 optionData.smartPhoneMapCreator = {
   toggleBlockMenu = {
     x = screenDim.x / 2 - screenDim.x / 10,
     y = screenDim.y / 2 - screenDim.y / 24
   },
+
+  displayIcon = function()
+    local currCoords = optionData.smartPhoneMapCreator.toggleBlockMenu
+    return {
+      x = currCoords.x,
+      y = currCoords.y,
+      r = screenDim.y / 30,
+    }
+  end,
 
   display = function()
     return {

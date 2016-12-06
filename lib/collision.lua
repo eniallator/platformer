@@ -26,6 +26,30 @@ collision.rectangles = function(box1,box2)
   return false
 end
 
+collision.circle = function(circleTbl, touchTbl)
+  local mouseCoords = {}
+
+  if touchTbl then
+    mouseCoords.x, mouseCoords.y = touchTbl.x, touchTbl.y
+
+  else
+    mouseCoords.x, mouseCoords.y = love.mouse.getPosition()
+    mouseCoords.x = mouseCoords.x - borders.x / 2
+    mouseCoords.y = mouseCoords.y - borders.y / 2
+  end
+
+  local side = {
+    x = mouseCoords.x - circleTbl.x,
+    y = mouseCoords.y - circleTbl.y
+  }
+
+  if math.sqrt(side.x ^ 2 + side.y ^ 2) <= circleTbl.r then
+    return true
+  end
+
+  return false
+end
+
 collision.detectEntity = function(pos, currEntity, attribute)
   local currEntityDim = currEntity.dim()
   local gridCoordinates = {

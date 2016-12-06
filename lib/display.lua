@@ -193,18 +193,26 @@ local function blockMenuHelpText()
   end
 end
 
-display.blockMenu = function()
-  blockMenuHelpText()
-
+local function blockMenuButton()
   if isSmartPhone then
     for name,box in pairs(optionData.smartPhoneMapCreator.display()) do
       displayBoxTexture(box)
     end
 
-    local coords = optionData.smartPhoneMapCreator.toggleBlockMenu
     local img = texture.other.dragIcon
-    love.graphics.draw(img, coords.x - cameraTranslation, coords.y, 0, screenDim.y / 30 / img:getWidth(), screenDim.y / 30 / img:getHeight())
+    local iconTbl = optionData.smartPhoneMapCreator.displayIcon()
+
+    love.graphics.setColor(180, 180, 180, 180)
+    love.graphics.circle("fill", iconTbl.x - cameraTranslation, iconTbl.y, iconTbl.r)
+    love.graphics.setColor(255, 255, 255)
+
+    love.graphics.draw(img, iconTbl.x - iconTbl.r - cameraTranslation, iconTbl.y - iconTbl.r, 0, iconTbl.r * 2 / img:getWidth(), iconTbl.r * 2 / img:getHeight())
   end
+end
+
+display.blockMenu = function()
+  blockMenuHelpText()
+  blockMenuButton()
 
   if mapCreatorMenu then
     local blockMenuTable = optionData.blockMenu.display()
@@ -250,14 +258,8 @@ end
 
 display.escMenu = function()
   if isSmartPhone and not escMenuOn and not reachedGoal then
-    local box = {
-      name = "esc",
-      y = 0,
-      w = screenDim.x / 15,
-      h = screenDim.y / 25
-    }
-    box.x = screenDim.x / 2 - box.w / 2
-    displayButton(box)
+    local box = optionData.smartPhoneEscMenu.display()
+    displayBoxTexture(box)
   end
 
   displayTbl(optionData.escMenu.display(), escMenuOn)

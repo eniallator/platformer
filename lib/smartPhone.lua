@@ -79,8 +79,12 @@ smartPhone.checkButtonPress = function(arrowType)
     local touches = love.touch.getTouches()
     local arrowData = smartPhone.arrowData()
     local currArrow = arrowData[arrowType].midPoint
-    local radius = arrowData.radius
-    local abs = math.abs
+
+    local circleTbl = {
+      x = currArrow.x,
+      y = currArrow.y,
+      r = arrowData.radius
+    }
 
     for _,id in pairs(touches) do
       local currTouch = {}
@@ -88,7 +92,8 @@ smartPhone.checkButtonPress = function(arrowType)
       currTouch.x = currTouch.x - cameraTranslation - borders.x / 2
       currTouch.y = currTouch.y - borders.y / 2
 
-      if math.sqrt((abs(currTouch.x) - abs(currArrow.x)) ^ 2 + (abs(currTouch.y) - abs(currArrow.y)) ^ 2) < radius then
+      -- if math.sqrt((abs(currTouch.x) - abs(currArrow.x)) ^ 2 + (abs(currTouch.y) - abs(currArrow.y)) ^ 2) < radius then
+      if collision.circle(circleTbl, currTouch) then
         return true
       end
     end

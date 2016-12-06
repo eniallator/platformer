@@ -11,7 +11,7 @@ end
 
 local function yOffset()
   if isSmartPhone then
-    return screenDim.y / 3
+    return screenDim.y * (2 / 7)
   end
 
   return 0

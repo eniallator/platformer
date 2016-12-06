@@ -44,11 +44,10 @@ end
 
 local function generateIcons(font, maxPrefixSize, iconSize)
   local iconTbl = {}
-  local iconSize = screenDim.y / 27
   local maxNameSize = getMaxTextSize(font, "name")
 
   for i=1,#credits do
-    local rowY = screenDim.y - (font:getHeight(credits[i]) + 5) * (#credits - i + 1) - 10
+    local rowY = screenDim.y - (iconSize + 5) * (#credits - i + 1) - 10
     local iconNum = 0
 
     for websiteName, url in pairs(credits[i]) do
@@ -69,8 +68,8 @@ local function generateIcons(font, maxPrefixSize, iconSize)
   return iconTbl
 end
 
-local function displayIcons(font, maxPrefixSize)
-  local iconList = generateIcons(font, maxPrefixSize)
+local function displayIcons(font, maxPrefixSize, iconSize)
+  local iconList = generateIcons(font, maxPrefixSize, iconSize)
 
   for name,box in pairs(iconList) do
     local currIcon = credits.websiteIcons[box.type]
@@ -80,25 +79,31 @@ end
 
 credits.display = function()
   if currMenu == "main" then
-    local font = love.graphics.getFont()
+    local font = love.graphics.newFont("assets/Psilly.otf", screenDim.x / (isSmartPhone and 30 or 40))
+    love.graphics.setFont(font)
+
     local maxPrefixSize = getMaxTextSize(font, "prefix")
-    displayIcons(font, maxPrefixSize)
+    local iconSize = screenDim.y / (isSmartPhone and 16 or 27)
+    displayIcons(font, maxPrefixSize, iconSize)
 
     for i=1,#credits do
       love.graphics.print(credits[i], 15, screenDim.y -(font:getHeight(credits[i]) + 2) * (#credits - i + 1) - 10)
-      local rowY = screenDim.y -(font:getHeight(credits[i]) + 5) * (#credits - i + 1) - 10
+      local rowY = screenDim.y -(iconSize + 5) * (#credits - i + 1) - 10
       local iconsDrawn = 0
 
       love.graphics.print(credits[i].prefix, 15, rowY)
       love.graphics.print(":  " .. credits[i].name, 25 + maxPrefixSize, rowY)
     end
+
+    love.graphics.setFont(love.graphics.newFont("assets/Psilly.otf", screenDim.x / 40))
   end
 end
 
 credits.update = function()
   if currMenu == "main" then
     local font = love.graphics.getFont()
-    local iconList = generateIcons(font, getMaxTextSize(font, "prefix"))
+    local iconSize = screenDim.y / (isSmartPhone and 16 or 27)
+    local iconList = generateIcons(font, getMaxTextSize(font, "prefix"), iconSize)
 
     collision.updateMouseCursor(iconList)
     local clickedIcon = collision.clickBox(iconList)
