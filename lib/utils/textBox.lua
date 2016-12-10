@@ -1,6 +1,6 @@
 local timer = 0
 local lastChar = nil
-local defaultCharDelay = 40
+local defaultCharDelay = 50
 local textBox = {}
 
 local function createDisplayText(text, textArea)
@@ -93,6 +93,13 @@ local function checkText(selectedTextBox)
   end
 end
 
+local function backSpace()
+  if #textBox.currText > 0 then
+    table.remove(textBox.currText, textBox.focusedChar -1)
+    textBox.focusedChar = textBox.focusedChar -1
+  end
+end
+
 textBox.getInput = function(selectedTextBox)
   if keys.currKey ~= lastChar then
     textBox.currCharDelay = defaultCharDelay
@@ -101,50 +108,32 @@ textBox.getInput = function(selectedTextBox)
   if textBox.stopped then
     checkText(selectedTextBox)
 
-  elseif keys.currKey then
-    if keys.currKey ~= lastChar or textBox.currCharDelay <= 0 then
+  else
+    if keys.textInput and keys.textInput:find(selectedTextBox.acceptedKeys) then
+      table.insert(textBox.currText, textBox.focusedChar, keys.textInput)
+      textBox.focusedChar = textBox.focusedChar + 1
+
+    elseif keys.textInput and keys.textInput == "\b" then
+      backSpace()
+
+    elseif keys.currKey and keys.currKey ~= lastChar or textBox.currCharDelay <= 0 then
       if textBox.currCharDelay <= 0 then
-        textBox.currCharDelay = 2
+        textBox.currCharDelay = 4
       end
 
-      local char = keys.currKey
+      if keys.currKey == "backspace" then
+        backSpace()
 
-      if char == "space" then
-        char = " "
-      end
-
-      if char:find(selectedTextBox.acceptedKeys) then
-        local upperCaseXOR = 0
-
-        if keys.state.rshift or keys.state.lshift then
-          upperCaseXOR = 1
-        end
-
-        if keys.state.capslock then
-          upperCaseXOR = upperCaseXOR + 1
-        end
-
-        if upperCaseXOR %2 == 1 then
-          char = char:upper()
-        end
-
-        table.insert(textBox.currText, textBox.focusedChar, char)
-        textBox.focusedChar = textBox.focusedChar + 1
-
-      elseif char == "backspace" and #textBox.currText > 0 then
-        table.remove(textBox.currText, textBox.focusedChar -1)
-        textBox.focusedChar = textBox.focusedChar -1
-
-      elseif char == "delete"and textBox.focusedChar <= #textBox.currText then
+      elseif keys.currKey == "delete"and textBox.focusedChar <= #textBox.currText then
         table.remove(textBox.currText, textBox.focusedChar)
 
-      elseif char == "left" and textBox.focusedChar -1 > 0 then
+      elseif keys.currKey == "left" and textBox.focusedChar -1 > 0 then
         textBox.focusedChar = textBox.focusedChar -1
 
-      elseif char == "right" and textBox.focusedChar -1 < #textBox.currText then
+      elseif keys.currKey == "right" and textBox.focusedChar -1 < #textBox.currText then
         textBox.focusedChar = textBox.focusedChar +1
 
-      elseif char == "return" then
+      elseif keys.currKey == "return" then
         if checkText(selectedTextBox) == "stop" then
           textBox.reset()
         end

@@ -61,6 +61,10 @@ function love.keyreleased(key)
   keys.updateState(key, false)
 end
 
+function love.textinput(text)
+  keys.textInput = text
+end
+
 function love.mousepressed(x, y, button, isTouch)
   mouse.updateState(true, x, y, button)
 end
@@ -106,6 +110,7 @@ function love.update()
     update.mapCreatorinteract()
   end
 
+  keys.textInput = nil
   mouse.updateClicked()
 end
 
