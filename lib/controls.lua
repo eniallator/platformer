@@ -1,11 +1,11 @@
 local controls = {
   waitForPress = nil,
-  {name = "game.jump", key = "up"},
-  {name = "game.right", key = "right"},
-  {name = "game.left", key = "left"},
+  {name = "game.jump", key = "space"},
+  {name = "game.right", key = "d"},
+  {name = "game.left", key = "a"},
   {name = "mapCreator.blockMenu", key = "m"},
-  {name = "mapCreator.scrollRight", key = "right"},
-  {name = "mapCreator.scrollLeft", key = "left"}
+  {name = "mapCreator.scrollRight", key = "d"},
+  {name = "mapCreator.scrollLeft", key = "a"}
 }
 
 controls.findName = function(name)
