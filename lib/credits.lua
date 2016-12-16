@@ -54,7 +54,7 @@ local function generateIcons(font, maxPrefixSize, iconSize)
       if websiteName ~= "prefix" and websiteName ~= "name" then
         local currIcon = {type = websiteName, url = url}
 
-        currIcon.x = 50 + maxNameSize + maxPrefixSize + iconNum * (iconSize + 5)
+        currIcon.x = 30 + font:getWidth(":  ") + maxNameSize + maxPrefixSize + iconNum * (iconSize + 5)
         currIcon.y = rowY
         currIcon.w = iconSize
         currIcon.h = iconSize
@@ -89,7 +89,6 @@ credits.display = function()
     for i=1,#credits do
       love.graphics.print(credits[i], 15, screenDim.y -(font:getHeight(credits[i]) + 2) * (#credits - i + 1) - 10)
       local rowY = screenDim.y -(iconSize + 5) * (#credits - i + 1) - 10
-      local iconsDrawn = 0
 
       love.graphics.print(credits[i].prefix, 15, rowY)
       love.graphics.print(":  " .. credits[i].name, 25 + maxPrefixSize, rowY)
