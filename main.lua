@@ -4,6 +4,7 @@ function love.load()
   love.graphics.setDefaultFilter("nearest", "nearest")
   isSmartPhone = love._os == "Android" or love._os == "iOS"
   update = require "lib/update"
+  debugMode = false
 
   update.internalWindowSize(love.graphics.getDimensions())
 
@@ -15,6 +16,7 @@ function love.load()
   display = require "lib/display"
   credits = require "lib/credits"
   entity = require "lib/entity"
+  debug = require "lib/debug"
   map = require "lib/map"
   textBox = require "lib/utils/textBox"
   alert = require "lib/utils/alert"
@@ -74,6 +76,8 @@ function love.mousereleased(x, y, button, isTouch)
 end
 
 function love.update()
+  debug.initTimes()
+
   if not isSmartPhone then
     love.mouse.setCursor()
   end
@@ -87,15 +91,20 @@ function love.update()
   elseif selected == "game" then
     if not reachedGoal then
       if not escMenuOn then
+        debug.addTime("update", "game start")
         entity.player.update()
+        debug.addTime("update", "entity.player.update")
         update.camera()
+        debug.addTime("update", "update.camera")
         timeCounter = timeCounter + 1
       end
 
       update.escMenu()
+      debug.addTime("update", "update.escMenu")
 
     else
       update.winMenu()
+      debug.addTime("update", "update.winMenu")
     end
 
   elseif selected == "menu" then
@@ -123,14 +132,23 @@ function love.draw()
     display.textBox()
 
   elseif selected == "game" then
+    debug.addTime("draw", "game start")
     display.background()
+    debug.addTime("draw", "display.background")
     display.map.background()
+    debug.addTime("draw", "display.map.background")
     entity.player.display()
+    debug.addTime("draw", "entity.player.display")
     display.map.foreground()
+    debug.addTime("draw", "display.map.foreground")
     display.timeCounter()
+    debug.addTime("draw", "display.timeCounter")
     display.arrowButtons()
+    debug.addTime("draw", "display.arrowButtons")
     display.escMenu()
+    debug.addTime("draw", "display.escMenu")
     display.winMenu()
+    debug.addTime("draw", "display.winMenu")
 
   elseif selected == "menu" then
     display.background()
@@ -147,5 +165,6 @@ function love.draw()
   end
 
   display.alert()
+  debug.printTimes()
   display.borders()
 end
