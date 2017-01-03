@@ -150,10 +150,12 @@ local function displayTbl(tbl, condition)
   end
 end
 
-local function displayBlockMenuButton(tbl)
-  love.graphics.setFont(love.graphics.newFont("assets/Psilly.otf", screenDim.x/60))
-  displayBoxTexture(tbl)
-  love.graphics.setFont(love.graphics.newFont("assets/Psilly.otf", screenDim.x/40))
+local function displayBlockMenuButtons(tbl)
+  for name, box in pairs(tbl) do
+    love.graphics.setFont(love.graphics.newFont("assets/Psilly.otf", screenDim.x/60))
+    displayBoxTexture(box)
+    love.graphics.setFont(love.graphics.newFont("assets/Psilly.otf", screenDim.x/40))
+  end
 end
 
 local function blockMenuBackground()
@@ -170,6 +172,21 @@ local function blockMenuBackground()
   love.graphics.setColor(255, 255, 255)
 end
 
+local function filterButtonsOut(tbl)
+  local newTbl = {}
+  local arrayIndex = 1
+
+  for k,v in pairs(tbl) do
+    if k ~= arrayIndex and k ~= "nextPage" and k ~= "prevPage" and not v.notButton then
+      newTbl[k] = v
+    end
+
+    arrayIndex = arrayIndex + 1
+  end
+
+  return newTbl
+end
+
 local function blockMenuOtherButtons(blockMenuTable)
   if blockMenuTable.nextPage then
     displayBlockMenuButton(blockMenuTable.nextPage)
@@ -179,7 +196,7 @@ local function blockMenuOtherButtons(blockMenuTable)
     displayBlockMenuButton(blockMenuTable.prevPage)
   end
 
-  displayBoxTexture(blockMenuTable.toggleMapGrid)
+  displayBlockMenuButtons(filterButtonsOut(blockMenuTable), true)
 end
 
 local function blockMenuHelpText()

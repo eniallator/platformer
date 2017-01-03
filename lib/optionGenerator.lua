@@ -212,7 +212,13 @@ optionGenerator.loadBlockOptions = function()
     returnTbl[optionGenerator.currBlockPage].prevPage = {name = "Prev", x = screenDim.x /(40/1), y = screenDim.y -screenDim.y /12, w = blockSize, h = blockSize}
   end
 
-  returnTbl[optionGenerator.currBlockPage].toggleMapGrid = {name = "Selected layer: " .. currSelectedGrid, x = 10, y = 10, w = screenDim.x / 3 - 17.5, h = screenDim.y / 16}
+  local buttonWidth = screenDim.x / 3 - 17.5
+
+  if isSmartPhone then
+    returnTbl[optionGenerator.currBlockPage].togglePlaceMode = {name = "Mode: " .. (destroyMode and "Destroy" or "Place"), x = 20 + buttonWidth, y = 10, w = buttonWidth, h = screenDim.y / 16}
+  end
+
+  returnTbl[optionGenerator.currBlockPage].toggleMapGrid = {name = "Selected layer: " .. currSelectedGrid, x = 10, y = 10, w = buttonWidth, h = screenDim.y / 16}
 
   returnTbl[optionGenerator.currBlockPage].blockMenuArea = {notButton = true, x = screenDim.x / 60 - cameraTranslation, y = screenDim.y - screenDim.y / 9, w = screenDim.x - screenDim.x / 60 * 2, h = blockSize * 2}
 

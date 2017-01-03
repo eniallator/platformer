@@ -129,7 +129,12 @@ update.mapCreatorinteract = function()
     and mouseCoords.y > 0 and mouseCoords.y < screenDim.y then
 
     if mouse.left.held and not firstLoad then
-      map.placeBlock(mouseCoords)
+      if isSmartPhone and destroyMode then
+        map.destroyBlock(mouseCoords)
+
+      else
+        map.placeBlock(mouseCoords)
+      end
 
     elseif not mouse.left.held then
       firstLoad = false
@@ -165,12 +170,17 @@ update.selectedMapCreatorBlock = function()
     local blockClicked = collision.clickBox(blockMenuTable)
     collision.updateMouseCursor(blockMenuTable)
 
-    if blockClicked ~= "blockMenuArea" then
-      if blockClicked == "prevPage" or blockClicked == "nextPage" or blockClicked == "toggleMapGrid" then
-        optionData.blockMenu.funcs[blockClicked]()
+    if not blockClicked then
+      return
+    end
 
-      elseif blockClicked then
+    if not blockMenuTable[blockClicked].notButton then
+      if tonumber(blockClicked) then
         selectedBlockIndex = blockMenuTable[blockClicked].blockIndex
+
+      else
+        print(blockClicked)
+        optionData.blockMenu.funcs[blockClicked]()
       end
     end
   end

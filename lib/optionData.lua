@@ -155,7 +155,7 @@ optionData.blockMenu = {
     nextPage = function() optionGenerator.currBlockPage = optionGenerator.currBlockPage + 1 end,
     prevPage = function() optionGenerator.currBlockPage = optionGenerator.currBlockPage - 1 end,
     toggleMapGrid = function() currSelectedGrid = currSelectedGrid == "foreground" and "background" or "foreground" end,
-    blockMenuArea = function() end
+    togglePlaceMode = function() destroyMode = not destroyMode end
   }
 }
 
