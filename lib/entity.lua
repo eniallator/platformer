@@ -129,7 +129,7 @@ entity.player.update = function()
   if checkPoint.x then
     local playerDim = player.dim()
     player.spawnPos.x = checkPoint.x * blockSize - blockSize / 2 - playerDim.w / 2
-    player.spawnPos.y = checkPoint.y * blockSize + blockSize - playerDim.h
+    player.spawnPos.y = math.floor(checkPoint.y * blockSize + blockSize - playerDim.h)
   end
 
   if collision.detectEntity(playerPos, player, "goal") then
@@ -150,7 +150,7 @@ local function findSpawnPoint()
       if type(mapGrid.foreground[i][j]) == "table" and mapGrid.foreground[i][j].block == "spawnPoint" then
         local playerDim = entity.player.dim()
         spawnPoint.x = j * blockSize - blockSize / 2 - playerDim.w / 2
-        spawnPoint.y = i * blockSize + blockSize - playerDim.h
+        spawnPoint.y = math.floor(i * blockSize + blockSize - playerDim.h)
       end
     end
   end
