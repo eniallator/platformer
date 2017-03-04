@@ -25,7 +25,6 @@ function love.load()
 
   display.loadTextures()
   textBox.reset()
-  update.forces()
   controls.loadControls()
 
   blocks = {
@@ -52,31 +51,11 @@ function love.resize(w, h)
   entity.player.pos.x = entity.player.pos.x *(h /20 /(screenDim.y /20))
 
   update.internalWindowSize(w, h)
-  update.forces()
 end
 
-function love.keypressed(key)
-  keys.updateState(key, true)
-end
-
-function love.keyreleased(key)
-  keys.updateState(key, false)
-end
-
-function love.textinput(text)
-  keys.textInput = text
-end
-
-function love.mousepressed(x, y, button, isTouch)
-  mouse.updateState(true, x, y, button)
-end
-
-function love.mousereleased(x, y, button, isTouch)
-  mouse.updateState(false, x, y, button)
-end
-
-function love.update()
+function love.update(dt)
   debug.initTimes()
+  update.forces(dt)
 
   if not isSmartPhone then
     love.mouse.setCursor()

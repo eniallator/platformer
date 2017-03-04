@@ -21,12 +21,13 @@ update.internalWindowSize = function(w, h)
   love.graphics.setFont(love.graphics.newFont("assets/Psilly.otf", screenDim.x / 40))
 end
 
-update.forces = function()
-  moveSpeed = screenDim.y / (600 / 0.4)
-  jumpHeight = - screenDim.y / (600/ 4.5)
-  gravity = screenDim.y / 200
-  drag = 1.07
-  friction = 1.07
+update.forces = function(dt)
+  moveSpeed = screenDim.y / (600 / 19.2 / dt)
+  jumpHeight = - screenDim.y / (600 / 216 / dt)
+  gravity = screenDim.y / (200 / 48 / dt)
+  drag = screenDim.y / (600 / 51.36 / dt)
+  friction = screenDim.y / (600 / 51.36 / dt)
+  mapCreatorScrollSpeed = screenDim.y / (120 / 48 / dt)
 end
 
 update.camera = function()
@@ -187,8 +188,6 @@ update.selectedMapCreatorBlock = function()
 end
 
 update.mapCreatorPos = function()
-  local mapCreatorScrollSpeed = screenDim.x / 160
-
   if (not mapCreatorMenu and smartPhone.checkButtonPress("right")
   or love.keyboard.isDown(controls[controls.findName("mapCreator.scrollRight")].key))
   and cameraTranslation > - (255 * blockSize - screenDim.x) + mapCreatorScrollSpeed - 1 then
