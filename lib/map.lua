@@ -1,6 +1,6 @@
 selectedBlockIndex = 1
 local map = {}
-local createBinReader = require 'lib/utils/binReader.lua'
+local createBinReader = require 'lib/utils/binReader'
 
 local function createGrid(xMax,yMax)
   local tbl = {}
@@ -353,30 +353,28 @@ local function decompressOldAlgorithm(rawTbl)
 end
 --layerEndPoint, layerLength, #binTbl, currIndex
 --[[
-0,1,1,0,
-0,1,0,0,
+0,1,0,1,
+0,1,0,1,
 0,0,0,0,
+0,1,0,1,
 0,0,0,0,
-0,0,0,0,
-0,         21
+0,
 
-1,0,0,0,1,0,0,0,
-0,         30
+1,0,1,1,1,1,0,0,
+0,
 
-1,0,0,
-1,
-1,1,0,
-1,         38
+1,1,0,0,1,
+1,1,0,0,1,
+1,1,0,0,0,
 
-1,0,0,0,1,0,0,0,
-0,         47
+1,0,0,0,0,
+0,0,1,0,1,
+1,0,1,0,0,
 
-0,0,1,
-1,
-0,1,0,
-1,         55
+1,0,0,0,0,0,0,0,
+0,
 
-0
+0,0,0
 ]]
 
 local function decompressNewAlgorithm(binTbl)
@@ -408,7 +406,7 @@ local function decompressNewAlgorithm(binTbl)
     end
   end
 
-  print(serialise(maxVal), serialise(binTbl), currIndex, #binTbl)
+  print(serialise(maxVal), serialise(binTbl), reader:getCurrIndex(), #binTbl)
 
   while reader:hasNext() do
     transformedTbl[currLayer] = {}
@@ -439,29 +437,23 @@ local function decompressNewAlgorithm(binTbl)
       for i=1, #dataOrder do
         local currFieldName = dataOrder[i].name
         local currBinData = {}
+
         local dimVal = currFieldName == 'w' or currFieldName == 'h'
-        -- local hasTail =
+        local dimValWithTail = dimVal and maxVal[currFieldName] > 0 and reader:nextBit() == 1
 
-        if (dimVal and (reader:nextBit() == 1 or maxVal[currFieldName] > 0)) or not dimVal then
-          -- if dimVal and maxVal[currFieldName] > 0 then
-          --   currIndex = currIndex + 1
-          -- end
-
+        if dimValWithTail or not dimVal then
           for i=1, maxVal[currFieldName] do
-            table.insert(currBinData, binTbl[currIndex])
-            currIndex = currIndex + 1
+            table.insert(currBinData, reader:nextBit())
           end
-
-        -- else
-        --   currIndex = currIndex + 1
         end
 
-        print(currFieldName, serialise(currBinData))
+        -- print(currFieldName, serialise(currBinData))
 
         if currFieldName == 'x' or currFieldName == 'y' then
           key = key .. currFieldName .. binToNum(currBinData)
 
         elseif currFieldName == 'block' then
+          print(serialise(currBinData))
           dataTbl[currFieldName] = blocks[binToNum(currBinData) + 1].name
 
         elseif #currBinData > 0 then
@@ -473,7 +465,7 @@ local function decompressNewAlgorithm(binTbl)
     end
 
     currLayer = currLayer + 1
-    print(currIndex .. '/' .. #binTbl)
+    print(reader:getCurrIndex() .. '/' .. #binTbl)
   end
 
   print(serialise(transformedTbl))
