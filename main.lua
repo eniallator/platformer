@@ -26,6 +26,7 @@ function love.load()
   display.loadTextures()
   textBox.reset()
   controls.loadControls()
+  update.forces()
 
   blocks = {
     {name = "stone", solid = true},
@@ -51,11 +52,11 @@ function love.resize(w, h)
   entity.player.pos.x = entity.player.pos.x *(h /20 /(screenDim.y /20))
 
   update.internalWindowSize(w, h)
+  update.forces()
 end
 
 function love.update(dt)
   debug.initTimes()
-  update.forces(dt)
 
   if not isSmartPhone then
     love.mouse.setCursor()

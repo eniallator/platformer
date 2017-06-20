@@ -22,12 +22,12 @@ update.internalWindowSize = function(w, h)
 end
 
 update.forces = function(dt)
-  moveSpeed = screenDim.y / (600 / 19.2 / dt)
-  jumpHeight = - screenDim.y / (600 / 216 / dt)
-  gravity = screenDim.y / (200 / 48 / dt)
-  drag = screenDim.y / (600 / 51.36 / dt)
-  friction = screenDim.y / (600 / 51.36 / dt)
-  mapCreatorScrollSpeed = screenDim.y / (120 / 48 / dt)
+  moveSpeed = screenDim.y / (600 / 0.4)
+  jumpHeight = - screenDim.y / (600/ 4.5)
+  gravity = screenDim.y / 200
+  drag = 1.07
+  friction = 1.07
+  mapCreatorScrollSpeed = screenDim.y / 120
 end
 
 update.camera = function()
@@ -180,7 +180,6 @@ update.selectedMapCreatorBlock = function()
         selectedBlockIndex = blockMenuTable[blockClicked].blockIndex
 
       else
-        print(blockClicked)
         optionData.blockMenu.funcs[blockClicked]()
       end
     end

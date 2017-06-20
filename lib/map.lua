@@ -1,5 +1,6 @@
 selectedBlockIndex = 1
 local map = {}
+local createBinReader = require 'lib/utils/binReader.lua'
 
 local function createGrid(xMax,yMax)
   local tbl = {}
@@ -83,31 +84,53 @@ local function binToNum(binTbl)
   return num
 end
 
+local function updateMaxVal(tbl1, tbl2)
+  for key, val in pairs(tbl2) do
+    local binLength = #numToBin(val)
+    print(key, binLength)
+    tbl1[key] = (not tbl1[key] or binLength > tbl1[key]) and binLength or tbl1[key]
+  end
+end
+
+local maxValues
+
 local function dataToBinary(coords, data)
   local pos = {}
   pos.x, pos.y = getCoords(coords)
+  local dataForBin = {
+    block = collision.getBlock(data.block) - 1,
+    w = data.w - 2,
+    h = data.h - 2
+  }
+  updateMaxVal(maxValues, pos)
+  updateMaxVal(maxValues, dataForBin)
 
-  local binEntry = {{type = 'dimPrefix', dat = {0, 0}}}
-
-  table.insert(binEntry, {type = 'x', dat = numToBin(pos.x)})
-  table.insert(binEntry, {type = 'y', dat = numToBin(pos.y)})
-  table.insert(binEntry, {type = 'block', dat = numToBin(collision.getBlock(data.block) - 1)})
+  local binEntry = {
+    numToBin(pos.x),
+    numToBin(pos.y),
+    numToBin(dataForBin.block)
+  }
 
   if data.w > 1 then
-    table.insert(binEntry, {type = 'w', dat = numToBin(data.w - 2)})
-    binEntry[1].dat[1] = 1
+    table.insert(binEntry, numToBin(dataForBin.w))
+    table.insert(binEntry[#binEntry], 1, 1)
+
+  else
+    table.insert(binEntry, {})
   end
 
   if data.h > 1 then
-    table.insert(binEntry, {type = 'h', dat = numToBin(data.h - 2)})
-    binEntry[1].dat[2] = 1
+    table.insert(binEntry, numToBin(dataForBin.h))
+    table.insert(binEntry[#binEntry], 1, 1)
+
+  else
+    table.insert(binEntry, {})
   end
 
   return binEntry
 end
 
 local mapDataLength = {
-  dimPrefix = 2,
   x = 8,
   y = 5,
   block = 6,
@@ -115,70 +138,158 @@ local mapDataLength = {
   h = 5
 }
 
+local dataOrder = {
+  {name = 'x'},
+  {name = 'y'},
+  {name = 'block'},
+  {name = 'w'},
+  {name = 'h'}
+}
+
+
+local function combineTbl(tbl)
+  local combinedTbl = {}
+
+  for i=1, #tbl do
+    for j=1, #tbl[i] do
+      table.insert(combinedTbl, tbl[i][j])
+    end
+    v = v + #tbl[i]
+    print(#tbl[i] .. '/' .. v)
+  end
+
+  return combinedTbl
+end
+
 local function createPrefix(binMap)
   local binMapLength = numToBin(#binMap)
+  local currPrefix = {}
 
-  for i=1, math.ceil(#binMapLength / 7) do
-    table.insert(binMap, i * 8 - 7, 1)
+  -- Excludes control bit
+  local binLengthBytes = #binMapLength / 7
+
+  for i=1, math.ceil(binLengthBytes > 0 and binLengthBytes or 1) do
+    table.insert(currPrefix, 1)
 
     for j=1, 7 do
-      local index = i * 8 - 7 + j
-      table.insert(binMap, i * 8 - 7 + j, binMapLength[(i - 1) * 7 + j] or 0)
+      table.insert(currPrefix, binMapLength[(i - 1) * 7 + j] or 0)
     end
+  end
+
+  table.insert(currPrefix, 0)
+
+  return currPrefix
+end
+
+local function getTranslatedTbl(tbl)
+  local transformedTbl = {}
+
+  for coords, data in pairs(tbl) do
+    local binEntry = dataToBinary(coords, data)
+    table.insert(transformedTbl, binEntry)
+  end
+
+  return transformedTbl
+end
+
+local function tblToBinMapLayers(tbl)
+  local binMap = {}
+
+  for layer=1, #tbl do
+    currLayer = {}
+
+    for binEntryIndex=1, #tbl[layer] do
+      local binEntry = tbl[layer][binEntryIndex]
+
+      for i=1, #binEntry do
+        local maxVal = maxValues[dataOrder[i].name]
+
+        for j=1, maxVal do
+          table.insert(currLayer, binEntry[i][j] or 0)
+        end
+      end
+    end
+
+    binMap[layer] = combineTbl({createPrefix(currLayer), currLayer})
   end
 
   return binMap
 end
 
-local function createBinaryMap(tbl)
-  local binMap = {0}
+--[[
+{
+  { // new layer
+    { // new rectangle
+      {1,0}, // propeties of rectangle
+    }
+  }
+}
+]]
 
-  for coords, data in pairs(tbl) do
-    local binEntry = dataToBinary(coords, data)
-
-    for i=1, #binEntry do
-      local binDat = binEntry[i].dat
-
-      for j=1, mapDataLength[binEntry[i].type] do
-        table.insert(binMap, binDat[j] or 0)
-      end
-    end
-  end
-
-  return createPrefix(binMap)
-end
+--[[
+1,0,1,0,0,1,0,0,
+2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2
+]]
 
 function serialise(a,b)local c={}local d=true;local e=""if not b then b=0 end;for f=1,b do e=e.." "end;local f=1;for g,h in pairs(a)do local i=""if g~=f then i="["..g.."] = "end;if type(h)=="table"then table.insert(c,i..serialise(a[g],b+2))d=false elseif type(h)=="string"then table.insert(c,i..'"'..a[g]..'"')else table.insert(c,i..tostring(a[g]))end;f=f+1 end;local j="{"if not d then j=j.."\n"end;for f=1,#c do if f~=1 then j=j..","if not d then j=j.."\n"end end;if not d then j=j..e.."  "end;j=j..c[f]end;if not d then j=j.."\n"..e end;return j.."}"end
 
 local binMapData = {}
 
-local function formattedTblToStr(tbl)
-  local binMap = createBinaryMap(tbl)
-  local strMap = ''
-  table.insert(binMapData, binMap)
+local function getBinMetaData(maxValues)
+  local metaData = {0}
 
-  for i=0, (#binMap - 1) / 8 do
-    local byteNum = 0
+  for i=1, #dataOrder do
+    local maxLength = maxValues[dataOrder[i].name]
+    local maxBinLength = numToBin(maxLength)
 
-    for j=1, 8 do
-      if binMap[i * 8 + j] == 1 then
-        byteNum = byteNum + 2 ^ (j - 1)
+    for i=1, math.ceil((#maxBinLength > 0 and #maxBinLength or 1) / 3) do
+      if i > 1 then
+        table.insert(metaData, 1)
+      end
+
+      for j=1, 3 do
+        table.insert(metaData, maxBinLength[(i-1) * 3 + j] or 0)
       end
     end
 
-    strMap = strMap .. string.char(byteNum)
+    table.insert(metaData, 0)
   end
 
-  return strMap
+  return metaData
+end
+
+local function binToString(bin)
+  local outStr = ''
+
+  for i=0, math.ceil(#bin / 8) - 1 do
+    local charId = 0
+
+    for j=0, 7 do
+      if bin[i * 8 + j + 1] == 1 then
+        charId = charId + 2^j
+      end
+    end
+
+    outStr = outStr .. string.char(charId)
+  end
+
+  return outStr
 end
 
 map.writeTable = function(tbl, fileToWrite)
-  local outStr = ""
-  outStr = outStr .. formattedTblToStr(tbl.foreground)
+  local outStr = ''
+  maxValues = {}
+  v = 0
 
-  if tbl.background then
-    outStr = outStr .. formattedTblToStr(tbl.background)
-  end
+  local translatedTbl = {getTranslatedTbl(tbl.foreground) or {}, getTranslatedTbl(tbl.background) or {}}
+  local binMapLayers = tblToBinMapLayers(translatedTbl)
+  local binMetaData = getBinMetaData(maxValues)
+
+  print(serialise(maxValues), serialise(translatedTbl))
+
+  table.insert(binMapLayers, 1, binMetaData)
+  local binMap = combineTbl(binMapLayers)
+  outStr = outStr .. binToString(binMap)
 
   love.filesystem.write(fileToWrite, outStr)
 end
@@ -240,71 +351,121 @@ local function decompressOldAlgorithm(rawTbl)
 
   return outTbl
 end
+--layerEndPoint, layerLength, #binTbl, currIndex
+--[[
+0,1,1,0,
+0,1,0,0,
+0,0,0,0,
+0,0,0,0,
+0,0,0,0,
+0,         21
 
-local dataOrder = {
-  {name = 'x'},
-  {name = 'y'},
-  {name = 'block'},
-  {name = 'w', condition = function(dimController) return dimController.w end},
-  {name = 'h', condition = function(dimController) return dimController.h end}
-}
+1,0,0,0,1,0,0,0,
+0,         30
+
+1,0,0,
+1,
+1,1,0,
+1,         38
+
+1,0,0,0,1,0,0,0,
+0,         47
+
+0,0,1,
+1,
+0,1,0,
+1,         55
+
+0
+]]
 
 local function decompressNewAlgorithm(binTbl)
-  local currIndex = 1
+  local binMapLength = #binTbl
+  local reader = createBinReader(binTbl)
+  -- local currIndex = 2 -- change to start at 1 and have metaDataIndex at 0 so no need for extra control bit in getBinMetaData
   local currLayer = 1
   local transformedTbl = {}
+  local metaDataIndex = 1
+  local maxVal = {}
+  local metaDataCurrVal = 0
+  local metaDataExponent = 0
 
-  while currIndex < #binTbl do
-    transformedTbl[currLayer] = {}
-    local binMapLength = 0
-    local exponent = 0
+  reader:nextBit()
 
-    while binTbl[currIndex] == 1 do
-      currIndex = currIndex + 1
-
-      for i=1, 7 do
-        if binTbl[currIndex] == 1 then
-          binMapLength = binMapLength + 2 ^ exponent
-        end
-
-        currIndex = currIndex + 1
-        exponent = exponent + 1
+  while metaDataIndex <= #dataOrder do --recursion???
+    for i=0, 2 do
+      if reader:nextBit() == 1 then
+        metaDataCurrVal = metaDataCurrVal + 2^(metaDataExponent * 3 + i)
       end
     end
 
-    local maxLength = currIndex + binMapLength
-    currIndex = currIndex + 1
+    if reader:nextBit() == 0 then
+      maxVal[dataOrder[metaDataIndex].name] = metaDataCurrVal
 
-    while currIndex < maxLength do
-      local dimController = {
-        w = binTbl[currIndex] == 1 and true,
-        h = binTbl[currIndex + 1] == 1 and true
-      }
-      currIndex = currIndex + 2
+      metaDataIndex = metaDataIndex + 1
+      metaDataCurrVal = 0
+      metaDataExponent = 0
+    end
+  end
 
+  print(serialise(maxVal), serialise(binTbl), currIndex, #binTbl)
+
+  while reader:hasNext() do
+    transformedTbl[currLayer] = {}
+    local layerLength = 0
+    local currLayerExponent = 0
+
+    if binMapLength - reader:getCurrIndex() < 8 then
+      break
+    end
+
+    while reader:nextBit() == 1 do
+      for i=1, 7 do
+        if reader:nextBit() == 1 then
+          layerLength = layerLength + 2 ^ currLayerExponent
+        end
+
+        currLayerExponent = currLayerExponent + 1
+      end
+    end
+
+    local layerEndPoint = reader:getCurrIndex() + layerLength
+    print(layerEndPoint, layerLength, reader:getCurrIndex())
+
+    while reader:getCurrIndex() < layerEndPoint do
       local key = ''
       local dataTbl = {w = 1, h = 1}
 
       for i=1, #dataOrder do
-        local currData = dataOrder[i]
+        local currFieldName = dataOrder[i].name
+        local currBinData = {}
+        local dimVal = currFieldName == 'w' or currFieldName == 'h'
+        -- local hasTail =
 
-        if currData.condition and currData.condition(dimController) or not currData.condition then
-          local currTbl = {}
+        if (dimVal and (reader:nextBit() == 1 or maxVal[currFieldName] > 0)) or not dimVal then
+          -- if dimVal and maxVal[currFieldName] > 0 then
+          --   currIndex = currIndex + 1
+          -- end
 
-          for i=1, mapDataLength[currData.name] do
-            table.insert(currTbl, binTbl[currIndex])
+          for i=1, maxVal[currFieldName] do
+            table.insert(currBinData, binTbl[currIndex])
             currIndex = currIndex + 1
           end
 
-          if currData.name == 'x' or currData.name == 'y' then
-            key = key .. currData.name .. binToNum(currTbl)
+        -- else
+        --   currIndex = currIndex + 1
+        end
 
-          elseif currData.name == 'block' then
-            dataTbl[currData.name] = blocks[binToNum(currTbl) + 1].name
+        print(currFieldName, serialise(currBinData))
 
-          else
-            dataTbl[currData.name] = binToNum(currTbl) + 2
-          end
+        if currFieldName == 'x' or currFieldName == 'y' then
+          key = key .. currFieldName .. binToNum(currBinData)
+
+        elseif currFieldName == 'block' then
+          dataTbl[currFieldName] = blocks[binToNum(currBinData) + 1].name
+
+        elseif #currBinData > 0 then
+          dataTbl[currFieldName] = binToNum(currBinData) + 2
         end
       end
 
@@ -312,8 +473,10 @@ local function decompressNewAlgorithm(binTbl)
     end
 
     currLayer = currLayer + 1
-    currIndex = 8 * math.ceil(currIndex / 8) + 1
+    print(currIndex .. '/' .. #binTbl)
   end
+
+  print(serialise(transformedTbl))
 
   return transformedTbl
 end
