@@ -206,7 +206,7 @@ local function tblToBinMapLayers(tbl)
 
         if i > 3 and #binEntry[i] > 1 then
           maxVal = maxVal + 1
-        elseif i > 3 then
+        elseif i > 3 and maxVal > 0 then
           maxVal = 1
         end
 
