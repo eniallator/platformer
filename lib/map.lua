@@ -99,8 +99,8 @@ local function dataToBinary(coords, data)
   pos.x, pos.y = getCoords(coords)
   local dataForBin = {
     block = collision.getBlock(data.block) - 1,
-    w = data.w - 2,
-    h = data.h - 2
+    w = data.w - 1,
+    h = data.h - 1
   }
   updateMaxVal(maxValues, pos)
   updateMaxVal(maxValues, dataForBin)
@@ -204,6 +204,12 @@ local function tblToBinMapLayers(tbl)
       for i=1, #binEntry do
         local maxVal = maxValues[dataOrder[i].name]
 
+        if i > 3 and #binEntry[i] > 1 then
+          maxVal = maxVal + 1
+        elseif i > 3 then
+          maxVal = 1
+        end
+
         for j=1, maxVal do
           table.insert(currLayer, binEntry[i][j] or 0)
         end
@@ -215,21 +221,6 @@ local function tblToBinMapLayers(tbl)
 
   return binMap
 end
-
---[[
-{
-  { // new layer
-    { // new rectangle
-      {1,0}, // propeties of rectangle
-    }
-  }
-}
-]]
-
---[[
-1,0,1,0,0,1,0,0,
-2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2
-]]
 
 function serialise(a,b)local c={}local d=true;local e=""if not b then b=0 end;for f=1,b do e=e.." "end;local f=1;for g,h in pairs(a)do local i=""if g~=f then i="["..g.."] = "end;if type(h)=="table"then table.insert(c,i..serialise(a[g],b+2))d=false elseif type(h)=="string"then table.insert(c,i..'"'..a[g]..'"')else table.insert(c,i..tostring(a[g]))end;f=f+1 end;local j="{"if not d then j=j.."\n"end;for f=1,#c do if f~=1 then j=j..","if not d then j=j.."\n"end end;if not d then j=j..e.."  "end;j=j..c[f]end;if not d then j=j.."\n"..e end;return j.."}"end
 
@@ -351,36 +342,10 @@ local function decompressOldAlgorithm(rawTbl)
 
   return outTbl
 end
---layerEndPoint, layerLength, #binTbl, currIndex
---[[
-0,1,0,1,
-0,1,0,1,
-0,0,0,0,
-0,1,0,1,
-0,0,0,0,
-0,
-
-1,0,1,1,1,1,0,0,
-0,
-
-1,1,0,0,1,
-1,1,0,0,1,
-1,1,0,0,0,
-
-1,0,0,0,0,
-0,0,1,0,1,
-1,0,1,0,0,
-
-1,0,0,0,0,0,0,0,
-0,
-
-0,0,0
-]]
 
 local function decompressNewAlgorithm(binTbl)
   local binMapLength = #binTbl
   local reader = createBinReader(binTbl)
-  -- local currIndex = 2 -- change to start at 1 and have metaDataIndex at 0 so no need for extra control bit in getBinMetaData
   local currLayer = 1
   local transformedTbl = {}
   local metaDataIndex = 1
@@ -393,7 +358,7 @@ local function decompressNewAlgorithm(binTbl)
   while metaDataIndex <= #dataOrder do --recursion???
     for i=0, 2 do
       if reader:nextBit() == 1 then
-        metaDataCurrVal = metaDataCurrVal + 2^(metaDataExponent * 3 + i)
+        metaDataCurrVal = metaDataCurrVal + 2^(metaDataExponent + i)
       end
     end
 
@@ -403,6 +368,9 @@ local function decompressNewAlgorithm(binTbl)
       metaDataIndex = metaDataIndex + 1
       metaDataCurrVal = 0
       metaDataExponent = 0
+
+    else
+      metaDataExponent = metaDataExponent + 3
     end
   end
 
@@ -457,7 +425,7 @@ local function decompressNewAlgorithm(binTbl)
           dataTbl[currFieldName] = blocks[binToNum(currBinData) + 1].name
 
         elseif #currBinData > 0 then
-          dataTbl[currFieldName] = binToNum(currBinData) + 2
+          dataTbl[currFieldName] = binToNum(currBinData) + 1
         end
       end
 
