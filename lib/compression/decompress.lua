@@ -25,8 +25,9 @@ local function decompress(binTbl)
     for i=1, 3 do
       if reader:nextBit() == 1 then
         metaDataCurrVal = metaDataCurrVal + 2 ^ metaDataExponent
-        metaDataExponent = metaDataExponent + 1
       end
+
+      metaDataExponent = metaDataExponent + 1
     end
 
     if reader:nextBit() == 0 then
