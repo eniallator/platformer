@@ -4,7 +4,6 @@ local maxValues
 local function updateMaxVal(tbl1, tbl2)
   for key, val in pairs(tbl2) do
     local binLength = #binaryUtils.numToBin(val)
-    print(key, binLength)
     tbl1[key] = (not tbl1[key] or binLength > tbl1[key]) and binLength or tbl1[key]
   end
 end

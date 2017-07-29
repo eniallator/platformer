@@ -1,23 +1,11 @@
 local binaryUtils = {}
 
 binaryUtils.numToBin = function(num)
-  local exponent = -1
-
-  while 2 ^ (exponent + 1) <= num do
-    exponent = exponent + 1
-  end
-
   local binary = {}
 
-  for i=exponent, 0, -1 do
-    local val = 0
-
-    if 2^i <= num then
-      val = 1
-      num = num - 2^i
-    end
-
-    binary[i+1] = val
+  while num > 0 do
+    table.insert(binary, num % 2)
+    num = math.floor(num / 2)
   end
 
   return binary
