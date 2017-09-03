@@ -65,8 +65,11 @@ function love.update(dt)
   controls.getKeyInput()
 
   if utilsData.textBox.selected or utilsData.alert.selected then
+    debug.addTime('update', 'textBox/alert start')
     update.textBox()
+    debug.addTime('update', 'update.textBox')
     update.alert()
+    debug.addTime('update', 'update.alert')
 
   elseif selected == "game" then
     if not reachedGoal then
@@ -88,15 +91,24 @@ function love.update(dt)
     end
 
   elseif selected == "menu" then
+    debug.addTime('update', 'menu start')
     credits.update()
+    debug.addTime('update', 'credits.update')
     update.optionMenu()
+    debug.addTime('update', 'update.optionMenu')
 
   elseif selected == "createMap" then
+    debug.addTime('update', 'createMap start')
     update.mapCreatorPos()
+    debug.addTime('update', 'update.mapCreatorPos')
     update.mapCreatorBlockMenu()
+    debug.addTime('update', 'update.mapCreatorBlockMenu')
     update.selectedMapCreatorBlock()
+    debug.addTime('update', 'update.selectedMapCreatorBlock')
     update.escMenu()
+    debug.addTime('update', 'update.escMenu')
     update.mapCreatorinteract()
+    debug.addTime('update', 'update.mapCreatorinteract')
   end
 
   keys.textInput = nil
@@ -104,12 +116,14 @@ function love.update(dt)
 end
 
 function love.draw()
-  love.graphics.translate(cameraTranslation +borders.x /2, borders.y /2)
+  love.graphics.translate(cameraTranslation + borders.x / 2, borders.y / 2)
   newTick = true
   display.makeScreenRed()
 
   if utilsData.textBox.selected then
+    debug.addTime('draw', 'textBox start')
     display.textBox()
+    debug.addTime('draw', 'display.textBox')
 
   elseif selected == "game" then
     debug.addTime("draw", "game start")
@@ -131,17 +145,28 @@ function love.draw()
     debug.addTime("draw", "display.winMenu")
 
   elseif selected == "menu" then
+    debug.addTime('draw', 'menu start')
     display.background()
+    debug.addTime('draw', 'display.background')
     credits.display()
+    debug.addTime('draw', 'credits.display')
     display.optionMenu()
+    debug.addTime('draw', 'display.optionMenu')
 
   elseif selected == "createMap" then
+    debug.addTime('draw', 'createMap start')
     display.background()
+    debug.addTime('draw', 'display.background')
     display.map.background()
+    debug.addTime('draw', 'display.map.background')
     display.map.foreground()
+    debug.addTime('draw', 'display.map.foreground')
     display.arrowButtons()
+    debug.addTime('draw', 'arrowButtons')
     display.blockMenu()
+    debug.addTime('draw', 'display.blockMenu')
     display.escMenu()
+    debug.addTime('draw', 'display.escMenu')
   end
 
   display.alert()
