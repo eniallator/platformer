@@ -1,4 +1,4 @@
-local binaryUtils = require 'lib/utils/binary'
+local binaryUtils = require 'src.utils.binary'
 local maxValues
 
 local function updateMaxVal(tbl1, tbl2)

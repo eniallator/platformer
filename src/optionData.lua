@@ -1,4 +1,4 @@
-optionGenerator = require "lib/optionGenerator"
+optionGenerator = require "src.optionGenerator"
 local optionData = {}
 
 optionData.main = {

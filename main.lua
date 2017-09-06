@@ -3,25 +3,25 @@ function love.load()
   aspectRatio = 4/3
   love.graphics.setDefaultFilter("nearest", "nearest")
   isSmartPhone = love._os == "Android" or love._os == "iOS"
-  update = require "lib/update"
+  update = require "src.update"
   debugMode = false
 
   update.internalWindowSize(love.graphics.getDimensions())
 
-  defaultMaps = require "lib/defaultMaps"
-  optionData = require "lib/optionData"
-  collision = require "lib/collision"
-  utilsData = require "lib/utilsData"
-  controls = require "lib/controls"
-  display = require "lib/display"
-  credits = require "lib/credits"
-  entity = require "lib/entity"
-  debug = require "lib/debug"
-  map = require "lib/map"
-  textBox = require "lib/utils/textBox"
-  alert = require "lib/utils/alert"
-  mouse = require "lib/utils/mouse"
-  keys = require "lib/utils/keys"
+  defaultMaps = require "src.defaultMaps"
+  optionData = require "src.optionData"
+  collision = require "src.collision"
+  utilsData = require "src.utilsData"
+  controls = require "src.controls"
+  display = require "src.display"
+  credits = require "src.credits"
+  entity = require "src.entity"
+  debug = require "src.debug"
+  map = require "src.map"
+  textBox = require "src.utils.textBox"
+  alert = require "src.utils.alert"
+  mouse = require "src.utils.mouse"
+  keys = require "src.utils.keys"
 
   display.loadTextures()
   textBox.reset()
@@ -55,7 +55,7 @@ function love.resize(w, h)
   update.forces()
 end
 
-function love.update(dt)
+function love.update()
   debug.initTimes()
 
   if not isSmartPhone then

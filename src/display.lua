@@ -1,4 +1,4 @@
-local smartPhone = require "lib/smartPhone"
+local smartPhone = require "src.smartPhone"
 local display = {}
 
 display.loadTextures = function()

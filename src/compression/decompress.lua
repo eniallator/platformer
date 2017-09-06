@@ -1,5 +1,5 @@
-local binaryUtils = require 'lib/utils/binary'
-local createBinReader = require 'lib/compression/binReader'
+local binaryUtils = require 'src.utils.binary'
+local createBinReader = require 'src.compression.binReader'
 
 local dataOrder = {
   {name = 'x'},

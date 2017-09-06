@@ -1,9 +1,10 @@
+local oldDecompress = require 'src.compression.oldDecompress'
+local compress = require 'src.compression.compress'
+local decompress = require 'src.compression.decompress'
+local binaryUtils = require 'src.utils.binary'
+
 selectedBlockIndex = 1
 local map = {}
-local oldDecompress = require 'lib/compression/oldDecompress'
-local compress = require 'lib/compression/compress'
-local decompress = require 'lib/compression/decompress'
-local binaryUtils = require 'lib/utils/binary'
 
 local function createGrid(xMax,yMax)
   local tbl = {}

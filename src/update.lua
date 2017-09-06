@@ -1,4 +1,4 @@
-local smartPhone = require "lib/smartPhone"
+local smartPhone = require "src.smartPhone"
 local update = {}
 
 update.internalWindowSize = function(w, h)
@@ -21,7 +21,7 @@ update.internalWindowSize = function(w, h)
   love.graphics.setFont(love.graphics.newFont("assets/Psilly.otf", screenDim.x / 40))
 end
 
-update.forces = function(dt)
+update.forces = function()
   moveSpeed = screenDim.y / (600 / 0.4)
   jumpHeight = - screenDim.y / (600/ 4.5)
   gravity = screenDim.y / 200
