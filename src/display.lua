@@ -91,7 +91,7 @@ display.map = {}
 display.map.background = function(dt)
   love.graphics.setColor(180, 180, 180)
   displayGrid("background", dt)
-  love.graphics.setColor(255, 255 - screenRed, 255 - screenRed)
+  display.makeScreenRed()
 end
 
 display.map.foreground = function(dt)
@@ -322,15 +322,15 @@ display.alert = function()
   end
 end
 
-display.makeScreenRed = function(tick)
-  if screenRed and screenRed > 0 then
-    screenRed = screenRed - 2
-
-  else
-    screenRed = 0
+display.makeScreenRed = function(dt)
+  if dt then
+    local updatedVal = screenRed - dt / 20
+    screenRed = updatedVal > 0 and updatedVal or 0
   end
 
-  love.graphics.setColor(255, 255 - screenRed, 255 - screenRed)
+  redness = screenRed / screenRedMax * 100
+
+  love.graphics.setColor(255, 255 - redness, 255 - redness)
 end
 
 display.borders = function()

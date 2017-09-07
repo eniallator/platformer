@@ -1,7 +1,8 @@
 local smartPhone = require "src.smartPhone"
 local update = {}
-local newCameraTranslation = 0
-local oldCameraTranslation = 0
+cameraTranslation = 0
+newCameraTranslation = 0
+oldCameraTranslation = 0
 
 update.internalWindowSize = function(w, h)
   if w/h == aspectRatio then

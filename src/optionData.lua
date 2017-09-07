@@ -84,6 +84,7 @@ optionData.escMenu = {
       selected = "menu"
       currMenu = "main"
       cameraTranslation = 0
+      newCameraTranslation = 0
     end,
 
     modeSwitch = function()
@@ -97,13 +98,16 @@ optionData.escMenu = {
         if entity.player.pos.x +playerDim.w /2 > screenDim.x /2  then
           if entity.player.pos.x +playerDim.w /2 > 255 *blockSize -screenDim.x /2 then
             cameraTranslation = -(255*blockSize - screenDim.x)
+            newCameraTranslation = -(255*blockSize - screenDim.x)
 
           else
             cameraTranslation = -(entity.player.pos.x -screenDim.x/2)
+            newCameraTranslation = -(entity.player.pos.x -screenDim.x/2)
           end
 
         else
           cameraTranslation = 0
+          newCameraTranslation = 0
         end
 
         if resetPlayer then
@@ -175,6 +179,7 @@ optionData.winMenu = {
       selected = "menu"
       currMenu = "main"
       cameraTranslation = 0
+      newCameraTranslation = 0
       reachedGoal = false
     end
   }

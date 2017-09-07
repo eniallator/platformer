@@ -41,11 +41,12 @@ function love.load()
     {name = "checkPoint", checkPoint = true},
     {name = "goal", goal = true, scale = 0.5, dim = {w = 8, h = 19}, offSet = {x = 1, y = 1}}
   }
-  cameraTranslation = 0
   selected = "menu"
   currMenu = "main"
   mapExtension = ".map"
   timeCounter = 0
+  screenRedMax = 1.5
+  screenRed = 0
 end
 
 function love.resize(w, h)
@@ -121,9 +122,9 @@ function love.draw(dt)
   update.interpolationVal(dt)
   love.graphics.translate(cameraTranslation + borders.x / 2, borders.y / 2)
   newTick = true
-  display.makeScreenRed()
+  display.makeScreenRed(dt)
 
-  if not escMenuOn then
+  if not escMenuOn and not reachedGoal then
     entity.player.updateInterpolation(dt)
     debug.addTime("draw", "entity.player.updateInterpolation")
   end

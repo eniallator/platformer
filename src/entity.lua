@@ -47,7 +47,7 @@ local function updatePos(currEntity)
 
   if collision.detectEntity({x = currEntity.pos.x, y = currEntity.pos.y}, currEntity, "kill") then
     currEntity.kill()
-    screenRed = 100
+    screenRed = screenRedMax
   end
 end
 
