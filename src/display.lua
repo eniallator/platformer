@@ -14,8 +14,8 @@ display.loadTextures = function()
       lava = {
         img = love.graphics.newImage("assets/textures/blocks/lava_animated.png"),
         frameHeight = 10,
-        updateRate = 20,
-        updateTime = 1,
+        updateRate = 1/3,
+        timePassed = 0,
         currFrame = 0
       },
       spawnPoint = love.graphics.newImage("assets/textures/blocks/spawnpoint.png"),
@@ -33,24 +33,24 @@ display.loadTextures = function()
   }
 end
 
-display.animatedTile = function(tbl, x, y, sx, sy)
+display.animatedTile = function(tbl, x, y, sx, sy, dt)
   local imgDim = {tbl.img:getDimensions()}
 
   if newTick then
-    tbl.updateTime = (tbl.updateTime + 1) % tbl.updateRate
+    tbl.timePassed = tbl.timePassed + dt / tps
     newTick = false
 
-    if tbl.updateTime == 0 then
+    while tbl.timePassed > tbl.updateRate do
       tbl.currFrame = (tbl.currFrame + 1) % (imgDim[2] / tbl.frameHeight)
+      tbl.timePassed = tbl.timePassed - tbl.updateRate
     end
   end
-
 
   local quad = love.graphics.newQuad(1, tbl.currFrame * tbl.frameHeight, imgDim[1], tbl.frameHeight, imgDim[1], imgDim[2])
   love.graphics.draw(tbl.img, quad, x, y, 0, sx, sy)
 end
 
-local function displayGrid(level)
+local function displayGrid(level, dt)
   for i=1, #mapGrid[level] do
     for j=1, screenDim.x / blockSize + blockSize * 2 + 1 do
       local cameraOffset = math.ceil(- cameraTranslation / blockSize - 1)
@@ -67,7 +67,8 @@ local function displayGrid(level)
             ((j + cameraOffset) - 2) * blockSize,
             (i - 1) * blockSize,
             screenDim.y / 200 * scale,
-            screenDim.y / 200 * scale
+            screenDim.y / 200 * scale,
+            dt
           )
 
         else
@@ -87,14 +88,14 @@ end
 
 display.map = {}
 
-display.map.background = function()
+display.map.background = function(dt)
   love.graphics.setColor(180, 180, 180)
-  displayGrid("background")
+  displayGrid("background", dt)
   love.graphics.setColor(255, 255 - screenRed, 255 - screenRed)
 end
 
-display.map.foreground = function()
-  displayGrid("foreground")
+display.map.foreground = function(dt)
+  displayGrid("foreground", dt)
 end
 
 local function createBackgroundTable(backgroundTexture)
@@ -227,7 +228,7 @@ local function blockMenuButton()
   end
 end
 
-display.blockMenu = function()
+display.blockMenu = function(dt)
   blockMenuHelpText()
   blockMenuButton()
 
@@ -247,7 +248,8 @@ display.blockMenu = function()
           currBlock.x - cameraTranslation,
           currBlock.y,
           blockSize / currBlock.texture.img:getWidth(),
-          blockSize / currBlock.texture.frameHeight
+          blockSize / currBlock.texture.frameHeight,
+          dt
         )
 
       else
