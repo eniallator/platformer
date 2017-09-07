@@ -25,12 +25,12 @@ update.internalWindowSize = function(w, h)
 end
 
 update.forces = function()
-  moveSpeed = screenDim.y / (600 / 0.4) * (1.5 * (48 / tps))
-  jumpHeight = -screenDim.y / (600/ 4.5) * (0.75 * (48 / tps))
-  gravity = screenDim.y / 200 * (1.5 * (48 / tps))
-  drag = 1 + 0.07 * 48 / tps
+  moveSpeed = screenDim.y / (600 / 0.4) * 3.6
+  jumpHeight = -screenDim.y / (600 / 4.5) * 1.8
+  gravity = screenDim.y / 200 * 3.6
+  drag = 1 + 0.07 * 2.4
   friction = drag
-  mapCreatorScrollSpeed = screenDim.y / 120 * 48 / tps
+  mapCreatorScrollSpeed = screenDim.y / 120 * 2.4
 end
 
 update.camera = function()
