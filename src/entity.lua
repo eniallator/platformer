@@ -97,6 +97,8 @@ end
 
 entity.player = {
   pos = {x = 1, y = 1},
+  newPos = {x = 1, y = 1},
+  oldPos = {x = 1, y = 1},
   spawnPos = {x = 1, y = 1},
   vel = {x = 0, y = 0},
   dim = function()
@@ -117,6 +119,8 @@ entity.player.texture = {
 
 entity.player.update = function()
   local player = entity.player
+  player.pos.x, player.pos.y = player.newPos.x, player.newPos.y
+  player.oldPos.x, player.oldPos.y = player.newPos.x, player.newPos.y
 
   applyVelForces(player)
   getInput(player)
@@ -135,6 +139,8 @@ entity.player.update = function()
   if collision.detectEntity(playerPos, player, "goal") then
     reachedGoal = true
   end
+  
+  player.newPos.x, player.newPos.y = player.pos.x, player.pos.y
 end
 
 entity.player.kill = function()
@@ -162,6 +168,8 @@ entity.player.reset = function()
   local spawnPointPos = findSpawnPoint()
 
   entity.player.pos = {x = spawnPointPos.x, y = spawnPointPos.y}
+  entity.player.newPos = {x = spawnPointPos.x, y = spawnPointPos.y}
+  entity.player.oldPos = {x = spawnPointPos.x, y = spawnPointPos.y}
   entity.player.spawnPos = {x = spawnPointPos.x, y = spawnPointPos.y}
   entity.player.vel = {x = 0, y = 0}
 end
@@ -185,6 +193,12 @@ local function choosePlayerImage(player)
   end
 
   return currTexture
+end
+
+entity.player.updateInterpolation = function(dt)
+  local player = entity.player
+  player.pos.x = player.oldPos.x + (player.newPos.x - player.oldPos.x) * dt
+  player.pos.y = player.oldPos.y + (player.newPos.y - player.oldPos.y) * dt
 end
 
 entity.player.display = function()

@@ -1,4 +1,5 @@
 function love.load()
+  tps = 20
   screenDim = {}
   aspectRatio = 4/3
   love.graphics.setDefaultFilter("nearest", "nearest")
@@ -57,6 +58,7 @@ end
 
 function love.update()
   debug.initTimes()
+  update.resetInterpolationVal()
 
   if not isSmartPhone then
     love.mouse.setCursor()
@@ -79,7 +81,6 @@ function love.update()
         debug.addTime("update", "entity.player.update")
         update.camera()
         debug.addTime("update", "update.camera")
-        timeCounter = timeCounter + 1
       end
 
       update.escMenu()
@@ -113,15 +114,24 @@ function love.update()
 
   keys.textInput = nil
   mouse.updateClicked()
+  update.setInterpolationVals()
 end
 
-function love.draw()
+function love.draw(dt)
+  update.interpolationVal(dt)
   love.graphics.translate(cameraTranslation + borders.x / 2, borders.y / 2)
   newTick = true
   display.makeScreenRed()
 
+  if not escMenuOn then
+    entity.player.updateInterpolation(dt)
+    debug.addTime("draw", "entity.player.updateInterpolation")
+  end
+
   if utilsData.textBox.selected then
     debug.addTime('draw', 'textBox start')
+    display.background()
+    debug.addTime("draw", "display.background")
     display.textBox()
     debug.addTime('draw', 'display.textBox')
 
@@ -135,7 +145,7 @@ function love.draw()
     debug.addTime("draw", "entity.player.display")
     display.map.foreground()
     debug.addTime("draw", "display.map.foreground")
-    display.timeCounter()
+    display.timeCounter(dt)
     debug.addTime("draw", "display.timeCounter")
     display.arrowButtons()
     debug.addTime("draw", "display.arrowButtons")
@@ -172,4 +182,36 @@ function love.draw()
   display.alert()
   debug.printTimes()
   display.borders()
+end
+
+function love.run()
+  if love.load then love.load() end
+
+  timer = require 'src.utils.timer'
+  timer:init(tps)
+
+  while true do
+    if love.event then
+      love.event.pump()
+      for name, a,b,c,d,e,f in love.event.poll() do
+        if name == "quit" then
+          if not love.quit or not love.quit() then
+            return a
+          end
+        end
+        love.handlers[name](a,b,c,d,e,f)
+      end
+    end
+    timer:clock()
+
+    for i=1, timer.missingTicks do
+      love.update()
+    end
+
+    if love.graphics and love.graphics.isActive() then
+      love.graphics.origin()
+      if love.draw then love.draw(timer.dt) end
+      love.graphics.present()
+    end
+  end
 end

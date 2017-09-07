@@ -1,5 +1,7 @@
 local smartPhone = require "src.smartPhone"
 local update = {}
+local newCameraTranslation = 0
+local oldCameraTranslation = 0
 
 update.internalWindowSize = function(w, h)
   if w/h == aspectRatio then
@@ -22,12 +24,12 @@ update.internalWindowSize = function(w, h)
 end
 
 update.forces = function()
-  moveSpeed = screenDim.y / (600 / 0.4)
-  jumpHeight = - screenDim.y / (600/ 4.5)
-  gravity = screenDim.y / 200
-  drag = 1.07
-  friction = 1.07
-  mapCreatorScrollSpeed = screenDim.y / 120
+  moveSpeed = screenDim.y / (600 / 0.4) * (1.5 * (48 / tps))
+  jumpHeight = -screenDim.y / (600/ 4.5) * (0.75 * (48 / tps))
+  gravity = screenDim.y / 200 * (1.5 * (48 / tps))
+  drag = 1 + 0.07 * 48 / tps
+  friction = drag
+  mapCreatorScrollSpeed = screenDim.y / 120 * 48 / tps
 end
 
 update.camera = function()
@@ -270,6 +272,19 @@ update.alert = function()
     local currAlert = utilsData.alert[utilsData.alert.selected]
     alert.getInput(currAlert)
   end
+end
+
+update.resetInterpolationVal = function()
+  cameraTranslation = newCameraTranslation
+end
+
+update.setInterpolationVals = function()
+  oldCameraTranslation = newCameraTranslation
+  newCameraTranslation = cameraTranslation
+end
+
+update.interpolationVal = function(dt)
+  cameraTranslation = oldCameraTranslation + (newCameraTranslation - oldCameraTranslation) * dt
 end
 
 return update

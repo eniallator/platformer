@@ -286,11 +286,12 @@ display.winMenu = function()
   displayTbl(optionData.winMenu.display(), reachedGoal)
 end
 
-display.timeCounter = function()
+display.timeCounter = function(dt)
   love.graphics.setFont(love.graphics.newFont("assets/Psilly.otf", screenDim.x / 20))
   love.graphics.setColor(255, 255, 255)
+  timeCounter = timeCounter + dt
 
-  local time = timeCounter / 60
+  local time = timeCounter / tps
   love.graphics.print(time - time % 0.01, - cameraTranslation)
 
   love.graphics.setFont(love.graphics.newFont("assets/Psilly.otf", screenDim.x / 40))
@@ -303,8 +304,6 @@ display.optionMenu = function()
 end
 
 display.textBox = function()
-  display.background()
-
   if utilsData.textBox.selected == "saveMap" then
     display.map.background()
     display.map.foreground()
