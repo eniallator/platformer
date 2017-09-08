@@ -2,7 +2,7 @@ local timer = {}
 
 function timer:init(tps)
     self.tps = tps
-    self.last = os.clock()
+    self.last = love.timer.getTime()
     self.dt = 0.0
     self.ds = 0.0
     self.ticks = 0
@@ -10,7 +10,7 @@ function timer:init(tps)
 end
 
 function timer:clock()
-    local now = os.clock()
+    local now = love.timer.getTime()
     local deltaS = now - self.last
     self.last = now
     self.ds = self.ds + deltaS
