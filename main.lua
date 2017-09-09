@@ -121,7 +121,6 @@ end
 function love.draw(dt)
   update.interpolationVal(dt)
   love.graphics.translate(cameraTranslation + borders.x / 2, borders.y / 2)
-  newTick = true
   display.makeScreenRed(dt)
 
   if not escMenuOn and not reachedGoal then

@@ -14,9 +14,7 @@ display.loadTextures = function()
       lava = {
         img = love.graphics.newImage("assets/textures/blocks/lava_animated.png"),
         frameHeight = 10,
-        updateRate = 1/3,
-        timePassed = 0,
-        currFrame = 0
+        updateRate = 1/3
       },
       spawnPoint = love.graphics.newImage("assets/textures/blocks/spawnpoint.png"),
       checkPoint = love.graphics.newImage("assets/textures/blocks/checkpoint.png"),
@@ -36,17 +34,10 @@ end
 display.animatedTile = function(tbl, x, y, sx, sy, dt)
   local imgDim = {tbl.img:getDimensions()}
 
-  if newTick then
-    tbl.timePassed = tbl.timePassed + dt / tps
-    newTick = false
+  local totalCycleTime = tbl.updateRate * (imgDim[2] / tbl.frameHeight)
+  local currFrame = math.floor((love.timer.getTime() % totalCycleTime) / tbl.updateRate)
 
-    while tbl.timePassed > tbl.updateRate do
-      tbl.currFrame = (tbl.currFrame + 1) % (imgDim[2] / tbl.frameHeight)
-      tbl.timePassed = tbl.timePassed - tbl.updateRate
-    end
-  end
-
-  local quad = love.graphics.newQuad(1, tbl.currFrame * tbl.frameHeight, imgDim[1], tbl.frameHeight, imgDim[1], imgDim[2])
+  local quad = love.graphics.newQuad(1, currFrame * tbl.frameHeight, imgDim[1], tbl.frameHeight, imgDim[1], imgDim[2])
   love.graphics.draw(tbl.img, quad, x, y, 0, sx, sy)
 end
 
@@ -289,9 +280,12 @@ display.winMenu = function()
 end
 
 display.timeCounter = function(dt)
+  if not reachedGoal and not escMenuOn then
+    timeCounter = timeCounter + dt
+  end
+
   love.graphics.setFont(love.graphics.newFont("assets/Psilly.otf", screenDim.x / 20))
   love.graphics.setColor(255, 255, 255)
-  timeCounter = timeCounter + dt
 
   local time = timeCounter / tps
   love.graphics.print(time - time % 0.01, - cameraTranslation)
