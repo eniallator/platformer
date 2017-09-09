@@ -104,7 +104,8 @@ entity.player = {
   dim = function()
     return {w = screenDim.y / 37.5, h = screenDim.y / 18.75}
   end,
-  xCounter = 0
+  xCounter = 0,
+  last_checkpoint = {}
 }
 
 entity.player.texture = {
@@ -131,6 +132,8 @@ entity.player.update = function()
   checkPoint.x,checkPoint.y = collision.detectEntity(playerPos, player, "checkPoint")
 
   if checkPoint.x then
+    player.last_checkpoint = checkPoint
+
     local playerDim = player.dim()
     player.spawnPos.x = checkPoint.x * blockSize - blockSize / 2 - playerDim.w / 2
     player.spawnPos.y = math.floor(checkPoint.y * blockSize + blockSize - playerDim.h)

@@ -39,6 +39,7 @@ controls.applyChanges = function()
   end
 
   love.filesystem.write("controls.cfg", controlsStr)
+  currMenu = 'main'
 end
 
 local function getCompareTblVal(tbl, name)

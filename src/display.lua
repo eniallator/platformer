@@ -18,7 +18,8 @@ display.loadTextures = function()
       },
       spawnPoint = love.graphics.newImage("assets/textures/blocks/spawnpoint.png"),
       checkPoint = love.graphics.newImage("assets/textures/blocks/checkpoint.png"),
-      goal = love.graphics.newImage("assets/textures/blocks/goal.png")
+      checkPoint_reached = love.graphics.newImage("assets/textures/blocks/checkpoint_reached.png"),
+      goal = love.graphics.newImage("assets/textures/blocks/goal.png"),
     },
 
     other = {
@@ -41,6 +42,23 @@ display.animatedTile = function(tbl, x, y, sx, sy, dt)
   love.graphics.draw(tbl.img, quad, x, y, 0, sx, sy)
 end
 
+local function check_cp_reached(x, y)
+  local last_cp_reached = entity.player.last_checkpoint
+
+  if last_cp_reached.x and last_cp_reached.x == x and last_cp_reached.y == y then
+    love.graphics.draw(
+      texture.block.checkPoint_reached,
+      (x - 1) * blockSize,
+      (y - 1) * blockSize,
+      0,
+      screenDim.y / 200,
+      screenDim.y / 200
+    )
+
+    return true
+  end
+end
+
 local function displayGrid(level, dt)
   for i=1, #mapGrid[level] do
     for j=1, screenDim.x / blockSize + blockSize * 2 + 1 do
@@ -52,25 +70,27 @@ local function displayGrid(level, dt)
         local currBlock = blocks[collision.getBlock(currTable.block)]
         local scale = currBlock.scale or 1
 
-        if type(currImage) == "table" then
-          display.animatedTile(
-            currImage,
-            ((j + cameraOffset) - 2) * blockSize,
-            (i - 1) * blockSize,
-            screenDim.y / 200 * scale,
-            screenDim.y / 200 * scale,
-            dt
-          )
+        if not check_cp_reached(j + cameraOffset - 1, i) then
+          if type(currImage) == "table" then
+            display.animatedTile(
+              currImage,
+              ((j + cameraOffset) - 2) * blockSize,
+              (i - 1) * blockSize,
+              screenDim.y / 200 * scale,
+              screenDim.y / 200 * scale,
+              dt
+            )
 
-        else
-          love.graphics.draw(
-            currImage,
-            ((j + cameraOffset) - 2) * blockSize,
-            (i - 1) * blockSize,
-            0,
-            screenDim.y / 200 * scale,
-            screenDim.y / 200 * scale
-          )
+          else
+            love.graphics.draw(
+              currImage,
+              ((j + cameraOffset) - 2) * blockSize,
+              (i - 1) * blockSize,
+              0,
+              screenDim.y / 200 * scale,
+              screenDim.y / 200 * scale
+            )
+          end
         end
       end
     end
