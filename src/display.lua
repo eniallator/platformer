@@ -352,6 +352,10 @@ display.borders = function()
     love.graphics.setColor(0, 0, 0)
     love.graphics.rectangle("fill", - cameraTranslation + screenDim.x , 0, borders.x / 2, screenDim.y)
     love.graphics.rectangle("fill", - cameraTranslation - borders.x / 2, 0, borders.x / 2, screenDim.y)
+  else
+    love.graphics.setColor(0, 0, 0)
+    love.graphics.rectangle("fill", - cameraTranslation, screenDim.y, screenDim.x, borders.y / 2)
+    love.graphics.rectangle("fill", - cameraTranslation, - borders.y / 2, screenDim.x, borders.y / 2)
   end
 end
 
