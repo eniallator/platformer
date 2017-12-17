@@ -1,8 +1,63 @@
 local smartPhone = require "src.smartPhone"
 local display = {}
 
-display.loadTextures = function()
+local tile_shader = love.graphics.newShader[[
+    vec4 darkenPixel();
 
+    vec4 darkenPixel( vec4 pixel, number darkness , number initial_lightness) {
+        number r = pixel.r * darkness * initial_lightness;
+        number g = pixel.g * darkness * initial_lightness;
+        number b = pixel.b * darkness * initial_lightness;
+        return vec4(r, g, b, pixel.a);
+    }
+
+    extern number initial_lightness;
+
+    extern bool top;
+    extern bool bottom;
+    extern bool left;
+    extern bool right;
+
+    extern bool top_left;
+    extern bool top_right;
+    extern bool bottom_left;
+    extern bool bottom_right;
+
+    vec4 effect( vec4 colour, Image texture, vec2 texture_coords, vec2 screen_coords ) {
+        number lightness_multiplier = 1.75;
+        number spread = 2.3;
+
+        number x = texture_coords.x;
+        number y = texture_coords.y;
+
+        number diffX = x - 0.5;
+        number diffY = y - 0.5;
+
+        vec4 pixel = Texel(texture, texture_coords);
+        
+        number magnitude = sqrt(pow(diffX, 2) + pow(diffY, 2));
+
+        if (top && diffY <= 0 || bottom && diffY >= 0)
+            magnitude = min(abs(0.5 - x), magnitude);
+
+        if (left && diffX <= 0 || right && diffX >= 0)
+            magnitude = min(abs(0.5 - y), magnitude);
+        
+        if (top && left && top_left && diffX <= 0 && diffY <= 0 || bottom && right && bottom_right && diffX >= 0 && diffY >= 0)
+            magnitude = 0;
+        
+        if (top && right && top_right && diffX >= 0 && diffY <= 0 || bottom && left && bottom_left && diffX <= 0 && diffY >= 0)
+            magnitude = 0;
+
+        magnitude = pow(magnitude, 2) * spread;
+        
+        number darkness = 1 - ((1 - magnitude) / lightness_multiplier);
+        vec4 newPixel = darkenPixel(pixel, darkness, initial_lightness);
+        return newPixel;
+    }
+]]
+
+display.loadTextures = function()
   texture = {
     block = {
       stone = love.graphics.newImage("assets/textures/blocks/stone.png"),
@@ -59,16 +114,44 @@ local function check_cp_reached(x, y)
   end
 end
 
+local function checkSolid(blockTbl)
+  if type(blockTbl) == 'table' then
+    for i=1, #blocks do
+      if blockTbl.block == blocks[i].name then
+        return blocks[i].solid
+      end
+    end
+  end
+end
+
 local function displayGrid(level, dt)
   for i=1, #mapGrid[level] do
     for j=1, screenDim.x / blockSize + blockSize * 2 + 1 do
       local cameraOffset = math.ceil(- cameraTranslation / blockSize - 1)
       local currTable = mapGrid[level][i][j + cameraOffset - 1]
-
+      
       if type(currTable) == "table" then
         local currImage = texture.block[currTable.block]
         local currBlock = blocks[collision.getBlock(currTable.block)]
         local scale = currBlock.scale or 1
+
+        if checkSolid(mapGrid[level][i][j + cameraOffset - 1]) then
+          love.graphics.setShader(tile_shader)
+          
+          tile_shader:send('initial_lightness', level == 'background' and 180 / 255 or 1)
+
+          tile_shader:send('top', not mapGrid[level][i - 1] or checkSolid(mapGrid[level][i - 1][j + cameraOffset - 1]) or false)
+          tile_shader:send('bottom', not mapGrid[level][i + 1] or checkSolid(mapGrid[level][i + 1][j + cameraOffset - 1]) or false)
+          tile_shader:send('left', not mapGrid[level][i][j + cameraOffset - 2] or checkSolid(mapGrid[level][i][j + cameraOffset - 2]) or false)
+          tile_shader:send('right', not mapGrid[level][i][j + cameraOffset] or checkSolid(mapGrid[level][i][j + cameraOffset]) or false)
+
+          tile_shader:send('top_left', not mapGrid[level][i - 1] or not mapGrid[level][i - 1][j + cameraOffset - 2] or checkSolid(mapGrid[level][i - 1][j + cameraOffset - 2]) or false)
+          tile_shader:send('top_right', not mapGrid[level][i - 1] or not mapGrid[level][i - 1][j + cameraOffset] or checkSolid(mapGrid[level][i - 1][j + cameraOffset]) or false)
+          tile_shader:send('bottom_left', not mapGrid[level][i + 1] or not mapGrid[level][i + 1][j + cameraOffset - 2] or checkSolid(mapGrid[level][i + 1][j + cameraOffset - 2]) or false)
+          tile_shader:send('bottom_right', not mapGrid[level][i + 1] or not mapGrid[level][i + 1][j + cameraOffset] or checkSolid(mapGrid[level][i + 1][j + cameraOffset]) or false)
+        else
+          love.graphics.setShader()
+        end
 
         if not check_cp_reached(j + cameraOffset - 1, i) then
           if type(currImage) == "table" then
@@ -95,6 +178,7 @@ local function displayGrid(level, dt)
       end
     end
   end
+  love.graphics.setShader()
 end
 
 display.map = {}
