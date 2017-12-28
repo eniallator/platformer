@@ -102,7 +102,7 @@ entity.player = {
   spawnPos = {x = 1, y = 1},
   vel = {x = 0, y = 0},
   dim = function()
-    return {w = screenDim.y / 37.5, h = screenDim.y / 18.75}
+    return {w = screenDim.y / (600 / 18), h = screenDim.y / 18.75}
   end,
   xCounter = 0,
   last_checkpoint = {}
