@@ -3,7 +3,7 @@ local timer = {}
 function timer:init(tps)
     self.tps = tps
     self.last = love.timer.getTime()
-    self.dt = 0.0
+    self.dt = 1.0
     self.ds = 0.0
     self.ticks = 0
     self.missingTicks = 0
