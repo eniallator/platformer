@@ -1,4 +1,4 @@
-local smartPhone = require "src.smartPhone"
+local smartPhone = require 'src.smartPhone'
 local entity = {}
 
 local function applyVelForces(currEntity)
@@ -11,27 +11,24 @@ local function applyVelForces(currEntity)
 end
 
 local function updateEntityX(currEntity, xBoundLimit)
-  if not collision.detectEntity({x = currEntity.pos.x + currEntity.vel.x, y = currEntity.pos.y}, currEntity, "solid") and xBoundLimit then
+  if not collision.detectEntity({x = currEntity.pos.x + currEntity.vel.x, y = currEntity.pos.y}, currEntity, 'solid') and xBoundLimit then
     currEntity.pos.x = currEntity.pos.x + currEntity.vel.x
-
   else
     currEntity.vel.x = 0
   end
 end
 
 local function updateEntityY(currEntity, yBoundLimit)
-  if not collision.detectEntity({x = currEntity.pos.x, y = currEntity.pos.y + currEntity.vel.y}, currEntity, "solid") and yBoundLimit then
+  if not collision.detectEntity({x = currEntity.pos.x, y = currEntity.pos.y + currEntity.vel.y}, currEntity, 'solid') and yBoundLimit then
     currEntity.inAir = currEntity.inAir and currEntity.inAir + 1 or 0
     currEntity.jumpsLeft = currEntity.jumpsLeft == 0 and 0 or currEntity.inAir > 8 and 1 or currEntity.jumpsLeft
     currEntity.pos.y = currEntity.pos.y + currEntity.vel.y
     currEntity.onGround = false
-
   elseif currEntity.vel.y > 0 then
     currEntity.jumpsLeft = 2
     currEntity.vel.y = 0
     currEntity.onGround = true
     currEntity.inAir = false
-
   else
     currEntity.vel.y = currEntity.vel.y * 0.5
   end
@@ -45,7 +42,7 @@ local function updatePos(currEntity)
   updateEntityX(currEntity, xBoundLimit)
   updateEntityY(currEntity, yBoundLimit)
 
-  if collision.detectEntity({x = currEntity.pos.x, y = currEntity.pos.y}, currEntity, "kill") then
+  if collision.detectEntity({x = currEntity.pos.x, y = currEntity.pos.y}, currEntity, 'kill') then
     currEntity.kill()
     screenRed = screenRedMax
   end
@@ -54,8 +51,7 @@ end
 local function checkUp(currEntity)
   local upPressed = false
 
-  if isSmartPhone and smartPhone.checkButtonPress("up") or love.keyboard.isDown(controls[controls.findName("game.jump")].key) then
-
+  if isSmartPhone and smartPhone.checkButtonPress('up') or love.keyboard.isDown(controls[controls.findName('game.jump')].key) then
     if not currEntity.stillDown then
       upPressed = true
     end
@@ -72,7 +68,6 @@ local function updateEntityJump(currEntity)
   if checkUp(currEntity) and currEntity.jumpsLeft and currEntity.jumpsLeft > 0 then
     if currEntity.vel.y > 0 then
       currEntity.vel.y = jumpHeight
-
     else
       currEntity.vel.y = currEntity.vel.y + jumpHeight
     end
@@ -84,14 +79,14 @@ end
 local function getInput(currEntity)
   updateEntityJump(currEntity)
 
-  if isSmartPhone and smartPhone.checkButtonPress("right") or love.keyboard.isDown(controls[controls.findName("game.right")].key) then
+  if isSmartPhone and smartPhone.checkButtonPress('right') or love.keyboard.isDown(controls[controls.findName('game.right')].key) then
     currEntity.vel.x = currEntity.vel.x + moveSpeed
-    currEntity.lastDir = "r"
+    currEntity.lastDir = 'r'
   end
 
-  if isSmartPhone and smartPhone.checkButtonPress("left") or love.keyboard.isDown(controls[controls.findName("game.left")].key) then
+  if isSmartPhone and smartPhone.checkButtonPress('left') or love.keyboard.isDown(controls[controls.findName('game.left')].key) then
     currEntity.vel.x = currEntity.vel.x - moveSpeed
-    currEntity.lastDir = "l"
+    currEntity.lastDir = 'l'
   end
 end
 
@@ -109,12 +104,11 @@ entity.player = {
 }
 
 entity.player.texture = {
-  still = love.graphics.newImage("assets/textures/player/player.still.png"),
-  glide = love.graphics.newImage("assets/textures/player/player.glide.png"),
-
+  still = love.graphics.newImage('assets/textures/player/player.still.png'),
+  glide = love.graphics.newImage('assets/textures/player/player.glide.png'),
   sprint = {
-    love.graphics.newImage("assets/textures/player/player.sprint.1.png"),
-    love.graphics.newImage("assets/textures/player/player.sprint.2.png")
+    love.graphics.newImage('assets/textures/player/player.sprint.1.png'),
+    love.graphics.newImage('assets/textures/player/player.sprint.2.png')
   }
 }
 
@@ -129,7 +123,7 @@ entity.player.update = function()
 
   local playerPos = {x = player.pos.x, y = player.pos.y}
   local checkPoint = {}
-  checkPoint.x,checkPoint.y = collision.detectEntity(playerPos, player, "checkPoint")
+  checkPoint.x, checkPoint.y = collision.detectEntity(playerPos, player, 'checkPoint')
 
   if checkPoint.x then
     player.last_checkpoint = checkPoint
@@ -139,10 +133,10 @@ entity.player.update = function()
     player.spawnPos.y = math.floor(checkPoint.y * blockSize + blockSize - playerDim.h)
   end
 
-  if collision.detectEntity(playerPos, player, "goal") then
+  if collision.detectEntity(playerPos, player, 'goal') then
     reachedGoal = true
   end
-  
+
   player.newPos.x, player.newPos.y = player.pos.x, player.pos.y
 end
 
@@ -154,9 +148,9 @@ end
 local function findSpawnPoint()
   local spawnPoint = {x = 1, y = 1}
 
-  for i=1, #mapGrid.foreground do
-    for j=1,#mapGrid.foreground[i] do
-      if type(mapGrid.foreground[i][j]) == "table" and mapGrid.foreground[i][j].block == "spawnPoint" then
+  for i = 1, #mapGrid.foreground do
+    for j = 1, #mapGrid.foreground[i] do
+      if type(mapGrid.foreground[i][j]) == 'table' and mapGrid.foreground[i][j].block == 'spawnPoint' then
         local playerDim = entity.player.dim()
         spawnPoint.x = j * blockSize - blockSize / 2 - playerDim.w / 2
         spawnPoint.y = math.floor(i * blockSize + blockSize - playerDim.h)
@@ -183,14 +177,11 @@ local function choosePlayerImage(player)
   if player.onGround then
     if math.abs(player.vel.x) < 1 then
       currTexture = player.texture.still
-
     elseif player.xCounter >= 15 then
       currTexture = player.texture.sprint[1]
-
     else
       currTexture = player.texture.sprint[2]
     end
-
   else
     currTexture = player.texture.still
   end
@@ -211,16 +202,22 @@ entity.player.display = function()
   local playerDim = player.dim()
   local currTexture = choosePlayerImage(player)
 
-  if player.lastDir == "r" or not player.lastDir then
-    xOffset = - 1 * playerDim.w
-    scaleOffset = - 1
-
+  if player.lastDir == 'r' or not player.lastDir then
+    xOffset = -1 * playerDim.w
+    scaleOffset = -1
   else
     xOffset = 0
     scaleOffset = 1
   end
 
-  love.graphics.draw(currTexture, player.pos.x - xOffset, player.pos.y, 0, scaleOffset * (playerDim.w / currTexture:getWidth()), playerDim.h / currTexture:getHeight())
+  love.graphics.draw(
+    currTexture,
+    player.pos.x - xOffset,
+    player.pos.y,
+    0,
+    scaleOffset * (playerDim.w / currTexture:getWidth()),
+    playerDim.h / currTexture:getHeight()
+  )
 end
 
 return entity

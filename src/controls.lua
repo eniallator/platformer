@@ -1,15 +1,15 @@
 local controls = {
   waitForPress = nil,
-  {name = "game.jump", key = "space"},
-  {name = "game.right", key = "d"},
-  {name = "game.left", key = "a"},
-  {name = "mapCreator.blockMenu", key = "m"},
-  {name = "mapCreator.scrollRight", key = "d"},
-  {name = "mapCreator.scrollLeft", key = "a"}
+  {name = 'game.jump', key = 'space'},
+  {name = 'game.right', key = 'd'},
+  {name = 'game.left', key = 'a'},
+  {name = 'mapCreator.blockMenu', key = 'm'},
+  {name = 'mapCreator.scrollRight', key = 'd'},
+  {name = 'mapCreator.scrollLeft', key = 'a'}
 }
 
 controls.findName = function(name)
-  for i=1, #controls do
+  for i = 1, #controls do
     if controls[i].name == name then
       return i
     end
@@ -28,22 +28,22 @@ controls.getKeyInput = function()
 end
 
 controls.applyChanges = function()
-  controlsStr = ""
+  controlsStr = ''
 
-  for i=1, #controls do
+  for i = 1, #controls do
     if i > 1 then
-      controlsStr = controlsStr .. "\r\n"
+      controlsStr = controlsStr .. '\r\n'
     end
 
     controlsStr = controlsStr .. controls[i].name .. ': "' .. controls[i].key .. '"'
   end
 
-  love.filesystem.write("controls.cfg", controlsStr)
+  love.filesystem.write('controls.cfg', controlsStr)
   currMenu = 'main'
 end
 
 local function getCompareTblVal(tbl, name)
-  for i=1, #tbl do
+  for i = 1, #tbl do
     if tbl[i].name == name then
       return i
     end
@@ -51,7 +51,7 @@ local function getCompareTblVal(tbl, name)
 end
 
 local function updateControlTbl(compareTbl)
-  for i=1, #controls do
+  for i = 1, #controls do
     local index = getCompareTblVal(compareTbl, controls[i].name)
 
     if index and compareTbl[index].name == controls[i].name then
@@ -63,12 +63,12 @@ end
 local function controlsToTbl()
   local compareTbl = {}
 
-  for line in love.filesystem.lines("controls.cfg") do
-    local name = line:sub(line:find("^[%.%w]*:"))
-    name = name:sub(1, #name -1)
+  for line in love.filesystem.lines('controls.cfg') do
+    local name = line:sub(line:find('^[%.%w]*:'))
+    name = name:sub(1, #name - 1)
 
     local key = line:sub(line:find('".*"$'))
-    key = key:sub(2, #key -1)
+    key = key:sub(2, #key - 1)
 
     table.insert(compareTbl, {key = key, name = name})
   end
@@ -77,7 +77,7 @@ local function controlsToTbl()
 end
 
 controls.loadControls = function()
-  if not love.filesystem.exists("controls.cfg") then
+  if not love.filesystem.exists('controls.cfg') then
     controls.applyChanges()
     return
   end

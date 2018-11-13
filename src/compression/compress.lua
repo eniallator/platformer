@@ -9,8 +9,8 @@ local function updateMaxVal(tbl1, tbl2)
 end
 
 local function getCoords(str)
-  local xNum = str:find("x")
-  local yNum = str:find("y")
+  local xNum = str:find('x')
+  local yNum = str:find('y')
 
   return tonumber(str:sub(xNum + 1, yNum - 1)), tonumber(str:sub(yNum + 1, #str))
 end
@@ -35,7 +35,6 @@ local function dataToBinary(coords, data)
   if data.w > 1 then
     table.insert(binEntry, binaryUtils.numToBin(dataForBin.w))
     table.insert(binEntry[#binEntry], 1, 1)
-
   else
     table.insert(binEntry, {})
   end
@@ -43,7 +42,6 @@ local function dataToBinary(coords, data)
   if data.h > 1 then
     table.insert(binEntry, binaryUtils.numToBin(dataForBin.h))
     table.insert(binEntry[#binEntry], 1, 1)
-
   else
     table.insert(binEntry, {})
   end
@@ -62,8 +60,8 @@ local dataOrder = {
 local function combineTbl(tbl)
   local combinedTbl = {}
 
-  for i=1, #tbl do
-    for j=1, #tbl[i] do
+  for i = 1, #tbl do
+    for j = 1, #tbl[i] do
       table.insert(combinedTbl, tbl[i][j])
     end
   end
@@ -78,10 +76,10 @@ local function createPrefix(binMap)
   -- Excludes control bit
   local binLengthBytes = #binMapLength / 7
 
-  for i=1, math.ceil(binLengthBytes > 0 and binLengthBytes or 1) do
+  for i = 1, math.ceil(binLengthBytes > 0 and binLengthBytes or 1) do
     table.insert(currPrefix, 1)
 
-    for j=1, 7 do
+    for j = 1, 7 do
       table.insert(currPrefix, binMapLength[(i - 1) * 7 + j] or 0)
     end
   end
@@ -105,13 +103,13 @@ end
 local function tblToBinMapLayers(tbl)
   local binMap = {}
 
-  for layer=1, #tbl do
+  for layer = 1, #tbl do
     currLayer = {}
 
-    for binEntryIndex=1, #tbl[layer] do
+    for binEntryIndex = 1, #tbl[layer] do
       local binEntry = tbl[layer][binEntryIndex]
 
-      for i=1, #binEntry do
+      for i = 1, #binEntry do
         local maxVal = maxValues[dataOrder[i].name]
 
         if i > 3 and #binEntry[i] > 1 then
@@ -120,7 +118,7 @@ local function tblToBinMapLayers(tbl)
           maxVal = 1
         end
 
-        for j=1, maxVal do
+        for j = 1, maxVal do
           table.insert(currLayer, binEntry[i][j] or 0)
         end
       end
@@ -137,17 +135,17 @@ local binMapData = {}
 local function getBinMetaData(maxValues)
   local metaData = {0}
 
-  for i=1, #dataOrder do
+  for i = 1, #dataOrder do
     local maxLength = maxValues[dataOrder[i].name]
     local maxBinLength = binaryUtils.numToBin(maxLength or 0)
 
-    for i=1, math.ceil((#maxBinLength > 0 and #maxBinLength or 1) / 3) do
+    for i = 1, math.ceil((#maxBinLength > 0 and #maxBinLength or 1) / 3) do
       if i > 1 then
         table.insert(metaData, 1)
       end
 
-      for j=1, 3 do
-        table.insert(metaData, maxBinLength[(i-1) * 3 + j] or 0)
+      for j = 1, 3 do
+        table.insert(metaData, maxBinLength[(i - 1) * 3 + j] or 0)
       end
     end
 

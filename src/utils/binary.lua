@@ -14,9 +14,9 @@ end
 binaryUtils.binToNum = function(binTbl)
   local num = 0
 
-  for i=1, #binTbl do
+  for i = 1, #binTbl do
     if binTbl[i] == 1 then
-      num = num + 2 ^ (i-1)
+      num = num + 2 ^ (i - 1)
     end
   end
 

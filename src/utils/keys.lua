@@ -3,11 +3,11 @@ local keys = {
 }
 
 local function updateKeyState(key, newMode)
-  if key == controls[controls.findName("mapCreator.blockMenu")].key then
+  if key == controls[controls.findName('mapCreator.blockMenu')].key then
     update.mapCreatorBlockMenu()
   end
 
-  escPressed = newMode and key == "escape" and selected ~= "menu" or escPressed
+  escPressed = newMode and key == 'escape' and selected ~= 'menu' or escPressed
   keys.currKey = newMode and key or keys.currKey ~= key and keys.currKey
   keys.state[key] = newMode
 end
@@ -23,6 +23,5 @@ end
 function love.textinput(text)
   keys.textInput = text
 end
-
 
 return keys

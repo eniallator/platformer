@@ -22,7 +22,7 @@ local function decompress(binTbl)
   reader:nextBit()
 
   while metaDataIndex <= #dataOrder do --recursion???
-    for i=1, 3 do
+    for i = 1, 3 do
       if reader:nextBit() == 1 then
         metaDataCurrVal = metaDataCurrVal + 2 ^ metaDataExponent
       end
@@ -49,7 +49,7 @@ local function decompress(binTbl)
     end
 
     while reader:nextBit() == 1 do
-      for i=1, 7 do
+      for i = 1, 7 do
         if reader:nextBit() == 1 then
           layerLength = layerLength + 2 ^ currLayerExponent
         end
@@ -64,7 +64,7 @@ local function decompress(binTbl)
       local key = ''
       local dataTbl = {w = 1, h = 1}
 
-      for i=1, #dataOrder do
+      for i = 1, #dataOrder do
         local currFieldName = dataOrder[i].name
         local currBinData = {}
 
@@ -72,17 +72,15 @@ local function decompress(binTbl)
         local dimValWithTail = dimVal and maxVal[currFieldName] > 0 and reader:nextBit() == 1
 
         if dimValWithTail or not dimVal then
-          for i=1, maxVal[currFieldName] do
+          for i = 1, maxVal[currFieldName] do
             table.insert(currBinData, reader:nextBit())
           end
         end
 
         if currFieldName == 'x' or currFieldName == 'y' then
           key = key .. currFieldName .. binaryUtils.binToNum(currBinData)
-
         elseif currFieldName == 'block' then
           dataTbl[currFieldName] = blocks[binaryUtils.binToNum(currBinData) + 1].name
-
         elseif #currBinData > 0 then
           dataTbl[currFieldName] = binaryUtils.binToNum(currBinData) + 1
         end

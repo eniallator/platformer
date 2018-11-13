@@ -21,26 +21,26 @@ end
 debug.printTimes = function()
   if debugMode then
     love.graphics.setColor(255, 255, 255)
-    local font = love.graphics.newFont("assets/Psilly.otf", screenDim.x / 55)
+    local font = love.graphics.newFont('assets/Psilly.otf', screenDim.x / 55)
     love.graphics.setFont(font)
-    local height = font:getHeight("Lg")
+    local height = font:getHeight('Lg')
     local currHeight = 0
     local lastValue = timeTbl.start
 
     for name, tbl in pairs(timeTbl) do
-      if name ~= "start" then
+      if name ~= 'start' then
         currHeight = currHeight ~= 0 and currHeight + 2 * height or currHeight
-        love.graphics.print(name .. ":", screenDim.x / 2 - cameraTranslation, currHeight)
+        love.graphics.print(name .. ':', screenDim.x / 2 - cameraTranslation, currHeight)
 
-        for i=1, #tbl do
+        for i = 1, #tbl do
           currHeight = currHeight + height
-          love.graphics.print(tbl[i][1] .. ": " .. tbl[i][2] - lastValue, screenDim.x / 2 - cameraTranslation, currHeight)
+          love.graphics.print(tbl[i][1] .. ': ' .. tbl[i][2] - lastValue, screenDim.x / 2 - cameraTranslation, currHeight)
           lastValue = tbl[i][2]
         end
       end
     end
 
-    love.graphics.setFont(love.graphics.newFont("assets/Psilly.otf", screenDim.x / 40))
+    love.graphics.setFont(love.graphics.newFont('assets/Psilly.otf', screenDim.x / 40))
     timeTable = {}
   end
 end

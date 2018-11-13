@@ -6,14 +6,14 @@ local binaryUtils = require 'src.utils.binary'
 selectedBlockIndex = 1
 local map = {}
 
-local function createGrid(xMax,yMax)
+local function createGrid(xMax, yMax)
   local tbl = {}
 
-  for y=1,yMax do
+  for y = 1, yMax do
     tbl[y] = {}
 
-    for x=1,xMax do
-      tbl[y][x] = "n"
+    for x = 1, xMax do
+      tbl[y][x] = 'n'
     end
   end
 
@@ -21,8 +21,8 @@ local function createGrid(xMax,yMax)
 end
 
 local function getCoords(str)
-  local xNum = str:find("x")
-  local yNum = str:find("y")
+  local xNum = str:find('x')
+  local yNum = str:find('y')
 
   return tonumber(str:sub(xNum + 1, yNum - 1)), tonumber(str:sub(yNum + 1, #str))
 end
@@ -31,8 +31,8 @@ local function applyFormattedMap(level)
   for coords, data in pairs(formattedMap[level]) do
     local blockX, blockY = getCoords(coords)
 
-    for i=1,data.h do
-      for j=1,data.w do
+    for i = 1, data.h do
+      for j = 1, data.w do
         mapGrid[level][blockY + i - 1][blockX + j - 1] = {block = data.block}
       end
     end
@@ -44,24 +44,24 @@ map.makeGrid = function(x, y)
   mapGrid.foreground = createGrid(x, y)
   mapGrid.background = createGrid(x, y)
 
-  if formattedMap["foreground"] then
-    applyFormattedMap("foreground")
+  if formattedMap['foreground'] then
+    applyFormattedMap('foreground')
   end
 
-  if formattedMap["background"] then
-    applyFormattedMap("background")
+  if formattedMap['background'] then
+    applyFormattedMap('background')
   end
 end
 
 local function binToString(bin)
   local outStr = ''
 
-  for i=0, math.ceil(#bin / 8) - 1 do
+  for i = 0, math.ceil(#bin / 8) - 1 do
     local charId = 0
 
-    for j=0, 7 do
+    for j = 0, 7 do
       if bin[i * 8 + j + 1] == 1 then
-        charId = charId + 2^j
+        charId = charId + 2 ^ j
       end
     end
 
@@ -74,11 +74,11 @@ end
 local function stringToBin(str)
   local binTbl = {}
 
-  for i=1, #str do
+  for i = 1, #str do
     local numVal = string.byte(str:sub(i, i))
     local byteBin = binaryUtils.numToBin(numVal)
 
-    for i=1, 8 do
+    for i = 1, 8 do
       table.insert(binTbl, byteBin[i] or 0)
     end
   end
@@ -96,8 +96,8 @@ end
 local function splitString(str)
   local tbl = {}
 
-  for i=1, #str do
-    table.insert(tbl, str:sub(i,i))
+  for i = 1, #str do
+    table.insert(tbl, str:sub(i, i))
   end
 
   return tbl
@@ -112,7 +112,6 @@ map.readTable = function(fileToRead)
     local chars = splitString(fileContents)
 
     formattedArray = oldDecompress(chars)
-
   else
     local binMap = stringToBin(fileContents)
 
@@ -126,9 +125,9 @@ map.readTable = function(fileToRead)
 end
 
 local function checkEmpty(tbl)
-  for i=1, #tbl do
-    for j=1, #tbl[i] do
-      if type(tbl[i][j]) == "table" then
+  for i = 1, #tbl do
+    for j = 1, #tbl[i] do
+      if type(tbl[i][j]) == 'table' then
         return i, j
       end
     end
@@ -140,12 +139,11 @@ end
 local function checkBlockRow(tbl, block, width, x, y)
   local allSame = true
 
-  for i=0,width - 1 do
-    if tbl[y] and type(tbl[y][x + i]) == "table" then
+  for i = 0, width - 1 do
+    if tbl[y] and type(tbl[y][x + i]) == 'table' then
       if tbl[y][x + i].block ~= block then
         allSame = false
       end
-
     else
       allSame = false
     end
@@ -157,10 +155,9 @@ end
 local function copyTable(tbl)
   local newTbl = {}
 
-  for k,v in pairs(tbl) do
-    if type(v) == "table" then
+  for k, v in pairs(tbl) do
+    if type(v) == 'table' then
       newTbl[k] = copyTable(v)
-
     else
       newTbl[k] = v
     end
@@ -179,7 +176,7 @@ local function createFormattedMapTbl(oldMap)
       local blocksWidth = 1
       local blocksHeight = 1
       local compareBlock = oldMap[blockY][blockX].block
-      local currKey = "x" .. blockX .. "y" .. blockY
+      local currKey = 'x' .. blockX .. 'y' .. blockY
 
       outMap[currKey] = {block = compareBlock}
 
@@ -194,13 +191,12 @@ local function createFormattedMapTbl(oldMap)
       outMap[currKey].w = blocksWidth
       outMap[currKey].h = blocksHeight
 
-      for i=1, blocksHeight do
-        for j=1, blocksWidth do
-          oldMap[blockY + i - 1][blockX + j - 1] = "n"
+      for i = 1, blocksHeight do
+        for j = 1, blocksWidth do
+          oldMap[blockY + i - 1][blockX + j - 1] = 'n'
         end
       end
     end
-
   until not blockY
 
   return outMap
@@ -214,7 +210,7 @@ map.transform = function(mapTbl)
 end
 
 map.destroyBlock = function(coords)
-  mapGrid[currSelectedGrid][math.ceil(coords.y / blockSize)][math.ceil(coords.x / blockSize)] = "n"
+  mapGrid[currSelectedGrid][math.ceil(coords.y / blockSize)][math.ceil(coords.x / blockSize)] = 'n'
 end
 
 map.placeBlock = function(coords)

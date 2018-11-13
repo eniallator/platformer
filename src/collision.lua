@@ -1,7 +1,7 @@
 local collision = {}
 
 collision.getBlock = function(block)
-  for i=1, #blocks do
+  for i = 1, #blocks do
     if block == blocks[i].name then
       return i
     end
@@ -18,8 +18,8 @@ local function collideAxis(box1, box2, axis, dim)
   return false
 end
 
-collision.rectangles = function(box1,box2)
-  if collideAxis(box1, box2, "x", "w") and collideAxis(box1, box2, "y", "h") then
+collision.rectangles = function(box1, box2)
+  if collideAxis(box1, box2, 'x', 'w') and collideAxis(box1, box2, 'y', 'h') then
     return true
   end
 
@@ -31,7 +31,6 @@ collision.circle = function(circleTbl, touchTbl)
 
   if touchTbl then
     mouseCoords.x, mouseCoords.y = touchTbl.x, touchTbl.y
-
   else
     mouseCoords.x, mouseCoords.y = love.mouse.getPosition()
     mouseCoords.x = mouseCoords.x - borders.x / 2
@@ -67,10 +66,9 @@ collision.detectEntity = function(pos, currEntity, attribute)
 
   for i = gridCoordinates.yMax, gridCoordinates.yMin, -1 do
     for j = gridCoordinates.xMax, gridCoordinates.xMin, -1 do
-      if mapGrid.foreground[i] and type(mapGrid.foreground[i][j]) == "table" then
-
+      if mapGrid.foreground[i] and type(mapGrid.foreground[i][j]) == 'table' then
         local currBlock = blocks[collision.getBlock(mapGrid.foreground[i][j].block)]
-        local pixelSize = (blockSize/10)
+        local pixelSize = (blockSize / 10)
         local tilePos = {
           x = (j - 1) * blockSize,
           y = (i - 1) * blockSize
@@ -103,8 +101,8 @@ collision.hoverOverBox = function(box)
   }
 
   local boxBounds = {
-    x = box.x +borders.x /2,
-    y = box.y +borders.y /2,
+    x = box.x + borders.x / 2,
+    y = box.y + borders.y / 2,
     w = box.w,
     h = box.h
   }
@@ -117,7 +115,7 @@ collision.hoverOverBox = function(box)
 end
 
 collision.hoverOverBoxes = function(tbl)
-  for name,box in pairs(tbl) do
+  for name, box in pairs(tbl) do
     if not box.notButton and collision.hoverOverBox(box) then
       return name
     end
@@ -141,7 +139,7 @@ end
 local handCursor
 
 if not isSmartPhone then
-  handCursor = love.mouse.getSystemCursor("hand")
+  handCursor = love.mouse.getSystemCursor('hand')
 end
 
 collision.updateMouseCursor = function(displayedTbl)

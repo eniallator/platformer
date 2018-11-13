@@ -1,18 +1,16 @@
-local smartPhone = require "src.smartPhone"
+local smartPhone = require 'src.smartPhone'
 local update = {}
 cameraTranslation = 0
 newCameraTranslation = 0
 oldCameraTranslation = 0
 
 update.internalWindowSize = function(w, h)
-  if w/h == aspectRatio then
+  if w / h == aspectRatio then
     borders = {x = 0, y = 0}
-
-  elseif w/h > aspectRatio then
+  elseif w / h > aspectRatio then
     borders = {}
     borders.x = (w - (h * aspectRatio))
     borders.y = 0
-
   else
     borders = {}
     borders.y = (h - (w / aspectRatio))
@@ -21,7 +19,7 @@ update.internalWindowSize = function(w, h)
 
   screenDim.x, screenDim.y = w - borders.x + 1, h - borders.y
   blockSize = screenDim.y / 20
-  love.graphics.setFont(love.graphics.newFont("assets/Psilly.otf", screenDim.x / 40))
+  love.graphics.setFont(love.graphics.newFont('assets/Psilly.otf', screenDim.x / 40))
 end
 
 update.forces = function()
@@ -37,14 +35,12 @@ update.camera = function()
   local playerDim = entity.player.dim()
   local midPlayerX = entity.player.pos.x + playerDim.w / 2
 
-  if midPlayerX > screenDim.x / 2  then
+  if midPlayerX > screenDim.x / 2 then
     if midPlayerX > 255 * blockSize - screenDim.x / 2 then
-      cameraTranslation = - (255 * blockSize - screenDim.x)
-
+      cameraTranslation = -(255 * blockSize - screenDim.x)
     else
-      cameraTranslation = - entity.player.pos.x + screenDim.x / 2 - playerDim.w / 2
+      cameraTranslation = -entity.player.pos.x + screenDim.x / 2 - playerDim.w / 2
     end
-
   else
     cameraTranslation = 0
   end
@@ -88,20 +84,12 @@ local function moveToggleBox()
           h = menu.toggleBlockMenu.h
         }
 
-        currCoords.x = nextCoords.x + offset.w < screenDim.x
-          and nextCoords.x > 0
-          and nextCoords.x
-          or nextCoords.x > 0 and screenDim.x - offset.w
-          or 0
+        currCoords.x =
+          nextCoords.x + offset.w < screenDim.x and nextCoords.x > 0 and nextCoords.x or nextCoords.x > 0 and screenDim.x - offset.w or 0
 
         currCoords.y =
-          nextCoords.y + offset.h < screenDim.y
-          and nextCoords.y > 0
-          and nextCoords.y
-          or nextCoords.y > 0 and screenDim.y - offset.h
-          or 0
+          nextCoords.y + offset.h < screenDim.y and nextCoords.y > 0 and nextCoords.y or nextCoords.y > 0 and screenDim.y - offset.h or 0
       end
-
     else
       startedDragging = false
     end
@@ -126,20 +114,21 @@ update.mapCreatorinteract = function()
     h = blockSize * 2
   }
 
-  if not (mapCreatorMenu and collision.hoverOverBoxes(optionData.blockMenu.display()))
-    and moveToggleBox()
-    and not smartPhone.checkButtonPress("right") and not smartPhone.checkButtonPress("left")
-    and mouseCoords.x > 0 and mouseCoords.x + cameraTranslation < screenDim.x
-    and mouseCoords.y > 0 and mouseCoords.y < screenDim.y then
-
+  if
+    not (mapCreatorMenu and collision.hoverOverBoxes(optionData.blockMenu.display())) and moveToggleBox() and
+      not smartPhone.checkButtonPress('right') and
+      not smartPhone.checkButtonPress('left') and
+      mouseCoords.x > 0 and
+      mouseCoords.x + cameraTranslation < screenDim.x and
+      mouseCoords.y > 0 and
+      mouseCoords.y < screenDim.y
+   then
     if mouse.left.held and not firstLoad then
       if isSmartPhone and destroyMode then
         map.destroyBlock(mouseCoords)
-
       else
         map.placeBlock(mouseCoords)
       end
-
     elseif not mouse.left.held then
       firstLoad = false
     end
@@ -152,13 +141,12 @@ end
 
 update.mapCreatorBlockMenu = function()
   if not isSmartPhone then
-    local blockMenuKey = controls[controls.findName("mapCreator.blockMenu")].key
+    local blockMenuKey = controls[controls.findName('mapCreator.blockMenu')].key
     local keyDown = love.keyboard.isDown(blockMenuKey)
 
     if not keys.state[blockMenuKey] and keyDown then
       mapCreatorMenu = not mapCreatorMenu
     end
-
   else
     touchedButton = collision.clickBox(optionData.smartPhoneMapCreator.display())
 
@@ -181,7 +169,6 @@ update.selectedMapCreatorBlock = function()
     if not blockMenuTable[blockClicked].notButton then
       if tonumber(blockClicked) then
         selectedBlockIndex = blockMenuTable[blockClicked].blockIndex
-
       else
         optionData.blockMenu.funcs[blockClicked]()
       end
@@ -190,17 +177,19 @@ update.selectedMapCreatorBlock = function()
 end
 
 update.mapCreatorPos = function()
-  if (not mapCreatorMenu and smartPhone.checkButtonPress("right")
-  or love.keyboard.isDown(controls[controls.findName("mapCreator.scrollRight")].key))
-  and cameraTranslation > - (255 * blockSize - screenDim.x) + mapCreatorScrollSpeed - 1 then
-
+  if
+    (not mapCreatorMenu and smartPhone.checkButtonPress('right') or
+      love.keyboard.isDown(controls[controls.findName('mapCreator.scrollRight')].key)) and
+      cameraTranslation > -(255 * blockSize - screenDim.x) + mapCreatorScrollSpeed - 1
+   then
     cameraTranslation = cameraTranslation - mapCreatorScrollSpeed
   end
 
-  if (not mapCreatorMenu and smartPhone.checkButtonPress("left")
-  or love.keyboard.isDown(controls[controls.findName("mapCreator.scrollLeft")].key))
-  and cameraTranslation < - mapCreatorScrollSpeed + 1 then
-
+  if
+    (not mapCreatorMenu and smartPhone.checkButtonPress('left') or
+      love.keyboard.isDown(controls[controls.findName('mapCreator.scrollLeft')].key)) and
+      cameraTranslation < -mapCreatorScrollSpeed + 1
+   then
     cameraTranslation = cameraTranslation + mapCreatorScrollSpeed
   end
 end
@@ -256,8 +245,7 @@ update.optionMenu = function()
 
   if clickedBox then
     optionData[currMenu].funcs[clickedBox](menuDisplayed[clickedBox])
-
-  elseif rightClickedBox and currMenu == "play" then
+  elseif rightClickedBox and currMenu == 'play' then
     optionData[currMenu].funcs[rightClickedBox](menuDisplayed[rightClickedBox], true)
   end
 end
